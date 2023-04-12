@@ -1,42 +1,49 @@
 import prisma from '../src/db';
+import bcrypt from 'bcrypt';
 
 async function seed() {
-  const user1 = await prisma!.user.upsert({
-    where: { email: 'johndoe@example.com' },
-    update: {},
-    create: {
+  // Delete all existing data
+  await prisma.user.deleteMany();
+  await prisma.item.deleteMany();
+  await prisma.session.deleteMany();
+  await prisma.userItem.deleteMany();
+
+  // Hash passwords
+  const hashedPassword = await bcrypt.hash('password', 10);
+
+  // Create users
+  const user1 = await prisma.user.create({
+    data: {
       email: 'johndoe@example.com',
       name: 'John',
-      password: 'password',
+      password: hashedPassword,
+      isAdmin: true,
     },
   });
 
-  const user2 = await prisma!.user.upsert({
-    where: { email: 'janedoe@example.com' },
-    update: {},
-    create: {
+  const user2 = await prisma.user.create({
+    data: {
       email: 'janedoe@example.com',
       name: 'Jane',
-      password: 'password',
+      password: hashedPassword,
     },
   });
 
-  const session = await prisma!.session.create({
+  // Create session
+  const session = await prisma.session.create({
     data: {
       name: 'Lunch at the park',
       items: {
         create: [
           {
             name: 'Hamburger',
-            quantity: 2,
+            quantity: 1,
             price: 10.99,
-            eatenBy: { connect: { id: user1.id } },
           },
           {
             name: 'Fries',
             quantity: 1,
             price: 4.99,
-            eatenBy: { connect: [{ id: user1.id }, { id: user2.id }] },
           },
         ],
       },
@@ -44,15 +51,37 @@ async function seed() {
     include: { items: true },
   });
 
-  console.log({ user1, user2, session });
+  // Create UserItems
+  const userItem1 = await prisma.userItem.create({
+    data: {
+      user: { connect: { id: user1.id } },
+      item: { connect: { id: session.items[0].id } },
+    },
+  });
+
+  const userItem2 = await prisma.userItem.create({
+    data: {
+      user: { connect: { id: user1.id } },
+      item: { connect: { id: session.items[1].id } },
+    },
+  });
+
+  const userItem3 = await prisma.userItem.create({
+    data: {
+      user: { connect: { id: user2.id } },
+      item: { connect: { id: session.items[1].id } },
+    },
+  });
+
+  console.log({ user1, user2, session, userItem1, userItem2, userItem3 });
 }
 
 seed()
   .then(async () => {
-    await prisma!.$disconnect();
+    await prisma.$disconnect();
   })
   .catch(async (e) => {
     console.error(e);
-    await prisma!.$disconnect();
+    await prisma.$disconnect();
     process.exit(1);
   });

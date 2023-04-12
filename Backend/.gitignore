@@ -1,3 +1,13 @@
-node_modules
-# Keep environment variables out of version control
+# Ignore node modules
+node_modules/
+
+# Ignore environment variables
 .env
+
+# Ignore compiled code and build artifacts
+dist/
+build/
+out/
+
+# Ignore migrations
+**/migrations

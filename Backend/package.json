@@ -28,6 +28,7 @@
     "typescript": "^5.0.4"
   },
   "devDependencies": {
+    "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.13",
     "prisma": "^4.12.0"
   }
