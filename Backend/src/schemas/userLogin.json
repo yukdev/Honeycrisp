@@ -12,13 +12,8 @@
       "type": "string",
       "minLength": 5,
       "maxLength": 20
-    },
-    "name": {
-      "type": "string",
-      "minLength": 1,
-      "maxLength": 30
     }
   },
   "additionalProperties": false,
-  "required": ["email", "password", "name"]
+  "required": ["email", "password"]
 }

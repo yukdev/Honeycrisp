@@ -16,6 +16,7 @@ model User {
   name      String
   isAdmin   Boolean    @default(false)
   userItems UserItem[]
+  Session   Session[]
 }
 
 model Session {
@@ -23,17 +24,18 @@ model Session {
   name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  owner     User     @relation(fields: [ownerId], references: [id])
+  ownerId   String
   finalized Boolean  @default(false)
   items     Item[]
-  tax       Float?   @default(8.875)
-  tip       Int?     @default(18)
+  tax       Float    @default(8.875)
+  tip       Int      @default(20)
   bill      Json?
 }
 
 model Item {
   id        String     @id @default(uuid())
   name      String
-  quantity  Int
   price     Float
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt

@@ -1,9 +1,9 @@
 import { Item } from '@prisma/client';
-import prisma from 'db';
+import prisma from '../db';
 
 interface Bill {
   total: string;
-  userTotal: { [key: string]: string };
+  userTotals: { [key: string]: string };
 }
 
 export default async function calculateBill(
@@ -41,7 +41,7 @@ export default async function calculateBill(
     return acc;
   }, {} as { [key: string]: number });
 
-  const userTotal = Object.entries(userSubtotals).reduce(
+  const userTotals = Object.entries(userSubtotals).reduce(
     (acc, [name, subtotal]) => {
       const total = (subtotal * (1 + (tax + tip) / 100)).toFixed(2);
       acc[name] = `$${total}`;
@@ -57,6 +57,6 @@ export default async function calculateBill(
 
   return {
     total,
-    userTotal,
+    userTotals,
   };
 }

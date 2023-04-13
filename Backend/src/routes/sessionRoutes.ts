@@ -2,10 +2,18 @@ import { Router } from 'express';
 import { validate } from 'jsonschema';
 import prisma from '../db';
 import { requireAdmin } from '../middleware/auth';
-import { BadRequestError, NotFoundError } from 'expressErrors';
-import calculateBill from 'helpers/calculateBill';
+import { BadRequestError, NotFoundError } from '../expressErrors';
+import sessionCreate from '../schemas/sessionCreate.json';
+import sessionItemsEaten from '../schemas/sessionItemsEaten.json';
+import calculateBill from '../helpers/calculateBill';
 
 const router = Router();
+
+// TODO: mock user data - deprecate later
+const user = {
+  id: '1',
+  name: 'George',
+};
 
 interface Item {
   name: string;
@@ -24,7 +32,7 @@ router.get('/', requireAdmin, async (req, res, next) => {
     const sessions = await prisma.session.findMany({
       include: { items: true },
     });
-    res.json(sessions);
+    return res.status(200).json(sessions);
   } catch (err) {
     next(err);
   }
@@ -37,13 +45,32 @@ router.get('/', requireAdmin, async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
   try {
+    const validator = validate(req.body, sessionCreate, { required: true });
+
+    if (!validator.valid) {
+      const errors = validator.errors.map((e) => e.stack).join('\n');
+      throw new BadRequestError(errors);
+    }
+
     const { name, items, tax, tip } = req.body;
+
+    const itemsWithQuantity = [];
+
+    for (const item of items) {
+      for (let i = 0; i < item.quantity; i++) {
+        itemsWithQuantity.push({
+          name: item.name,
+          price: item.price,
+        });
+      }
+    }
 
     const newSession = await prisma.session.create({
       data: {
+        ownerId: user.id,
         name,
         items: {
-          create: items.map((item: Item) => ({ ...item })),
+          create: itemsWithQuantity,
         },
         tax,
         tip,
@@ -80,12 +107,6 @@ router.get('/:sessionId', async (req, res, next) => {
   }
 });
 
-// TODO: mock user data - deprecate later
-const user = {
-  id: '1',
-  name: 'John',
-};
-
 /**
  * PUT /sessions/:sessionId
  *
@@ -106,6 +127,21 @@ router.put('/:sessionId', async (req, res, next) => {
 
     if (!session) {
       throw new NotFoundError(`Session not found with id ${sessionId}`);
+    }
+
+    // Check if session has already been finalized
+    if (session.finalized) {
+      throw new BadRequestError(
+        `Session with id ${sessionId} has already been finalized`,
+      );
+    }
+
+    // Validate request body
+    const validator = validate(req.body, sessionItemsEaten, { required: true });
+
+    if (!validator.valid) {
+      const errors = validator.errors.map((e) => e.stack).join('\n');
+      throw new BadRequestError(errors);
     }
 
     // Find all items that the user ate
@@ -153,6 +189,13 @@ router.post('/:sessionId/finalize', async (req, res, next) => {
       );
     }
 
+    // Check if it's the owner finalizing the session
+    if (session.ownerId !== user.id) {
+      throw new BadRequestError(
+        `Only the owner of the session can finalize it`,
+      );
+    }
+
     // Finalize the session
     const updatedSession = await prisma.session.update({
       where: { id: sessionId },
@@ -161,7 +204,8 @@ router.post('/:sessionId/finalize', async (req, res, next) => {
     });
 
     const { items, tax, tip } = updatedSession;
-    const bill = calculateBill(items, tax, tip);
+    const bill = await calculateBill(items, tax, tip);
+    res.json({ bill });
   } catch (err) {
     next(err);
   }
@@ -180,7 +224,7 @@ router.delete('/:sessionId', requireAdmin, async (req, res, next) => {
       where: { id: sessionId },
     });
 
-    res.sendStatus(204); // 204 No Content response indicates the deletion was successful
+    res.sendStatus(204);
   } catch (err) {
     next(err);
   }
