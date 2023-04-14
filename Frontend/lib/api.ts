@@ -31,3 +31,8 @@ export const fetcher = async ({
     return data;
   }
 };
+
+export const getSessions = () => fetcher({ url: 'sessions', method: 'GET' });
+
+export const getSession = (id: string) =>
+  fetcher({ url: `sessions/${id}`, method: 'GET' });

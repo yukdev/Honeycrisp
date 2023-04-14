@@ -1,9 +1,17 @@
-import Session from '../../components/Session';
+import { getSession } from '@/lib/api';
+import Session from '../../../components/Session';
 
-const SessionPage = ({ params: { id } }) => {
+interface Props {
+  params: {
+    id: string;
+  };
+}
+
+const SessionPage = async ({ params: { id } }: Props) => {
+  const session = await getSession(id);
   return (
     <div className="card">
-      <Session id={id} />
+      <Session session={session} />
     </div>
   );
 };

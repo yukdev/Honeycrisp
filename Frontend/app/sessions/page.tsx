@@ -1,5 +1,5 @@
 'use client';
-import { fetcher } from '@/lib/api';
+import { getSessions } from '@/lib/api';
 import Link from 'next/link';
 
 interface Item {
@@ -26,10 +26,7 @@ interface Session {
 }
 
 const SessionsPage = async () => {
-  const sessions = await fetcher({
-    url: 'sessions',
-    method: 'GET',
-  });
+  const sessions = await getSessions();
 
   return (
     <div className="container min-h-screen">

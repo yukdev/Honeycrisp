@@ -1,11 +1,12 @@
 'use client';
-import { fetcher } from '@/lib/api';
+// import { getSession } from '@/lib/api';
 import { useState, useEffect, useCallback } from 'react';
 import SessionItem from './SessionItem';
-import LoadingPage from '../loading';
+// import LoadingPage from '../app/loading';
 
-const Session = ({ id }) => {
-  const [session, setSession] = useState(null);
+const Session = ({ session }) => {
+  const { items } = session;
+
   const [selectedItems, setSelectedItems] = useState([]);
 
   const handleItemClick = useCallback(
@@ -23,21 +24,6 @@ const Session = ({ id }) => {
     console.log(selectedItems);
   };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const sessionData = await fetcher({
-        url: `sessions/${id}`,
-        method: 'GET',
-      });
-      setSession(sessionData);
-    };
-    fetchData();
-  }, [id]);
-
-  if (!session) {
-    return <LoadingPage />;
-  }
-
   return (
     <div className="flex flex-col items-center justify-center container min-h-screen">
       <div className="w-full max-w-2xl">
@@ -54,7 +40,7 @@ const Session = ({ id }) => {
             </tr>
           </thead>
           <tbody>
-            {session.items.map((item, index) => (
+            {items.map((item, index) => (
               <SessionItem
                 key={item.id}
                 index={index}
