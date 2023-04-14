@@ -69,6 +69,7 @@ router.post('/', async (req, res, next) => {
     const newSession = await prisma.session.create({
       data: {
         ownerId: user.id,
+        ownerName: user.name,
         name,
         items: {
           create: itemsWithQuantity,
@@ -246,21 +247,22 @@ router.post('/:sessionId/finalize', async (req, res, next) => {
     // }
 
     // Check if it's the owner finalizing the session
-    if (session.ownerId !== user.id) {
-      throw new BadRequestError(
-        `Only the owner of the session can finalize it`,
-      );
-    }
+    // if (session.ownerId !== user.id) {
+    //   throw new BadRequestError(
+    //     `Only the owner of the session can finalize it`,
+    //   );
+    // }
 
-    // Finalize the session
-    const updatedSession = await prisma.session.update({
+    const { items, tax, tip } = session;
+    const bill = await calculateBill(items, tax, tip);
+    const { total } = bill;
+
+    await prisma.session.update({
       where: { id: sessionId },
-      data: { finalized: true },
+      data: { finalized: true, bill: total },
       include: { items: true },
     });
 
-    const { items, tax, tip } = updatedSession;
-    const bill = await calculateBill(items, tax, tip);
     res.json({ bill });
   } catch (err) {
     next(err);

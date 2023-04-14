@@ -1,3 +1,4 @@
+'use client';
 import { fetcher } from '@/lib/api';
 import Link from 'next/link';
 
@@ -31,27 +32,25 @@ const SessionsPage = async () => {
   });
 
   return (
-    <div className="container mx-auto py-10">
-      <h1 className="text-3xl font-bold text-center mb-8">Sessions</h1>
+    <div className="container min-h-screen">
+      <h1 className="text-3xl font-bold text-center my-5">Sessions</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {sessions.map((session: Session) => (
           <Link
             href={`/sessions/${session.id}`}
             key={session.id}
-            className="bg-white rounded-lg shadow-md p-2 md:p-4 hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1 block text-center"
+            className="hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
           >
-            <div className="text-black">
-              <h2 className="text-2xl font-bold mb-1">{session.name}</h2>
-              <p className="text-sm text-gray-500 font-semibold mb-1">
-                Payer: {session.ownerName}
-              </p>
-              <p
-                className={`text-sm font-semibold ${
-                  session.bill ? 'text-green-500' : 'text-red-500'
-                }`}
-              >
-                Bill: {session.bill ? session.bill : 'Pending'}
-              </p>
+            <div className="card w-96 bg-secondary text-secondary-content">
+              <div className="card-body">
+                <h2 className="card-title">{session.name}</h2>
+                <p>Host: {session.ownerName}</p>
+                <div className="card-actions justify-end">
+                  <button className="btn">
+                    Bill: {session.bill ? session.bill : 'Pending'}
+                  </button>
+                </div>
+              </div>
             </div>
           </Link>
         ))}

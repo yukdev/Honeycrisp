@@ -6,9 +6,11 @@ export const metadata = {
 
 const AboutPage = () => {
   return (
-    <div>
-      <h1>About Honeycrisp</h1>
-      <p>
+    <div className="container min-h-screen flex flex-col justify-center">
+      <h1 className="text-3xl font-bold text-center my-5 text-center">
+        About Honeycrisp
+      </h1>
+      <p className="text-center">
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Repellat
         quibusdam dolore corporis asperiores, architecto commodi pariatur
         ducimus! Tenetur quos id, molestias perspiciatis ea unde soluta nisi

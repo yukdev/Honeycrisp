@@ -1,6 +1,8 @@
 import { Open_Sans } from 'next/font/google';
 import './globals.css';
-import Header from './components/Header';
+import Header from './components/NavBar';
+import NavBar from './components/NavBar';
+import Footer from './components/Footer';
 
 const openSans = Open_Sans({
   weight: ['400', '700'],
@@ -18,12 +20,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" data-theme="forest">
       <body className={openSans.className}>
-        <Header />
-        <main className="flex justify-center min-h-screen mt-4">
-          {children}
-        </main>
+        <NavBar />
+        <main className="flex justify-center">{children}</main>
+        <Footer />
       </body>
     </html>
   );

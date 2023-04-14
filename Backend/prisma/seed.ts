@@ -1,5 +1,4 @@
 import prisma from '../src/db';
-import bcrypt from 'bcrypt';
 import { hashPassword } from '../src/helpers/auth';
 
 async function seed() {
@@ -35,8 +34,32 @@ async function seed() {
       password: await hashPassword('bob'),
     },
   });
+  const user4 = await prisma.user.create({
+    data: {
+      id: '4',
+      email: 'kenyu@example.com',
+      name: 'Ken',
+      password: await hashPassword('knhr'),
+    },
+  });
+  const user5 = await prisma.user.create({
+    data: {
+      id: '5',
+      email: 'johnsong@example.com',
+      name: 'John',
+      password: await hashPassword('jong'),
+    },
+  });
+  const user6 = await prisma.user.create({
+    data: {
+      id: '6',
+      email: 'chengjason@example.com',
+      name: 'Cheng',
+      password: await hashPassword('jason'),
+    },
+  });
 
-  const session = await prisma.session.create({
+  const italianSession = await prisma.session.create({
     data: {
       name: 'Sotto le Stelle',
       items: {
@@ -75,35 +98,122 @@ async function seed() {
           },
         ],
       },
+      owner: { connect: { id: user2.id } },
+      ownerName: user2.name,
+      finalized: true,
+    },
+    include: { items: true },
+  });
+
+  const koreanSession = await prisma.session.create({
+    data: {
+      name: 'BCD Tofu House',
+      items: {
+        create: [
+          {
+            name: 'Bulgogi',
+            price: 15.5,
+          },
+          {
+            name: 'Galbi',
+            price: 20.0,
+          },
+          {
+            name: 'Japchae',
+            price: 12.5,
+          },
+          {
+            name: 'Bibimbap',
+            price: 11.0,
+          },
+          {
+            name: 'Korean Fried Chicken',
+            price: 18.0,
+          },
+          {
+            name: 'Kimchi Stew',
+            price: 13.5,
+          },
+          {
+            name: 'Tteokbokki',
+            price: 10.0,
+          },
+          {
+            name: 'Haemul Pajeon',
+            price: 14.0,
+          },
+        ],
+      },
+      owner: { connect: { id: user4.id } },
+      ownerName: user4.name,
+      finalized: true,
+    },
+    include: { items: true },
+  });
+
+  const bbqSession = await prisma.session.create({
+    data: {
+      name: "Mike's Bar-B-Que",
+      items: {
+        create: [
+          {
+            name: 'Hot Dogs',
+            price: 4.5,
+          },
+          {
+            name: 'Hamburgers',
+            price: 6.5,
+          },
+          {
+            name: 'Veggie Burgers',
+            price: 7.5,
+          },
+        ],
+      },
       owner: { connect: { id: user1.id } },
+      ownerName: user1.name,
     },
     include: { items: true },
   });
 
   const userItems = [
-    { userId: user1.id, itemId: session.items[0].id },
-    { userId: user2.id, itemId: session.items[0].id },
-    { userId: user3.id, itemId: session.items[0].id },
-    { userId: user1.id, itemId: session.items[1].id },
-    { userId: user2.id, itemId: session.items[1].id },
-    { userId: user3.id, itemId: session.items[1].id },
-    { userId: user1.id, itemId: session.items[2].id },
-    { userId: user2.id, itemId: session.items[2].id },
-    { userId: user3.id, itemId: session.items[2].id },
-    { userId: user1.id, itemId: session.items[3].id },
-    { userId: user1.id, itemId: session.items[4].id },
-    { userId: user2.id, itemId: session.items[4].id },
-    { userId: user3.id, itemId: session.items[4].id },
-    { userId: user1.id, itemId: session.items[5].id },
-    { userId: user2.id, itemId: session.items[6].id },
-    { userId: user3.id, itemId: session.items[7].id },
+    { userId: user1.id, itemId: italianSession.items[0].id },
+    { userId: user2.id, itemId: italianSession.items[0].id },
+    { userId: user3.id, itemId: italianSession.items[0].id },
+    { userId: user1.id, itemId: italianSession.items[1].id },
+    { userId: user2.id, itemId: italianSession.items[1].id },
+    { userId: user3.id, itemId: italianSession.items[1].id },
+    { userId: user1.id, itemId: italianSession.items[2].id },
+    { userId: user2.id, itemId: italianSession.items[2].id },
+    { userId: user3.id, itemId: italianSession.items[2].id },
+    { userId: user1.id, itemId: italianSession.items[3].id },
+    { userId: user1.id, itemId: italianSession.items[4].id },
+    { userId: user2.id, itemId: italianSession.items[4].id },
+    { userId: user3.id, itemId: italianSession.items[4].id },
+    { userId: user1.id, itemId: italianSession.items[5].id },
+    { userId: user2.id, itemId: italianSession.items[6].id },
+    { userId: user3.id, itemId: italianSession.items[7].id },
+    { userId: user1.id, itemId: koreanSession.items[0].id },
+    { userId: user2.id, itemId: koreanSession.items[1].id },
+    { userId: user3.id, itemId: koreanSession.items[2].id },
+    { userId: user4.id, itemId: koreanSession.items[3].id },
+    { userId: user5.id, itemId: koreanSession.items[4].id },
+    { userId: user6.id, itemId: koreanSession.items[5].id },
+    { userId: user1.id, itemId: koreanSession.items[6].id },
+    { userId: user2.id, itemId: koreanSession.items[7].id },
+    { userId: user1.id, itemId: bbqSession.items[0].id },
+    { userId: user2.id, itemId: bbqSession.items[0].id },
+    { userId: user3.id, itemId: bbqSession.items[1].id },
+    { userId: user4.id, itemId: bbqSession.items[1].id },
+    { userId: user5.id, itemId: bbqSession.items[2].id },
+    { userId: user6.id, itemId: bbqSession.items[2].id },
   ];
 
   await Promise.all(
     userItems.map((userItem) => prisma.userItem.create({ data: userItem })),
   );
 
-  console.log({ user1, user2, user3, session, userItems });
+  console.log({ italianSession, koreanSession, bbqSession });
 }
 
 seed()

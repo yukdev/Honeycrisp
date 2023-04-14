@@ -14,7 +14,10 @@ export default function NavLink({ label, path, targetSegment }: NavLinkProps) {
 
   const isActive = activeSegment === targetSegment;
   return (
-    <Link className={`${isActive && 'underline'} mx-3`} href={path}>
+    <Link
+      className={`${isActive && 'bg-primary-focus'} mx-3 text-white`}
+      href={path}
+    >
       {label}
     </Link>
   );
