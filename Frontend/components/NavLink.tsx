@@ -1,4 +1,3 @@
-// app/NavLink.js
 'use client';
 import Link from 'next/link';
 import { useSelectedLayoutSegment } from 'next/navigation';

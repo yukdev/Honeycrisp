@@ -1,8 +1,6 @@
 'use client';
-// import { getSession } from '@/lib/api';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import SessionItem from './SessionItem';
-// import LoadingPage from '../app/loading';
 
 const Session = ({ session }) => {
   const { items } = session;

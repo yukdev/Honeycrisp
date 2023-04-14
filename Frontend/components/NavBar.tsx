@@ -1,7 +1,6 @@
-'use client';
 import Link from 'next/link';
 import NavLink from './NavLink';
-
+import { getCurrentUser } from '@/lib/session';
 const links = [
   {
     label: 'About',
@@ -15,7 +14,10 @@ const links = [
   },
 ];
 
-const NavBar = () => {
+const NavBar = async () => {
+  const user = await getCurrentUser();
+  console.log(user);
+
   return (
     <div className="navbar bg-primary text-primary-content sticky top-0 z-50">
       <div className="flex-1">

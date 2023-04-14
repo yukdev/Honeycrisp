@@ -1,7 +1,12 @@
+import { getServerSession } from 'next-auth/next';
 import { Open_Sans } from 'next/font/google';
 import './globals.css';
 import NavBar from '@/components/NavBar';
 import Footer from '@/components/Footer';
+
+interface RootLayoutProps {
+  children: React.ReactNode;
+}
 
 const openSans = Open_Sans({
   weight: ['400', '700'],
@@ -13,11 +18,7 @@ export const metadata = {
   description: 'Your user-friendly bill-splitting app',
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default async function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en" data-theme="forest">
       <body className={openSans.className}>
