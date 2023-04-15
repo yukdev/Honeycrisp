@@ -52,9 +52,8 @@ router.post('/register', async (req, res, next) => {
         password: hashedPassword,
       },
     });
-    const token = generateToken(newUser);
 
-    return res.status(201).json({ token });
+    return res.status(201).json({ user: newUser });
   } catch (error) {
     next(error);
   }
@@ -86,9 +85,7 @@ router.post('/login', async (req, res, next) => {
       throw new BadRequestError('Invalid password');
     }
 
-    const token = generateToken(user);
-
-    return res.status(200).json({ token });
+    return res.status(200).json(user);
   } catch (error) {
     next(error);
   }

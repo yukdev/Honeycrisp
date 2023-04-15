@@ -1,8 +1,8 @@
 'use client';
 
-import { register, login } from '@/lib/api';
+import { register } from '@/lib/api';
+import { signIn } from 'next-auth/react';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 
 const registerContent = {
@@ -31,38 +31,19 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
   const [formData, setFormData] = useState(initialFormData);
   const [error, setError] = useState('');
 
-  const router = useRouter();
-
   const handleSubmit = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
-      e.preventDefault();
-
-      const { email, password, name } = formData;
-
-      try {
-        if (mode === 'register') {
-          const newUser = await register({
-            email,
-            password,
-            name,
-          });
-          if (newUser) {
-            router.push('/');
-          }
-        } else if (mode === 'login') {
-          const user = await login({ email, password });
-          if (user) {
-            router.push('/');
-          }
-        }
-        router.replace('/');
-      } catch (e) {
-        setError(`Could not ${mode}`);
-      } finally {
-        setFormData({ ...initialFormData });
+    async (event: React.FormEvent<HTMLFormElement>) => {
+      event.preventDefault();
+      if (mode === 'login') {
+        await signIn('credentials', {
+          email: formData.email,
+          password: formData.password,
+          redirect: true,
+          callbackUrl: '/',
+        });
       }
     },
-    [formData, mode, router],
+    [formData, mode],
   );
 
   const handleFormChange = useCallback(

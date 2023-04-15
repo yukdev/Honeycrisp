@@ -1,22 +1,31 @@
 import Link from 'next/link';
 import NavLink from './NavLink';
-import { getCurrentUser } from '@/lib/session';
-const links = [
-  {
-    label: 'About',
-    path: '/about',
-    targetSegment: 'about',
-  },
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../app/api/auth/[...nextauth]/route';
+const userlinks = [
   {
     label: 'Sessions',
     path: '/sessions',
-    targetSegment: 'sessions',
+  },
+  {
+    label: 'Log out',
+    path: '/logout',
+  },
+];
+
+const guestlinks = [
+  {
+    label: 'Register',
+    path: '/register',
+  },
+  {
+    label: 'Log in',
+    path: '/login',
   },
 ];
 
 const NavBar = async () => {
-  const user = await getCurrentUser();
-  console.log(user);
+  const session = await getServerSession(authOptions);
 
   return (
     <div className="navbar bg-primary text-primary-content sticky top-0 z-50">
@@ -27,11 +36,23 @@ const NavBar = async () => {
       </div>
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1">
-          {links.map((link) => (
-            <li key={link.label}>
-              <NavLink {...link} />
-            </li>
-          ))}
+          {session?.user ? (
+            <>
+              {userlinks.map((link) => (
+                <li key={link.label}>
+                  <NavLink {...link} />
+                </li>
+              ))}
+            </>
+          ) : (
+            <>
+              {guestlinks.map((link) => (
+                <li key={link.label}>
+                  <NavLink {...link} />
+                </li>
+              ))}
+            </>
+          )}
         </ul>
       </div>
     </div>

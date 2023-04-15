@@ -3,6 +3,8 @@ import { Open_Sans } from 'next/font/google';
 import './globals.css';
 import NavBar from '@/components/NavBar';
 import Footer from '@/components/Footer';
+import { authOptions } from './api/auth/[...nextauth]/route';
+import { Provider } from './providers';
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -19,12 +21,17 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }: RootLayoutProps) {
+  const session = await getServerSession(authOptions);
   return (
     <html lang="en" data-theme="forest">
       <body className={openSans.className}>
-        <NavBar />
-        <main className="flex justify-center">{children}</main>
-        <Footer />
+        <Provider>
+          {/* @ts-expect-error Server Component */}
+          <NavBar />
+          <pre>{JSON.stringify(session)}</pre>
+          <main className="flex justify-center">{children}</main>
+          <Footer />
+        </Provider>
       </body>
     </html>
   );

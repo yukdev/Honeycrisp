@@ -75,8 +75,7 @@ export const login = async (user: LoginUser) => {
       body: user,
     });
 
-    const { token } = resp;
-    return token;
+    return resp;
   } catch (error) {
     console.log(error);
     throw new Error('Could not login the user');
