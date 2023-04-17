@@ -44,9 +44,16 @@ const CreateSessionPage = () => {
   };
 
   const removeItem = (index: number) => {
-    const newItems = [...sessionData.items];
-    newItems.splice(index, 1);
-    setSessionData({ ...sessionData, items: newItems });
+    if (sessionData.items.length === 1) {
+      setSessionData({
+        ...sessionData,
+        items: [{ name: '', price: 0, quantity: 1 }],
+      });
+    } else {
+      const newItems = [...sessionData.items];
+      newItems.splice(index, 1);
+      setSessionData({ ...sessionData, items: newItems });
+    }
   };
 
   const handleSubmit = () => {
@@ -66,36 +73,47 @@ const CreateSessionPage = () => {
             Session Name:
           </label>
           <input
-            className="input input-bordered input-primary w-full max-w-xs"
+            className="input input-bordered input-sm input-primary w-full max-w-xs text-center"
             type="text"
             name="name"
             value={sessionData.name}
             onChange={handleInputChange}
           />
         </div>
-        <div className="flex justify-between">
-          <div className="mb-4 mr-4">
-            <label className="block font-bold mb-2 text-center" htmlFor="tax">
-              Tax:
-            </label>
+        <div className="flex justify-between items-center">
+          <label className="block font-bold text-center" htmlFor="tax">
+            Tax:
+          </label>
+          <input
+            className="input input-bordered input-sm input-primary w-24 text-center mx-2"
+            type="number"
+            name="tax"
+            value={sessionData.tax}
+            onChange={handleInputChange}
+          />
+          <label className="block font-bold text-center" htmlFor="tip">
+            Tip:
+          </label>
+          <input
+            className="input input-bordered input-sm input-primary w-24 text-center mx-2"
+            type="number"
+            name="tip"
+            value={sessionData.tip}
+            onChange={handleInputChange}
+          />
+          <div className="btn-group">
             <input
-              className="input input-bordered input-primary w-full max-w-xs"
-              type="number"
-              name="tax"
-              value={sessionData.tax}
-              onChange={handleInputChange}
+              type="radio"
+              name="options"
+              data-title="%"
+              className="btn btn-sm"
+              checked
             />
-          </div>
-          <div className="mb-4">
-            <label className="block font-bold mb-2 text-center" htmlFor="tip">
-              Tip:
-            </label>
             <input
-              className="input input-bordered input-primary w-full max-w-xs"
-              type="number"
-              name="tip"
-              value={sessionData.tip}
-              onChange={handleInputChange}
+              type="radio"
+              name="options"
+              data-title="flat"
+              className="btn btn-sm"
             />
           </div>
         </div>
@@ -117,7 +135,7 @@ const CreateSessionPage = () => {
                 <td>{index + 1}</td>
                 <td>
                   <input
-                    className="input input-bordered input-primary w-full max-w-xs text-center"
+                    className="input input-bordered input-sm input-primary w-full max-w-xs text-center"
                     type="text"
                     value={item.name}
                     onChange={(event) =>
@@ -127,7 +145,7 @@ const CreateSessionPage = () => {
                 </td>
                 <td>
                   <input
-                    className="input input-bordered input-primary w-full max-w-xs text-center"
+                    className="input input-bordered input-sm input-primary w-full max-w-xs text-center"
                     type="number"
                     value={item.price}
                     onChange={(event) =>
@@ -137,7 +155,7 @@ const CreateSessionPage = () => {
                 </td>
                 <td>
                   <input
-                    className="input input-bordered input-primary w-full max-w-xs text-center"
+                    className="input input-bordered input-sm input-primary w-full max-w-xs text-center"
                     type="number"
                     value={item.quantity}
                     onChange={(event) =>
@@ -146,34 +164,32 @@ const CreateSessionPage = () => {
                   />
                 </td>
                 <td>
-                  {index > 0 && (
-                    <button
-                      className="btn btn-error btn-circle btn-outline"
-                      onClick={() => removeItem(index)}
+                  <button
+                    className="btn btn-error btn-circle btn-outline btn-sm"
+                    onClick={() => removeItem(index)}
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-6 w-6"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
                     >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-6 w-6"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth="2"
-                          d="M6 18L18 6M6 6l12 12"
-                        />
-                      </svg>
-                    </button>
-                  )}
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="2"
+                        d="M6 18L18 6M6 6l12 12"
+                      />
+                    </svg>
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
         <div className="flex justify-center mt-4">
-          <button className="btn btn-primary" onClick={addItem}>
+          <button className="btn btn-primary btn-sm" onClick={addItem}>
             Add Item
           </button>
         </div>
