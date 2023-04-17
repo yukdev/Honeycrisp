@@ -28,7 +28,7 @@ export const fetcher = async ({
 }: RequestProps) => {
   const res = await fetch(`${BASE_URL}${url}`, {
     method,
-    body: body && JSON.stringify(body),
+    body: json ? JSON.stringify(body) : body,
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
@@ -36,13 +36,11 @@ export const fetcher = async ({
   });
 
   if (!res.ok) {
-    throw new Error('API Error');
+    const { error } = JSON.parse(await res.text());
+    throw new Error(error);
   }
 
-  if (json) {
-    const data = await res.json();
-    return data;
-  }
+  return json ? await res.json() : await res.text();
 };
 
 export const getSessions = async () =>
@@ -58,12 +56,11 @@ export const register = async (user: RegisterUser) => {
       method: 'POST',
       body: user,
     });
-
-    const { token } = resp;
-    return token;
+    return resp;
   } catch (error) {
-    console.log(error);
-    throw new Error('Could not register the user');
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
   }
 };
 
@@ -77,7 +74,8 @@ export const login = async (user: LoginUser) => {
 
     return resp;
   } catch (error) {
-    console.log(error);
-    throw new Error('Could not login the user');
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
   }
 };

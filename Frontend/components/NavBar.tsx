@@ -2,14 +2,11 @@ import Link from 'next/link';
 import NavLink from './NavLink';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../app/api/auth/[...nextauth]/route';
+import LogOutButton from './LogOutButton';
 const userlinks = [
   {
     label: 'Sessions',
     path: '/sessions',
-  },
-  {
-    label: 'Log out',
-    path: '/logout',
   },
 ];
 
@@ -43,6 +40,7 @@ const NavBar = async () => {
                   <NavLink {...link} />
                 </li>
               ))}
+              <LogOutButton />
             </>
           ) : (
             <>

@@ -8,6 +8,7 @@ export const authOptions: NextAuthOptions = {
   },
   providers: [
     CredentialsProvider({
+      id: 'login',
       name: 'Log in',
       credentials: {
         email: { label: 'Email', type: 'text' },
@@ -15,37 +16,15 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
-          return null;
+          throw new Error('Invalid credentials');
         }
         const { email, password } = credentials;
-        const resp = await login({ email, password });
-        if (!resp) {
-          return null;
+        const user = await login({ email, password });
+        if (user) {
+          return user;
+        } else {
+          throw new Error('Invalid email or password.');
         }
-        return resp;
-      },
-    }),
-    CredentialsProvider({
-      name: 'Register',
-      credentials: {
-        email: { label: 'Email', type: 'text' },
-        password: { label: 'Password', type: 'password' },
-        name: { label: 'Name', type: 'text' },
-      },
-      async authorize(credentials) {
-        if (
-          !credentials?.email ||
-          !credentials?.password ||
-          !credentials?.name
-        ) {
-          return null;
-        }
-        const { email, password, name } = credentials;
-        const resp = await register({ email, password, name });
-        if (!resp) {
-          return null;
-        }
-        return resp;
       },
     }),
   ],

@@ -1,5 +1,5 @@
 import { getSession } from '@/lib/api';
-import Session from '../../../components/Session';
+import Session from '@/components/Session';
 
 interface Props {
   params: {
