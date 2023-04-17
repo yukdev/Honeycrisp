@@ -2,13 +2,36 @@
 import { useState, useCallback } from 'react';
 import SessionItem from './SessionItem';
 
-const Session = ({ session }) => {
+interface SessionProps {
+  session: {
+    id: string;
+    name: string;
+    createdAt: string;
+    updatedAt: string;
+    ownerId: string;
+    ownerName: string;
+    finalized: boolean;
+    bill: number | null;
+    tax: number;
+    tip: number;
+    items: {
+      id: string;
+      name: string;
+      price: number;
+      createdAt: string;
+      updatedAt: string;
+      sessionId: string;
+    }[];
+  };
+}
+
+const Session = ({ session }: SessionProps) => {
   const { items } = session;
 
-  const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
   const handleItemClick = useCallback(
-    (itemId) => {
+    (itemId: string) => {
       setSelectedItems((prevItems) =>
         prevItems.includes(itemId)
           ? prevItems.filter((id) => id !== itemId)

@@ -21,14 +21,12 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }: RootLayoutProps) {
-  const session = await getServerSession(authOptions);
   return (
     <html lang="en" data-theme="forest">
       <body className={openSans.className}>
         <Provider>
           {/* @ts-expect-error Server Component */}
           <NavBar />
-          <pre>{JSON.stringify(session)}</pre>
           <main className="flex justify-center">{children}</main>
           <Footer />
         </Provider>

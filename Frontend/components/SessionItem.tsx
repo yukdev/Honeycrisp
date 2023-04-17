@@ -1,11 +1,25 @@
 import { memo } from 'react';
 
+interface SessionItemProps {
+  index: number;
+  item: {
+    id: string;
+    name: string;
+    price: number;
+    createdAt: string;
+    updatedAt: string;
+    sessionId: string;
+  };
+  isSelected: boolean;
+  onItemClick: (itemId: string) => void;
+}
+
 const SessionItem = memo(function SessionItem({
   index,
   item,
   isSelected,
   onItemClick,
-}) {
+}: SessionItemProps) {
   const { id, name, price } = item;
 
   const handleCheckboxChange = () => {
@@ -37,7 +51,5 @@ const SessionItem = memo(function SessionItem({
     </tr>
   );
 });
-
-SessionItem.displayName = 'SessionItem';
 
 export default SessionItem;
