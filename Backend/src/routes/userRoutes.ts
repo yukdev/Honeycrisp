@@ -40,7 +40,7 @@ router.post('/register', async (req, res, next) => {
 
     const existingUser = await prisma.user.findUnique({ where: { email } });
     if (existingUser) {
-      throw new BadRequestError(`Email ${req.body.email} already in use'`);
+      throw new BadRequestError(`Email: ${req.body.email} is already in use'`);
     }
 
     const hashedPassword = await hashPassword(password);
@@ -55,7 +55,9 @@ router.post('/register', async (req, res, next) => {
 
     return res.status(201).json({ user: newUser });
   } catch (error) {
-    next(error);
+    if (error instanceof Error) {
+      return res.status(400).json({ error: error.message });
+    }
   }
 });
 
@@ -87,7 +89,9 @@ router.post('/login', async (req, res, next) => {
 
     return res.status(200).json(user);
   } catch (error) {
-    next(error);
+    if (error instanceof Error) {
+      return res.status(400).json({ error: error.message });
+    }
   }
 });
 

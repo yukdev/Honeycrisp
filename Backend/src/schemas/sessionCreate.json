@@ -2,6 +2,14 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "type": "object",
   "properties": {
+    "ownerId": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ownerName": {
+      "type": "string",
+      "minLength": 1
+    },
     "name": {
       "type": "string",
       "minLength": 1
@@ -37,5 +45,5 @@
     }
   },
   "additionalProperties": false,
-  "required": ["name", "items", "tax", "tip"]
+  "required": ["ownerId", "ownerName", "name", "items", "tax", "tip"]
 }
