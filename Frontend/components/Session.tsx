@@ -46,7 +46,7 @@ const Session = ({ session, userSession }: SessionProps) => {
   const {
     user: { id: userId, name: userName },
   } = userSession;
-  const { items, id: sessionId } = session;
+  const { items, id: sessionId, itemsEaten } = session;
 
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
@@ -61,18 +61,19 @@ const Session = ({ session, userSession }: SessionProps) => {
     [setSelectedItems],
   );
 
-  const handleSubmit = async () => {
-    try {
-      const response = await eatSessionItems({
-        items: selectedItems,
-        userId,
-        userName,
-        sessionId,
-      });
-    } catch (error) {
-      console.log(error);
-    }
+  const handleSubmit = () => {
     console.log(selectedItems);
+    // try {
+    //   const response = await eatSessionItems({
+    //     items: selectedItems,
+    //     userId,
+    //     userName,
+    //     sessionId,
+    //   });
+    //   console.log(response);
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   return (
@@ -90,6 +91,7 @@ const Session = ({ session, userSession }: SessionProps) => {
               <th></th>
               <th>Item</th>
               <th>Price</th>
+              <th>Eaten By</th>
               <th>Ate?</th>
             </tr>
           </thead>
@@ -100,6 +102,7 @@ const Session = ({ session, userSession }: SessionProps) => {
                 index={index}
                 item={item}
                 isSelected={selectedItems.includes(item.id)}
+                itemsEaten={itemsEaten}
                 onItemClick={handleItemClick}
               />
             ))}

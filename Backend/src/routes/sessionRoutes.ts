@@ -106,13 +106,14 @@ router.get('/:sessionId', async (req, res, next) => {
     }
 
     const itemsEaten: {
-      [key: string]: { name: string; eatenBy: string[] };
+      [key: string]: { itemId: string; name: string; eatenBy: string[] };
     } = {};
     for (const item of session.items) {
-      const key = `${item.name}`;
+      const { id: itemId, name: itemName } = item;
+      const key = `${itemId}`;
       const eatenBy = item.userItems.map((ui) => ui.user.name);
       if (!itemsEaten[key]) {
-        itemsEaten[key] = { name: item.name, eatenBy };
+        itemsEaten[key] = { itemId, name: itemName, eatenBy };
       } else {
         itemsEaten[key].eatenBy = [...itemsEaten[key].eatenBy, ...eatenBy];
       }
@@ -124,10 +125,13 @@ router.get('/:sessionId', async (req, res, next) => {
         const { userItems, ...rest } = item;
         return rest;
       }),
-      itemsEaten: Object.values(itemsEaten).map(({ name, eatenBy }) => ({
-        name,
-        eatenBy,
-      })),
+      itemsEaten: Object.values(itemsEaten).map(
+        ({ itemId, name, eatenBy }) => ({
+          itemId,
+          name,
+          eatenBy: eatenBy.sort(),
+        }),
+      ),
     };
 
     res.json(sessionWithItemsEaten);

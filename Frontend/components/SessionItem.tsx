@@ -1,5 +1,9 @@
 import { memo } from 'react';
 
+interface ItemEaten {
+  name: string;
+  eatenBy: string[];
+}
 interface SessionItemProps {
   index: number;
   item: {
@@ -11,6 +15,7 @@ interface SessionItemProps {
     sessionId: string;
   };
   isSelected: boolean;
+  itemsEaten: ItemEaten[];
   onItemClick: (itemId: string) => void;
 }
 
@@ -18,6 +23,7 @@ const SessionItem = memo(function SessionItem({
   index,
   item,
   isSelected,
+  itemsEaten,
   onItemClick,
 }: SessionItemProps) {
   const { id, name, price } = item;
@@ -36,6 +42,7 @@ const SessionItem = memo(function SessionItem({
           currency: 'USD',
         })}
       </td>
+      <td>{itemsEaten[index]?.eatenBy.join(', ')}</td>
       <td>
         <div className="form-control">
           <label className="label cursor-pointer">
