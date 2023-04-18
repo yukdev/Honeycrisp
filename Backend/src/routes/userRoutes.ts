@@ -95,4 +95,38 @@ router.post('/login', async (req, res, next) => {
   }
 });
 
+/**
+ * GET /users/:id/sessions
+ *
+ * Returns a list of sessions associated with the given user id
+ */
+router.get('/:id/sessions', async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const userSessions = await prisma.session.findMany({
+      where: {
+        OR: [
+          { ownerId: id },
+          {
+            items: {
+              some: {
+                userItems: {
+                  some: {
+                    userId: id,
+                  },
+                },
+              },
+            },
+          },
+        ],
+      },
+    });
+
+    return res.json(userSessions);
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;

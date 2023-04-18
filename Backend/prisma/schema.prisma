@@ -31,7 +31,7 @@ model Session {
   items     Item[]
   tax       Float    @default(8.875)
   tip       Int      @default(20)
-  bill      Json?
+  bill      Float
 }
 
 model Item {

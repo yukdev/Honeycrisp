@@ -6,22 +6,9 @@ import { BadRequestError, NotFoundError } from '../expressErrors';
 import sessionCreate from '../schemas/sessionCreate.json';
 import sessionItemsEaten from '../schemas/sessionItemsEaten.json';
 import sessionItemAdd from '../schemas/sessionItemAdd.json';
-import { calculateBill } from 'helpers/bill';
+import { calculateBill } from '../helpers/bill';
 
 const router = Router();
-
-// TODO: mock user data - deprecate later
-const user = {
-  id: '1',
-  name: 'George',
-};
-
-interface Item {
-  name: string;
-  quantity: number;
-  price: number;
-  eatenBy?: string[];
-}
 
 /**
  * GET /session
@@ -99,14 +86,51 @@ router.get('/:sessionId', async (req, res, next) => {
 
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
-      include: { items: true },
+      include: {
+        items: {
+          include: {
+            userItems: {
+              include: {
+                user: {
+                  select: { name: true },
+                },
+              },
+            },
+          },
+        },
+      },
     });
 
     if (!session) {
       throw new NotFoundError(`Session not found with id ${sessionId}`);
     }
 
-    res.json(session);
+    const itemsEaten: {
+      [key: string]: { name: string; eatenBy: string[] };
+    } = {};
+    for (const item of session.items) {
+      const key = `${item.name}`;
+      const eatenBy = item.userItems.map((ui) => ui.user.name);
+      if (!itemsEaten[key]) {
+        itemsEaten[key] = { name: item.name, eatenBy };
+      } else {
+        itemsEaten[key].eatenBy = [...itemsEaten[key].eatenBy, ...eatenBy];
+      }
+    }
+
+    const sessionWithItemsEaten = {
+      ...session,
+      items: session.items.map((item) => {
+        const { userItems, ...rest } = item;
+        return rest;
+      }),
+      itemsEaten: Object.values(itemsEaten).map(({ name, eatenBy }) => ({
+        name,
+        eatenBy,
+      })),
+    };
+
+    res.json(sessionWithItemsEaten);
   } catch (err) {
     next(err);
   }
@@ -180,10 +204,7 @@ router.post('/:sessionId/add', async (req, res, next) => {
 router.put('/:sessionId/eat', async (req, res, next) => {
   try {
     const { sessionId } = req.params;
-    const { items } = req.body;
-    const userId = user.id;
-    // figure this out later
-    // const { userId } = req.user;
+    const { items, userId, userName } = req.body;
 
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
@@ -226,7 +247,7 @@ router.put('/:sessionId/eat', async (req, res, next) => {
 
     res.json({
       message: `Successfully updated session with ID ${sessionId}`,
-      user: user.name,
+      user: userName,
       eatenItems: eatenItems.map((item) => item.name),
     });
   } catch (err) {

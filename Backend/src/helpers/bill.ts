@@ -1,5 +1,5 @@
-import { Item } from '@prisma/client';
-import prisma from '../db';
+// import { Item } from '@prisma/client';
+// import prisma from '../db';
 
 interface Item {
   id: string;
@@ -14,7 +14,8 @@ export function calculateBill(items: Item[], tax: number, tip: number): number {
   );
   const taxAmount = subtotal * (tax / 100);
   const tipAmount = subtotal * (tip / 100);
-  return subtotal + taxAmount + tipAmount;
+  const total = subtotal + taxAmount + tipAmount;
+  return Number(total.toFixed(2));
 }
 
 // export async function calculateSplit(
