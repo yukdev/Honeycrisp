@@ -7,8 +7,14 @@
       "items": {
         "type": "string"
       }
+    },
+    "userId": {
+      "type": "string"
+    },
+    "userName": {
+      "type": "string"
     }
   },
   "additionalProperties": false,
-  "required": ["items"]
+  "required": ["items", "userId", "userName"]
 }

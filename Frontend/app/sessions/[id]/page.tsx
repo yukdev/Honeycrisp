@@ -12,7 +12,6 @@ interface Props {
 const SessionPage = async ({ params: { id } }: Props) => {
   const userSession = (await getServerSession(authOptions)) as any;
   const session = await getSession(id);
-  console.log(JSON.stringify(session));
   return (
     <div className="card">
       <Session userSession={userSession} session={session} />

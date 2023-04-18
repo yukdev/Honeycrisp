@@ -234,6 +234,16 @@ router.put('/:sessionId/eat', async (req, res, next) => {
       throw new BadRequestError(errors);
     }
 
+    // Remove all previous UserItem records for the user in the session
+    await prisma.userItem.deleteMany({
+      where: {
+        userId: userId,
+        itemId: {
+          in: session.items.map((item) => item.id),
+        },
+      },
+    });
+
     // Find all items that the user ate
     const eatenItems = session.items.filter((item) => items.includes(item.id));
 

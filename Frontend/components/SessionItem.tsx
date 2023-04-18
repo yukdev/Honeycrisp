@@ -1,9 +1,10 @@
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 
 interface ItemEaten {
   name: string;
   eatenBy: string[];
 }
+
 interface SessionItemProps {
   index: number;
   item: {
@@ -14,21 +15,27 @@ interface SessionItemProps {
     updatedAt: string;
     sessionId: string;
   };
-  isSelected: boolean;
   itemsEaten: ItemEaten[];
+  userName: string;
   onItemClick: (itemId: string) => void;
 }
 
 const SessionItem = memo(function SessionItem({
   index,
   item,
-  isSelected,
   itemsEaten,
+  userName,
   onItemClick,
 }: SessionItemProps) {
   const { id, name, price } = item;
+  const [isSelected, setIsSelected] = useState(false);
+
+  useEffect(() => {
+    setIsSelected(itemsEaten[index]?.eatenBy.includes(userName));
+  }, [itemsEaten, index, userName]);
 
   const handleCheckboxChange = () => {
+    setIsSelected(!isSelected);
     onItemClick(id);
   };
 
@@ -42,7 +49,16 @@ const SessionItem = memo(function SessionItem({
           currency: 'USD',
         })}
       </td>
-      <td>{itemsEaten[index]?.eatenBy.join(', ')}</td>
+      <td>
+        {itemsEaten[index]?.eatenBy.map((name, index) => (
+          <div
+            key={index}
+            className={name === userName ? 'font-bold text-secondary' : ''}
+          >
+            {name}
+          </div>
+        ))}
+      </td>
       <td>
         <div className="form-control">
           <label className="label cursor-pointer">

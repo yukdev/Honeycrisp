@@ -2,6 +2,7 @@
 import { useState, useCallback } from 'react';
 import SessionItem from './SessionItem';
 import { eatSessionItems } from '@/lib/api';
+import { useRouter } from 'next/navigation';
 
 interface Item {
   id: string;
@@ -13,6 +14,7 @@ interface Item {
 }
 
 interface ItemEaten {
+  itemId: string;
   name: string;
   eatenBy: string[];
 }
@@ -43,37 +45,52 @@ interface SessionProps {
 }
 
 const Session = ({ session, userSession }: SessionProps) => {
+  const router = useRouter();
   const {
     user: { id: userId, name: userName },
   } = userSession;
   const { items, id: sessionId, itemsEaten } = session;
 
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
+  const [selectedItems, setSelectedItems] = useState<string[]>(() => {
+    const itemsEatenByUser = itemsEaten.filter((itemEaten) =>
+      itemEaten.eatenBy.includes(userName),
+    );
+    return itemsEatenByUser.map((item) => item.itemId);
+  });
+  const [eatenItems, setEatenItems] = useState<string[]>([]);
 
   const handleItemClick = useCallback(
     (itemId: string) => {
-      setSelectedItems((prevItems) =>
-        prevItems.includes(itemId)
-          ? prevItems.filter((id) => id !== itemId)
-          : [...prevItems, itemId],
-      );
+      setSelectedItems((prevItems) => {
+        if (prevItems.includes(itemId)) {
+          return prevItems.filter((id) => id !== itemId);
+        } else {
+          return [...prevItems, itemId];
+        }
+      });
     },
     [setSelectedItems],
   );
 
-  const handleSubmit = () => {
-    console.log(selectedItems);
-    // try {
-    //   const response = await eatSessionItems({
-    //     items: selectedItems,
-    //     userId,
-    //     userName,
-    //     sessionId,
-    //   });
-    //   console.log(response);
-    // } catch (error) {
-    //   console.log(error);
-    // }
+  const handleSubmit = async () => {
+    try {
+      const response = await eatSessionItems({
+        items: selectedItems,
+        userId,
+        userName,
+        sessionId,
+      });
+      console.log(
+        '🚀 ~ file: Session.tsx:80 ~ handleSubmit ~ response:',
+        response,
+      );
+      const newEatenItems = response.eatenItems;
+      setEatenItems(newEatenItems);
+
+      router.refresh();
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -101,7 +118,7 @@ const Session = ({ session, userSession }: SessionProps) => {
                 key={item.id}
                 index={index}
                 item={item}
-                isSelected={selectedItems.includes(item.id)}
+                userName={userName}
                 itemsEaten={itemsEaten}
                 onItemClick={handleItemClick}
               />
@@ -112,6 +129,17 @@ const Session = ({ session, userSession }: SessionProps) => {
       <button onClick={handleSubmit} className="btn btn-primary my-3">
         Submit
       </button>
+      {eatenItems.length > 0 && (
+        <>
+          <div className="toast">
+            <div className="alert alert-success">
+              <div>
+                <span>Thanks for confirming what you ate!</span>
+              </div>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
