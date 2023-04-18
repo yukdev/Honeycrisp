@@ -1,7 +1,5 @@
 import Link from 'next/link';
 import NavLink from './NavLink';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '../app/api/auth/[...nextauth]/route';
 import LogOutButton from './LogOutButton';
 const userlinks = [
   {
@@ -21,9 +19,18 @@ const guestlinks = [
   },
 ];
 
-const NavBar = async () => {
-  const session = await getServerSession(authOptions);
+interface NavBarProps {
+  userSession: {
+    user: {
+      name: string;
+      email: string;
+      id: string;
+      image?: any;
+    };
+  };
+}
 
+const NavBar = async ({ userSession }: NavBarProps) => {
   return (
     <div className="navbar bg-primary text-primary-content sticky top-0 z-50">
       <div className="flex-1">
@@ -33,7 +40,7 @@ const NavBar = async () => {
       </div>
       <div className="flex-none">
         <ul className="menu menu-horizontal px-1">
-          {session?.user ? (
+          {userSession?.user ? (
             <>
               {userlinks.map((link) => (
                 <li key={link.label}>

@@ -37,15 +37,15 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       if (mode === 'login') {
-        const result = await signIn('login', {
+        const response = await signIn('login', {
           email: formData.email,
           password: formData.password,
           redirect: false,
           callbackUrl: '/',
         });
 
-        if (result) {
-          const { error, url } = result;
+        if (response) {
+          const { error, url } = response;
           if (error) {
             console.log(error);
             setError(error);

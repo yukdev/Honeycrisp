@@ -20,6 +20,28 @@ interface RegisterUser extends LoginUser {
   name: string;
 }
 
+interface Item {
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+interface NewSession {
+  ownerId: string;
+  ownerName: string;
+  name: string;
+  items: Item[];
+  tax: number;
+  tip: number;
+}
+
+interface EatenItems {
+  items: string[];
+  userId: string;
+  userName: string;
+  sessionId: string;
+}
+
 export const fetcher = async ({
   url,
   method,
@@ -43,11 +65,42 @@ export const fetcher = async ({
   return json ? await res.json() : await res.text();
 };
 
-export const getSessions = async () =>
-  fetcher({ url: 'sessions', method: 'GET' });
+export const getSessions = async (userId: string) =>
+  fetcher({ url: `users/${userId}/sessions`, method: 'GET' });
 
 export const getSession = async (id: string) =>
   fetcher({ url: `sessions/${id}`, method: 'GET' });
+
+export const createSession = async (newSession: NewSession) => {
+  try {
+    const resp = await fetcher({
+      url: 'sessions',
+      method: 'POST',
+      body: newSession,
+    });
+    return resp;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+  }
+};
+
+export const eatSessionItems = async (eatenItems: EatenItems) => {
+  const { items, userId, userName, sessionId } = eatenItems;
+  try {
+    const resp = await fetcher({
+      url: `sessions/${sessionId}/eat`,
+      method: 'PUT',
+      body: { userId, userName, items },
+    });
+    return resp;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+  }
+};
 
 export const register = async (user: RegisterUser) => {
   try {

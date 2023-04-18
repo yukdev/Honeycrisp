@@ -1,6 +1,5 @@
-import { getServerSession } from 'next-auth';
 import Link from 'next/link';
-import React from 'react';
+import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]/route';
 
 const HomePage = async () => {

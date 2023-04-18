@@ -6,6 +6,8 @@ type ProviderProps = {
   children?: React.ReactNode;
 };
 
-export const Provider = ({ children }: ProviderProps) => {
+const Provider = ({ children }: ProviderProps) => {
   return <SessionProvider>{children}</SessionProvider>;
 };
+
+export default Provider;

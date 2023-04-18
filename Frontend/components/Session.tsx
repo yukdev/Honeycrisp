@@ -1,8 +1,31 @@
 'use client';
 import { useState, useCallback } from 'react';
 import SessionItem from './SessionItem';
+import { eatSessionItems } from '@/lib/api';
+
+interface Item {
+  id: string;
+  name: string;
+  price: number;
+  createdAt: string;
+  updatedAt: string;
+  sessionId: string;
+}
+
+interface ItemEaten {
+  name: string;
+  eatenBy: string[];
+}
 
 interface SessionProps {
+  userSession: {
+    user: {
+      name: string;
+      email: string;
+      id: string;
+      image?: any;
+    };
+  };
   session: {
     id: string;
     name: string;
@@ -14,19 +37,16 @@ interface SessionProps {
     bill: number | null;
     tax: number;
     tip: number;
-    items: {
-      id: string;
-      name: string;
-      price: number;
-      createdAt: string;
-      updatedAt: string;
-      sessionId: string;
-    }[];
+    items: Item[];
+    itemsEaten: ItemEaten[];
   };
 }
 
-const Session = ({ session }: SessionProps) => {
-  const { items } = session;
+const Session = ({ session, userSession }: SessionProps) => {
+  const {
+    user: { id: userId, name: userName },
+  } = userSession;
+  const { items, id: sessionId } = session;
 
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
 
@@ -41,14 +61,27 @@ const Session = ({ session }: SessionProps) => {
     [setSelectedItems],
   );
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    try {
+      const response = await eatSessionItems({
+        items: selectedItems,
+        userId,
+        userName,
+        sessionId,
+      });
+    } catch (error) {
+      console.log(error);
+    }
     console.log(selectedItems);
   };
 
   return (
     <div className="flex flex-col items-center justify-center container min-h-screen">
       <div className="w-full max-w-2xl">
-        <h1 className="text-3xl font-bold mb-4 text-center">{session.name}</h1>
+        <h1 className="text-3xl font-bold mb-4 text-center text-accent">
+          {session.name}
+        </h1>
+        <h1 className="text-xl font-bold mb-4 text-center text-secondary">{`Total: $${session.bill}`}</h1>
       </div>
       <div className="overflow-x-auto">
         <table className="table table-zebra w-full">

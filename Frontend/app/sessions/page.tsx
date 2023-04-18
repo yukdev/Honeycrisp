@@ -1,4 +1,5 @@
-'use client';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '../api/auth/[...nextauth]/route';
 import { getSessions } from '@/lib/api';
 import Link from 'next/link';
 
@@ -26,7 +27,12 @@ interface Session {
 }
 
 const SessionsPage = async () => {
-  const sessions = await getSessions();
+  const userSession = (await getServerSession(authOptions)) as any;
+  const {
+    user: { id: userId },
+  } = userSession;
+
+  const sessions = await getSessions(userId);
 
   return (
     <div className="container min-h-screen">
@@ -44,7 +50,7 @@ const SessionsPage = async () => {
                 <p>Host: {session.ownerName}</p>
                 <div className="card-actions justify-end">
                   <button className="btn">
-                    Bill: {session.bill ? session.bill : 'Pending'}
+                    Bill: {session.bill ? `$${session.bill}` : 'Pending'}
                   </button>
                 </div>
               </div>

@@ -1,10 +1,11 @@
-import { getServerSession } from 'next-auth/next';
 import { Open_Sans } from 'next/font/google';
 import './globals.css';
+import { getServerSession } from 'next-auth';
+import { authOptions } from './api/auth/[...nextauth]/route';
 import NavBar from '@/components/NavBar';
 import Footer from '@/components/Footer';
-import { authOptions } from './api/auth/[...nextauth]/route';
-import { Provider } from './providers';
+import React from 'react';
+import Provider from '@/components/Provider';
 
 interface RootLayoutProps {
   children: React.ReactNode;
@@ -21,12 +22,14 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }: RootLayoutProps) {
+  const userSession = await getServerSession(authOptions);
+
   return (
     <html lang="en" data-theme="forest">
       <body className={openSans.className}>
         <Provider>
           {/* @ts-expect-error Server Component */}
-          <NavBar />
+          <NavBar userSession={userSession} />
           <main className="flex justify-center">{children}</main>
           <Footer />
         </Provider>
