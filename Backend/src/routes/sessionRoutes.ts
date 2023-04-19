@@ -6,7 +6,7 @@ import { BadRequestError, NotFoundError } from '../expressErrors';
 import sessionCreate from '../schemas/sessionCreate.json';
 import sessionItemsEaten from '../schemas/sessionItemsEaten.json';
 import sessionItemAdd from '../schemas/sessionItemAdd.json';
-import { calculateBill } from '../helpers/bill';
+import { Session, calculateBill, calculateSplit } from '../helpers/bill';
 
 const router = Router();
 
@@ -269,48 +269,61 @@ router.put('/:sessionId/eat', async (req, res, next) => {
   }
 });
 
-// router.post('/:sessionId/finalize', async (req, res, next) => {
-//   try {
-//     const { sessionId } = req.params;
+router.post('/:sessionId/finalize', async (req, res, next) => {
+  try {
+    const { sessionId } = req.params;
 
-//     const session = await prisma.session.findUnique({
-//       where: { id: sessionId },
-//       include: { items: true },
-//     });
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: {
+        items: {
+          include: {
+            userItems: {
+              include: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
 
-//     if (!session) {
-//       throw new NotFoundError(`Session not found with id ${sessionId}`);
-//     }
+    if (!session) {
+      throw new NotFoundError(`Session not found with id ${sessionId}`);
+    }
 
-//     // Check if session has already been finalized
-//     // if (session.finalized) {
-//     //   throw new BadRequestError(
-//     //     `Session with id ${sessionId} has already been finalized`,
-//     //   );
-//     // }
+    // Check if session has already been finalized
+    if (session.finalized) {
+      throw new BadRequestError(
+        `Session with id ${sessionId} has already been finalized`,
+      );
+    }
 
-//     // Check if it's the owner finalizing the session
-//     // if (session.ownerId !== user.id) {
-//     //   throw new BadRequestError(
-//     //     `Only the owner of the session can finalize it`,
-//     //   );
-//     // }
+    // Check if it's the owner finalizing the session
+    // if (session.ownerId !== user.id) {
+    //   throw new BadRequestError(
+    //     `Only the owner of the session can finalize it`,
+    //   );
+    // }
 
-//     const { items, tax, tip } = session;
-//     const bill = calculateBill(items, tax, tip);
-//     const { total } = bill;
+    const split = calculateSplit(session as Session);
 
-//     await prisma.session.update({
-//       where: { id: sessionId },
-//       data: { finalized: true, bill: total },
-//       include: { items: true },
-//     });
+    // Update the session with the split
+    await prisma.session.update({
+      where: { id: sessionId },
+      data: { split },
+    });
 
-//     res.json({ bill });
-//   } catch (err) {
-//     next(err);
-//   }
-// });
+    res.json({ split });
+  } catch (err) {
+    next(err);
+  }
+});
 
 /**
  * DELETE /sessions/:sessionId

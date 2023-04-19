@@ -32,6 +32,7 @@ model Session {
   tax       Float    @default(8.875)
   tip       Int      @default(20)
   bill      Float
+  split     Json?
 }
 
 model Item {

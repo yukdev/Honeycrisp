@@ -101,7 +101,6 @@ async function seed() {
       owner: { connect: { id: user2.id } },
       ownerName: user2.name,
       bill: 161.77,
-      finalized: true,
     },
     include: { items: true },
   });
@@ -147,7 +146,6 @@ async function seed() {
       },
       owner: { connect: { id: user4.id } },
       ownerName: user4.name,
-      finalized: true,
       bill: 145.27,
     },
     include: { items: true },
@@ -175,7 +173,6 @@ async function seed() {
       owner: { connect: { id: user1.id } },
       ownerName: user1.name,
       bill: 23.47,
-      finalized: true,
     },
     include: { items: true },
   });

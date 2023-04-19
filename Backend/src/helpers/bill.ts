@@ -1,13 +1,54 @@
 // import { Item } from '@prisma/client';
 // import prisma from '../db';
 
-interface Item {
+interface Item1 {
   id: string;
   quantity: number;
   price: number;
 }
 
-export function calculateBill(items: Item[], tax: number, tip: number): number {
+export interface Session {
+  id: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+  ownerId: string;
+  ownerName: string;
+  finalized: boolean;
+  tax: number;
+  tip: number;
+  bill: number;
+  split: JSON | null;
+  items: Item[];
+}
+
+interface Item {
+  id: string;
+  name: string;
+  price: number;
+  createdAt: Date;
+  updatedAt: Date;
+  sessionId: string | null;
+  userItems: UserItem[];
+}
+
+interface UserItem {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  userId: string;
+  itemId: string;
+  user: {
+    id: string;
+    name: string;
+  };
+}
+
+export function calculateBill(
+  items: Item1[],
+  tax: number,
+  tip: number,
+): number {
   const subtotal = items.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0,
@@ -18,57 +59,33 @@ export function calculateBill(items: Item[], tax: number, tip: number): number {
   return Number(total.toFixed(2));
 }
 
-// export async function calculateSplit(
-//   items: Item[],
-//   tax: number,
-//   tip: number,
-// ): Promise<Bill> {
-//   const userItems = await prisma.userItem.findMany({
-//     where: {
-//       itemId: { in: items.map((item) => item.id) },
-//     },
-//     select: {
-//       user: { select: { name: true } },
-//       item: { select: { id: true, price: true } },
-//     },
-//   });
+export function calculateSplit(session: Session): Record<string, number> {
+  const userBills: Record<string, number> = {};
+  const { items, tax, tip } = session;
 
-//   const itemSplit = items.reduce(
-//     (acc, item) => ({
-//       ...acc,
-//       [item.id]: userItems.filter((userItem) => userItem.item.id === item.id)
-//         .length,
-//     }),
-//     {} as { [key: string]: number },
-//   );
+  items.forEach((item) => {
+    const numEaters = item.userItems.length;
+    const itemCost = item.price / numEaters;
+    item.userItems.forEach((userItem) => {
+      const userId = userItem.user.id;
+      const bill = userBills[userId] || 0;
+      userBills[userId] = bill + itemCost;
+    });
+  });
 
-//   const userSubtotals = userItems.reduce((acc, userItem) => {
-//     const {
-//       user: { name },
-//       item: { id, price },
-//     } = userItem;
-//     const count = itemSplit[id];
-//     const total = price / count;
-//     acc[name] = (acc[name] ?? 0) + total;
-//     return acc;
-//   }, {} as { [key: string]: number });
+  const split: Record<string, number> = {};
+  Object.entries(userBills).forEach(([userId, value]) => {
+    const userName = session.items
+      .flatMap((item) => item.userItems)
+      .find((userItem) => userItem.user.id === userId)?.user.name;
+    if (userName) {
+      split[userName] = roundToTwoDecimals(value * (1 + tip / 100 + tax / 100));
+    }
+  });
 
-//   const userTotals = Object.entries(userSubtotals).reduce(
-//     (acc, [name, subtotal]) => {
-//       const total = (subtotal * (1 + (tax + tip) / 100)).toFixed(2);
-//       acc[name] = `$${total}`;
-//       return acc;
-//     },
-//     {} as { [key: string]: string },
-//   );
+  return split;
+}
 
-//   const total = `$${(
-//     items.reduce((acc, item) => acc + item.price, 0) *
-//     (1 + (tax + tip) / 100)
-//   ).toFixed(2)}`;
-
-//   return {
-//     total,
-//     userTotals,
-//   };
-// }
+function roundToTwoDecimals(num: number): number {
+  return Math.round(num * 100) / 100;
+}
