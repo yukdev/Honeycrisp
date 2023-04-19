@@ -2,6 +2,7 @@ import { getSession } from '@/lib/api';
 import Session from '@/components/Session';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../api/auth/[...nextauth]/route';
+import SessionFinalized from '@/components/SessionFinalized';
 
 interface Props {
   params: {
@@ -12,9 +13,14 @@ interface Props {
 const SessionPage = async ({ params: { id } }: Props) => {
   const userSession = (await getServerSession(authOptions)) as any;
   const session = await getSession(id);
+  const { finalized } = session;
   return (
     <div className="card">
-      <Session userSession={userSession} session={session} />
+      {finalized ? (
+        <SessionFinalized userSession={userSession} session={session} />
+      ) : (
+        <Session userSession={userSession} session={session} />
+      )}
     </div>
   );
 };

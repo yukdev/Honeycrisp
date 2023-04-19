@@ -3,46 +3,7 @@ import { useState, useCallback } from 'react';
 import SessionItem from './SessionItem';
 import { eatSessionItems } from '@/lib/api';
 import { useRouter } from 'next/navigation';
-
-interface Item {
-  id: string;
-  name: string;
-  price: number;
-  createdAt: string;
-  updatedAt: string;
-  sessionId: string;
-}
-
-interface ItemEaten {
-  itemId: string;
-  name: string;
-  eatenBy: string[];
-}
-
-interface SessionProps {
-  userSession: {
-    user: {
-      name: string;
-      email: string;
-      id: string;
-      image?: any;
-    };
-  };
-  session: {
-    id: string;
-    name: string;
-    createdAt: string;
-    updatedAt: string;
-    ownerId: string;
-    ownerName: string;
-    finalized: boolean;
-    bill: number | null;
-    tax: number;
-    tip: number;
-    items: Item[];
-    itemsEaten: ItemEaten[];
-  };
-}
+import { SessionProps } from '@/lib/interfaces';
 
 const Session = ({ session, userSession }: SessionProps) => {
   const router = useRouter();
@@ -58,6 +19,7 @@ const Session = ({ session, userSession }: SessionProps) => {
     return itemsEatenByUser.map((item) => item.itemId);
   });
   const [eatenItems, setEatenItems] = useState<string[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleItemClick = useCallback(
     (itemId: string) => {
@@ -74,22 +36,21 @@ const Session = ({ session, userSession }: SessionProps) => {
 
   const handleSubmit = async () => {
     try {
+      setIsSubmitting(true);
       const response = await eatSessionItems({
         items: selectedItems,
         userId,
         userName,
         sessionId,
       });
-      console.log(
-        '🚀 ~ file: Session.tsx:80 ~ handleSubmit ~ response:',
-        response,
-      );
       const newEatenItems = response.eatenItems;
       setEatenItems(newEatenItems);
 
       router.refresh();
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -100,6 +61,11 @@ const Session = ({ session, userSession }: SessionProps) => {
           {session.name}
         </h1>
         <h1 className="text-xl font-bold mb-4 text-center text-secondary">{`Total: $${session.bill}`}</h1>
+        {selectedItems.length === 0 && (
+          <p className="text-center text-red-500 mb-4">
+            Please select what you ate before submitting.
+          </p>
+        )}
       </div>
       <div className="overflow-x-auto">
         <table className="table table-zebra w-full">
@@ -126,19 +92,26 @@ const Session = ({ session, userSession }: SessionProps) => {
           </tbody>
         </table>
       </div>
-      <button onClick={handleSubmit} className="btn btn-primary my-3">
-        Submit
+      <button
+        onClick={handleSubmit}
+        className={`btn btn-primary my-3 ${isSubmitting && 'loading'}`}
+      >
+        {isSubmitting ? 'Submitting...' : 'Submit'}
       </button>
       {eatenItems.length > 0 && (
-        <>
-          <div className="toast">
-            <div className="alert alert-success">
-              <div>
-                <span>Thanks for confirming what you ate!</span>
-              </div>
+        <div
+          x-data="{ show: true }"
+          x-show="show"
+          x-init="setTimeout(() => { show = false }, 5000)"
+          x-cloak
+          className="toast"
+        >
+          <div className="alert alert-success">
+            <div>
+              <span>Thanks for confirming what you ate!</span>
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
