@@ -30,7 +30,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
         <Provider>
           {/* @ts-expect-error Server Component */}
           <NavBar userSession={userSession} />
-          <main className="flex justify-center">{children}</main>
+          <main className="flex justify-center bg-base-200">{children}</main>
           <Footer />
         </Provider>
       </body>

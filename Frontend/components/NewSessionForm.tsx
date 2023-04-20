@@ -32,7 +32,7 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
   const [sessionData, setSessionData] = useState<SessionData>({
     name: '',
     tax: 8.875,
-    tip: 18,
+    tip: 20,
     items: [{ name: '', price: 0, quantity: 1 }],
   });
   const [error, setError] = useState('');
@@ -79,21 +79,12 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
   };
 
   const handleSubmit = async () => {
-    // console.log({
-    //   ...sessionData,
-    //   ownerName,
-    //   ownerId,
-    // });
     try {
       const response = await createSession({
         ...sessionData,
         ownerName,
         ownerId,
       });
-      console.log(
-        '🚀 ~ file: NewSessionForm.tsx:91 ~ handleSubmit ~ response:',
-        response,
-      );
 
       const { id } = response;
       router.push(`/sessions/${id}`);
@@ -145,22 +136,6 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
             value={sessionData.tip}
             onChange={handleInputChange}
           />
-          {/* implement flat tip option later */}
-          {/* <div className="btn-group">
-        <input
-          type="radio"
-          name="options"
-          data-title="%"
-          className="btn btn-sm"
-          checked
-        />
-        <input
-          type="radio"
-          name="options"
-          data-title="flat"
-          className="btn btn-sm"
-        />
-      </div> */}
         </div>
       </div>
       {/* table portion */}

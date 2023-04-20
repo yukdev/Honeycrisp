@@ -12,7 +12,7 @@ const LogOutButton = () => {
             callbackUrl: '/',
           })
         }
-        className="mx-3 text-white"
+        className="mx-3"
       >
         Sign out
       </a>

@@ -269,9 +269,15 @@ router.put('/:sessionId/eat', async (req, res, next) => {
   }
 });
 
+/**
+ * POST /sessions/:sessionId/finalize
+ *
+ * Finalizes a session
+ */
 router.post('/:sessionId/finalize', async (req, res, next) => {
   try {
     const { sessionId } = req.params;
+    const { userId } = req.body;
 
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
@@ -305,18 +311,18 @@ router.post('/:sessionId/finalize', async (req, res, next) => {
     }
 
     // Check if it's the owner finalizing the session
-    // if (session.ownerId !== user.id) {
-    //   throw new BadRequestError(
-    //     `Only the owner of the session can finalize it`,
-    //   );
-    // }
+    if (session.ownerId !== userId) {
+      throw new BadRequestError(
+        `Only the owner of the session can finalize it`,
+      );
+    }
 
     const split = calculateSplit(session as Session);
 
     // Update the session with the split
     await prisma.session.update({
       where: { id: sessionId },
-      data: { split },
+      data: { split, finalized: true },
     });
 
     res.json({ split });

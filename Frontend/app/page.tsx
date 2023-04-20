@@ -6,7 +6,7 @@ const HomePage = async () => {
   const session = await getServerSession(authOptions);
 
   return (
-    <div className="hero min-h-screen bg-base-200">
+    <div className="hero min-h-screen">
       <div className="hero-content text-center">
         <div className="max-w-md">
           <h1 className="text-5xl font-bold">Hello {session?.user?.name}</h1>

@@ -22,7 +22,7 @@ const SessionsPage = async () => {
   return (
     <div className="container min-h-screen">
       {unfinalizedSessions.length > 0 && (
-        <h1 className="text-3xl font-bold text-primary-content text-center my-5">
+        <h1 className="text-3xl font-bold text-base-content text-center my-5">
           Pending Sessions
         </h1>
       )}
@@ -37,6 +37,9 @@ const SessionsPage = async () => {
               <div className="card w-96 bg-warning text-warning-content">
                 <div className="card-body">
                   <h2 className="card-title">{session.name}</h2>
+                  <p className="text-warning-content   mt-2">
+                    Owner: {session.ownerName}
+                  </p>
                   <div className="flex items-center justify-between">
                     <div className="text-lg font-bold">
                       Bill: ${session.bill ?? 'N/A'}
@@ -54,7 +57,7 @@ const SessionsPage = async () => {
           <div className="divider my-8"></div>
         )}
         {finalizedSessions.length > 0 && (
-          <h1 className="text-3xl font-bold text-primary-content text-center mb-5">
+          <h1 className="text-3xl font-bold text-base-content text-center mb-5">
             Finalized Sessions
           </h1>
         )}
@@ -68,6 +71,9 @@ const SessionsPage = async () => {
               <div className="card w-96 bg-success text-success-content">
                 <div className="card-body">
                   <h2 className="card-title">{session.name}</h2>
+                  <p className="text-success-content mt-2">
+                    Owner: {session.ownerName}
+                  </p>
                   <div className="flex items-center justify-between">
                     <div className="text-lg font-bold">
                       Bill: ${session.bill ?? 'N/A'}
