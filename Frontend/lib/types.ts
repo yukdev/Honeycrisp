@@ -23,7 +23,10 @@ export interface UsersSession {
 export interface ItemEaten {
   itemId: string;
   name: string;
-  eatenBy: string[];
+  eatenBy: {
+    id: string;
+    name: string;
+  }[];
 }
 
 export interface SessionProps {
@@ -43,9 +46,10 @@ export interface SessionProps {
     ownerId: string;
     ownerName: string;
     finalized: boolean;
-    bill: number;
     tax: number;
     tip: number;
+    bill: number;
+    split: JSON;
     items: SessionItem[];
     itemsEaten: ItemEaten[];
   };

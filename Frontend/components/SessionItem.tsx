@@ -2,7 +2,10 @@ import { memo, useEffect, useState } from 'react';
 
 interface ItemEaten {
   name: string;
-  eatenBy: string[];
+  eatenBy: {
+    id: string;
+    name: string;
+  }[];
 }
 
 interface SessionItemProps {
@@ -16,7 +19,7 @@ interface SessionItemProps {
     sessionId: string;
   };
   itemsEaten: ItemEaten[];
-  userName: string;
+  userId: string;
   onItemClick: (itemId: string) => void;
 }
 
@@ -24,15 +27,17 @@ const SessionItem = memo(function SessionItem({
   index,
   item,
   itemsEaten,
-  userName,
+  userId,
   onItemClick,
 }: SessionItemProps) {
   const { id, name, price } = item;
   const [isSelected, setIsSelected] = useState(false);
 
   useEffect(() => {
-    setIsSelected(itemsEaten[index]?.eatenBy.includes(userName));
-  }, [itemsEaten, index, userName]);
+    setIsSelected(
+      itemsEaten[index]?.eatenBy.some((user) => user.id === userId),
+    );
+  }, [itemsEaten, index, userId]);
 
   const handleCheckboxChange = () => {
     setIsSelected(!isSelected);
@@ -50,12 +55,12 @@ const SessionItem = memo(function SessionItem({
         })}
       </td>
       <td>
-        {itemsEaten[index]?.eatenBy.map((name, index) => (
+        {itemsEaten[index]?.eatenBy.map((eater, index) => (
           <div
             key={index}
-            className={name === userName ? 'font-bold text-secondary' : ''}
+            className={eater.id === userId ? 'font-bold text-secondary' : ''}
           >
-            {name}
+            {eater.name}
           </div>
         ))}
       </td>

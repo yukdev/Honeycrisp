@@ -91,6 +91,7 @@ export function calculateSplit(
     }
   });
 
+  const userId = session.ownerId;
   return Object.entries(split).map(([id, split]) => ({
     id: parseInt(id),
     name:
@@ -98,6 +99,7 @@ export function calculateSplit(
         .flatMap((item) => item.userItems)
         .find((userItem) => userItem.user.id === id)?.user.name || '',
     split,
+    paid: id === userId,
   }));
 }
 

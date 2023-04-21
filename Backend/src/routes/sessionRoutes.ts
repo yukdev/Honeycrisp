@@ -10,6 +10,13 @@ import { Session, calculateBill, calculateSplit } from '../helpers/bill';
 
 const router = Router();
 
+interface SplitUser {
+  id: string;
+  name: string;
+  split: number;
+  paid: boolean;
+}
+
 /**
  * GET /session
  *
@@ -92,7 +99,7 @@ router.get('/:sessionId', async (req, res, next) => {
             userItems: {
               include: {
                 user: {
-                  select: { name: true },
+                  select: { name: true, id: true },
                 },
               },
             },
@@ -106,12 +113,19 @@ router.get('/:sessionId', async (req, res, next) => {
     }
 
     const itemsEaten: {
-      [key: string]: { itemId: string; name: string; eatenBy: string[] };
+      [key: string]: {
+        itemId: string;
+        name: string;
+        eatenBy: { id: string; name: string }[];
+      };
     } = {};
     for (const item of session.items) {
       const { id: itemId, name: itemName } = item;
       const key = `${itemId}`;
-      const eatenBy = item.userItems.map((ui) => ui.user.name);
+      const eatenBy = item.userItems.map((ui) => ({
+        id: ui.user.id,
+        name: ui.user.name,
+      }));
       if (!itemsEaten[key]) {
         itemsEaten[key] = { itemId, name: itemName, eatenBy };
       } else {
@@ -129,7 +143,7 @@ router.get('/:sessionId', async (req, res, next) => {
         ({ itemId, name, eatenBy }) => ({
           itemId,
           name,
-          eatenBy: eatenBy.sort(),
+          eatenBy: eatenBy.sort((a, b) => a.name.localeCompare(b.name)),
         }),
       ),
     };
@@ -326,6 +340,49 @@ router.post('/:sessionId/finalize', async (req, res, next) => {
     });
 
     res.json({ split });
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post('/:sessionId/paid', async (req, res, next) => {
+  try {
+    const { sessionId } = req.params;
+    const { userId } = req.body;
+
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: { owner: true },
+    });
+
+    if (!session) {
+      return res.status(404).json({ message: 'Session not found' });
+    }
+
+    const split = JSON.parse(JSON.stringify(session.split));
+
+    const updatedSplit = split.map((user: SplitUser) => {
+      if (user.id === userId) {
+        return { ...user, paid: !user.paid };
+      }
+      return user;
+    });
+
+    await prisma.session.update({
+      where: { id: sessionId },
+      data: { split: updatedSplit },
+    });
+
+    const user = updatedSplit.find((user: SplitUser) => user.id === userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found in split' });
+    }
+
+    const message = user.paid
+      ? `${user.name} marked as paid`
+      : `${user.name} marked as unpaid`;
+
+    res.status(200).json({ message });
   } catch (err) {
     next(err);
   }

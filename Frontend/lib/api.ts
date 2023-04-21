@@ -102,6 +102,21 @@ export const eatSessionItems = async (eatenItems: EatenItems) => {
   }
 };
 
+export const togglePaid = async (sessionId: string, userId: string) => {
+  try {
+    const resp = await fetcher({
+      url: `sessions/${sessionId}/paid`,
+      method: 'POST',
+      body: { userId },
+    });
+    return resp;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+  }
+};
+
 export const finalizeSession = async (sessionId: string, userId: string) => {
   try {
     const resp = await fetcher({

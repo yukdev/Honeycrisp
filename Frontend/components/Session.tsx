@@ -14,10 +14,11 @@ const Session = ({ session, userSession }: SessionProps) => {
 
   const [selectedItems, setSelectedItems] = useState<string[]>(() => {
     const itemsEatenByUser = itemsEaten.filter((itemEaten) =>
-      itemEaten.eatenBy.includes(userName),
+      itemEaten.eatenBy.some((user) => user.id === userId),
     );
     return itemsEatenByUser.map((item) => item.itemId);
   });
+
   const [eatenItems, setEatenItems] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFinalizing, setIsFinalizing] = useState(false);
@@ -55,6 +56,9 @@ const Session = ({ session, userSession }: SessionProps) => {
   };
 
   const handleFinalize = async () => {
+    if (userId !== session.ownerId) {
+      return;
+    }
     try {
       setIsFinalizing(true);
       await finalizeSession(sessionId, userId);
@@ -92,11 +96,9 @@ const Session = ({ session, userSession }: SessionProps) => {
         </div>
         <div className="flex justify-center">
           <h2 className="text-xl font-bold text-center text-base-content mr-6">
-            {`Owner: ${
-              session.ownerName === userName ? 'You' : session.ownerName
-            }`}
+            {`Owner: ${session.ownerId === userId ? 'You' : session.ownerName}`}
           </h2>
-          {session.ownerName === userName && (
+          {session.ownerId === userId && (
             <button
               onClick={handleFinalize}
               className={`btn btn-accent btn-sm ${isFinalizing && 'loading'}`}
@@ -113,7 +115,7 @@ const Session = ({ session, userSession }: SessionProps) => {
       </section>
       <section
         id="session-items"
-        className="flex flex-col justify-center items-center flex-grow"
+        className="flex flex-col items-center flex-grow"
       >
         <div className="w-full max-w-2xl text-center">
           <h2 className="text-2xl font-bold text-accent">Session Items</h2>
@@ -135,7 +137,7 @@ const Session = ({ session, userSession }: SessionProps) => {
                   key={item.id}
                   index={index}
                   item={item}
-                  userName={userName}
+                  userId={userId}
                   itemsEaten={itemsEaten}
                   onItemClick={handleItemClick}
                 />
