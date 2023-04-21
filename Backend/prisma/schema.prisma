@@ -15,6 +15,7 @@ model User {
   password  String
   name      String
   isAdmin   Boolean    @default(false)
+  isGuest   Boolean    @default(false)
   userItems UserItem[]
   Session   Session[]
 }

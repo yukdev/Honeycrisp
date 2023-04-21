@@ -45,7 +45,7 @@ const SessionPage = async ({ params: { id } }: Props) => {
           </div>
         </div>
         <div className="flex justify-center">
-          <h2 className="text-xl font-bold text-center text-base-content mr-6">
+          <h2 className="text-xl font-bold text-center text-base-content">
             {`Owner: ${session.ownerId === userId ? 'You' : session.ownerName}`}
           </h2>
         </div>

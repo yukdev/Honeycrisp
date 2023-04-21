@@ -18,6 +18,21 @@ const SessionsPage = async () => {
 
   return (
     <div className="container min-h-screen">
+      {sessions.length === 0 && (
+        <div className="flex flex-col items-center justify-center h-full">
+          <h1 className="text-3xl font-bold text-base-content text-center">
+            You have no sessions.
+          </h1>
+          <h2 className="text-xl font-bold text-base-content text-center">
+            Please either create one or join one via a link.
+          </h2>
+          <Link href={'/sessions/new'} className="mt-3">
+            <button className="btn btn-outline btn-primary">
+              Create a new session
+            </button>
+          </Link>
+        </div>
+      )}
       {unfinalizedSessions.length > 0 && (
         <h1 className="text-3xl font-bold text-base-content text-center my-5">
           Pending Sessions

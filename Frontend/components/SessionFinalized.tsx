@@ -73,10 +73,10 @@ const SessionFinalized = ({ session, userSession }: SessionProps) => {
 
         {activeTab === 'split' && (
           <div className="overflow-x-auto">
-            <table className="table table-zebra w-full">
+            <table className="table table-zebra w-full text-center">
               <thead>
                 <tr>
-                  <th></th>
+                  <th>#</th>
                   <th>Name</th>
                   <th>Split</th>
                   <th>Paid?</th>
@@ -117,10 +117,10 @@ const SessionFinalized = ({ session, userSession }: SessionProps) => {
         )}
         {activeTab === 'items' && (
           <div id="session-items">
-            <table className="table table-zebra w-full">
+            <table className="table table-zebra w-full text-center">
               <thead>
                 <tr>
-                  <th></th>
+                  <th>#</th>
                   <th>Item Name</th>
                   <th>Price</th>
                   <th>Eaten By</th>

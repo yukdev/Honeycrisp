@@ -88,9 +88,9 @@ const Session = ({ session, userSession }: SessionProps) => {
           <h2 className="text-2xl font-bold text-accent">Session Items</h2>
         </div>
         <div className="overflow-x-auto">
-          <table className="table table-zebra w-full">
+          <table className="table table-zebra w-full text-center">
             <thead>
-              <tr className="text-center">
+              <tr>
                 <th></th>
                 <th>Item</th>
                 <th>Price</th>

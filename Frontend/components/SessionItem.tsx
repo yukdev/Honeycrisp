@@ -45,7 +45,7 @@ const SessionItem = memo(function SessionItem({
   };
 
   return (
-    <tr className="hover text-center">
+    <tr className="hover">
       <td>{index + 1}</td>
       <td>{name}</td>
       <td>

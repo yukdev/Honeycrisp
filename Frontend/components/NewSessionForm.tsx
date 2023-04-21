@@ -79,6 +79,12 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
   };
 
   const handleSubmit = async () => {
+    const errorMessage = validateForm();
+    if (errorMessage) {
+      setError(errorMessage);
+      return;
+    }
+
     try {
       const response = await createSession({
         ...sessionData,
@@ -93,6 +99,33 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
         setError(error.message);
       }
     }
+  };
+
+  const validateForm = (): string => {
+    let errorMessage = '';
+
+    if (sessionData.name.trim() === '') {
+      errorMessage = 'Session name is required.';
+      return errorMessage;
+    }
+
+    const missingItemNames = sessionData.items.filter(
+      (item) => item.name.trim() === '',
+    );
+    if (missingItemNames.length > 0) {
+      errorMessage = 'Item names are required for all items.';
+      return errorMessage;
+    }
+
+    const invalidItemPrices = sessionData.items.filter(
+      (item) => isNaN(item.price) || item.price <= 0,
+    );
+    if (invalidItemPrices.length > 0) {
+      errorMessage = 'Item prices must be valid numbers.';
+      return errorMessage;
+    }
+
+    return errorMessage;
   };
 
   return (
@@ -138,7 +171,6 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
           />
         </div>
       </div>
-      {/* table portion */}
       <div className="mt-8">
         <table className="table table-zebra w-full">
           <thead>
@@ -222,11 +254,8 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
           </button>
         </div>
       </div>
-      <button className="btn btn-accent my-3" onClick={() => handleSubmit()}>
-        Create Session
-      </button>
       {error && (
-        <div className="alert alert-error shadow-lg mt-3  ">
+        <div className="alert alert-error shadow-lg mt-3">
           <div>
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -245,6 +274,9 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
           </div>
         </div>
       )}
+      <button className="btn btn-accent my-3" onClick={() => handleSubmit()}>
+        Create Session
+      </button>
     </div>
   );
 };
