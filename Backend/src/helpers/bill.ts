@@ -44,6 +44,12 @@ interface UserItem {
   };
 }
 
+export interface UserSplit {
+  id: string;
+  name: string;
+  split: number;
+}
+
 export function calculateBill(
   items: Item1[],
   tax: number,
@@ -59,7 +65,9 @@ export function calculateBill(
   return Number(total.toFixed(2));
 }
 
-export function calculateSplit(session: Session): Record<string, number> {
+export function calculateSplit(
+  session: Session,
+): { id: number; name: string; split: number }[] {
   const userBills: Record<string, number> = {};
   const { items, tax, tip } = session;
 
@@ -79,11 +87,18 @@ export function calculateSplit(session: Session): Record<string, number> {
       .flatMap((item) => item.userItems)
       .find((userItem) => userItem.user.id === userId)?.user.name;
     if (userName) {
-      split[userName] = roundToTwoDecimals(value * (1 + tip / 100 + tax / 100));
+      split[userId] = roundToTwoDecimals(value * (1 + tip / 100 + tax / 100));
     }
   });
 
-  return split;
+  return Object.entries(split).map(([id, split]) => ({
+    id: parseInt(id),
+    name:
+      session.items
+        .flatMap((item) => item.userItems)
+        .find((userItem) => userItem.user.id === id)?.user.name || '',
+    split,
+  }));
 }
 
 function roundToTwoDecimals(num: number): number {

@@ -304,18 +304,18 @@ router.post('/:sessionId/finalize', async (req, res, next) => {
     }
 
     // Check if session has already been finalized
-    if (session.finalized) {
-      throw new BadRequestError(
-        `Session with id ${sessionId} has already been finalized`,
-      );
-    }
+    // if (session.finalized) {
+    //   throw new BadRequestError(
+    //     `Session with id ${sessionId} has already been finalized`,
+    //   );
+    // }
 
     // Check if it's the owner finalizing the session
-    if (session.ownerId !== userId) {
-      throw new BadRequestError(
-        `Only the owner of the session can finalize it`,
-      );
-    }
+    // if (session.ownerId !== userId) {
+    //   throw new BadRequestError(
+    //     `Only the owner of the session can finalize it`,
+    //   );
+    // }
 
     const split = calculateSplit(session as Session);
 
