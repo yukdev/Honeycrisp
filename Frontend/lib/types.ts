@@ -18,6 +18,12 @@ export interface UsersSession {
   tax: number;
   tip: number;
   bill: number;
+  split: {
+    id: string;
+    name: string;
+    paid: boolean;
+    split: number;
+  }[];
 }
 
 export interface ItemEaten {

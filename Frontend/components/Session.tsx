@@ -69,54 +69,21 @@ const Session = ({ session, userSession }: SessionProps) => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen">
-      <section id="session-info" className="w-full max-w-2xl my-8">
-        <h1 className="text-3xl font-bold mb-4 text-center text-accent">
-          {session.name}
-        </h1>
-        <div className="flex justify-center items-center mb-3">
-          <div className="flex flex-col items-center justify-center mx-8">
-            <h2 className="text-lg font-bold mb-2 text-center text-secondary">
-              Tip
-            </h2>
-            <p className="text-2xl font-bold text-center text-accent">{`${session.tip}%`}</p>
-          </div>
-          <div className="flex flex-col items-center justify-center mx-8">
-            <h2 className="text-lg font-bold mb-2 text-center text-secondary">
-              Tax
-            </h2>
-            <p className="text-2xl font-bold text-center text-accent">{`${session.tax}%`}</p>
-          </div>
-          <div className="flex flex-col items-center justify-center mx-8">
-            <h2 className="text-lg font-bold mb-2 text-center text-secondary">
-              Total
-            </h2>
-            <p className="text-2xl font-bold text-center underline text-accent">{`$${session.bill}`}</p>
-          </div>
-        </div>
-        <div className="flex justify-center">
-          <h2 className="text-xl font-bold text-center text-base-content mr-6">
-            {`Owner: ${session.ownerId === userId ? 'You' : session.ownerName}`}
-          </h2>
-          {session.ownerId === userId && (
+    <>
+      <section
+        id="session-items"
+        className="flex flex-col items-center flex-grow"
+      >
+        {session.ownerId === userId && (
+          <div className="my-3">
             <button
               onClick={handleFinalize}
               className={`btn btn-accent btn-sm ${isFinalizing && 'loading'}`}
             >
               {isFinalizing ? 'Finalizing...' : 'Finalize'}
             </button>
-          )}
-        </div>
-        {selectedItems.length === 0 && (
-          <p className="text-center text-red-500 mb-4">
-            Please select what you ate before submitting.
-          </p>
+          </div>
         )}
-      </section>
-      <section
-        id="session-items"
-        className="flex flex-col items-center flex-grow"
-      >
         <div className="w-full max-w-2xl text-center">
           <h2 className="text-2xl font-bold text-accent">Session Items</h2>
         </div>
@@ -145,9 +112,16 @@ const Session = ({ session, userSession }: SessionProps) => {
             </tbody>
           </table>
         </div>
+        {selectedItems.length === 0 && (
+          <div className="mt-3">
+            <p className="text-center text-red-500">
+              Please select what you ate before submitting.
+            </p>
+          </div>
+        )}
         <button
           onClick={handleSubmit}
-          className={`btn btn-primary my-3 ${isSubmitting && 'loading'}`}
+          className={`btn btn-primary mt-3 ${isSubmitting && 'loading'}`}
         >
           {isSubmitting ? 'Submitting...' : 'Submit'}
         </button>
@@ -161,7 +135,7 @@ const Session = ({ session, userSession }: SessionProps) => {
           </div>
         )}
       </section>
-    </div>
+    </>
   );
 };
 

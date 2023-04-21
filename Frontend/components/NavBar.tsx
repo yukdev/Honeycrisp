@@ -3,7 +3,11 @@ import NavLink from './NavLink';
 import LogOutButton from './LogOutButton';
 const userlinks = [
   {
-    label: 'Sessions',
+    label: 'Create session',
+    path: '/sessions/new',
+  },
+  {
+    label: 'My sessions',
     path: '/sessions',
   },
 ];

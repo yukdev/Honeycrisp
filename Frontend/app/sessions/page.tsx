@@ -10,14 +10,11 @@ const SessionsPage = async () => {
     user: { id: userId },
   } = userSession;
 
-  const sessions = await getSessions(userId);
+  let sessions = (await getSessions(userId)) as UsersSession[];
+  sessions.sort((a, b) => +new Date(b.updatedAt) - +new Date(a.updatedAt));
 
-  const finalizedSessions = sessions.filter(
-    (session: UsersSession) => session.finalized,
-  );
-  const unfinalizedSessions = sessions.filter(
-    (session: UsersSession) => !session.finalized,
-  );
+  const finalizedSessions = sessions.filter((session) => session.finalized);
+  const unfinalizedSessions = sessions.filter((session) => !session.finalized);
 
   return (
     <div className="container min-h-screen">
@@ -34,10 +31,10 @@ const SessionsPage = async () => {
               key={session.id}
               className="hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
             >
-              <div className="card w-96 bg-warning text-warning-content">
+              <div className="card w-96 bg-accent text-accent-content">
                 <div className="card-body">
                   <h2 className="card-title">{session.name}</h2>
-                  <p className="text-warning-content   mt-2">
+                  <p className="text-accent-content   mt-2">
                     Owner: {session.ownerName}
                   </p>
                   <div className="flex items-center justify-between">
@@ -68,11 +65,16 @@ const SessionsPage = async () => {
               key={session.id}
               className="hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
             >
-              <div className="card w-96 bg-success text-success-content">
+              <div className="card w-96 bg-secondary text-secondary-content">
                 <div className="card-body">
                   <h2 className="card-title">{session.name}</h2>
-                  <p className="text-success-content mt-2">
-                    Owner: {session.ownerName}
+                  <p
+                    className={`text-secondary-content mt-2 ${
+                      userId == session.ownerId && 'font-bold'
+                    }`}
+                  >
+                    Owner:{' '}
+                    {userId == session.ownerId ? 'You' : session.ownerName}
                   </p>
                   <div className="flex items-center justify-between">
                     <div className="text-lg font-bold">
@@ -82,6 +84,11 @@ const SessionsPage = async () => {
                       <button className="btn no-animation">View</button>
                     </div>
                   </div>
+                  <progress
+                    className="progress progress-accent w-100 mt-2"
+                    value={session.split.filter((s) => s.paid).length}
+                    max={session.split.length}
+                  ></progress>
                 </div>
               </div>
             </Link>

@@ -92,7 +92,9 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
     <div className="container min-h-screen flex justify-center items-center">
       <div className="card w-96 bg-neutral text-neutral-content">
         <div className="card-body items-center text-center">
-          <h3 className="card-title text-primary">{formContent.header}</h3>
+          <h3 className="card-title text-primary text-3xl">
+            {formContent.header}
+          </h3>
           <p>{formContent.subheader}</p>
           <form onSubmit={handleSubmit}>
             {mode === 'register' && (
@@ -102,7 +104,7 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
                 </label>
                 <input
                   type="text"
-                  className="input input-bordered input-primary w-full max-w-xs"
+                  className="input input-sm input-bordered input-primary w-full max-w-xs"
                   name="name"
                   value={formData.name}
                   onChange={handleFormChange}
@@ -115,7 +117,7 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
               </label>
               <input
                 type="email"
-                className="input input-bordered input-primary w-full max-w-xs"
+                className="input input-sm input-bordered input-primary w-full max-w-xs"
                 name="email"
                 value={formData.email}
                 onChange={handleFormChange}
@@ -125,7 +127,7 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
               </label>
               <input
                 type="password"
-                className="input input-bordered input-primary w-full max-w-xs"
+                className="input input-sm input-bordered input-primary w-full max-w-xs"
                 name="password"
                 value={formData.password}
                 onChange={handleFormChange}

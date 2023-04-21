@@ -2,6 +2,7 @@
 import { SessionProps } from '@/lib/types';
 import { useState } from 'react';
 import { togglePaid } from '@/lib/api';
+import { useRouter } from 'next/navigation';
 interface UserSplit {
   id: string;
   name: string;
@@ -10,6 +11,7 @@ interface UserSplit {
 }
 
 const SessionFinalized = ({ session, userSession }: SessionProps) => {
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState('split');
   const [split, setSplit] = useState<UserSplit[]>(
     JSON.parse(JSON.stringify(session.split)),
@@ -37,6 +39,7 @@ const SessionFinalized = ({ session, userSession }: SessionProps) => {
       });
       await togglePaid(session.id, id);
       setSplit(updatedSplit);
+      router.refresh();
     } catch (error) {
       console.error(error);
     } finally {
@@ -44,39 +47,7 @@ const SessionFinalized = ({ session, userSession }: SessionProps) => {
     }
   };
   return (
-    <div className="flex flex-col min-h-screen">
-      <section id="session-info" className="w-full max-w-2xl my-8">
-        <h1 className="text-3xl font-bold mb-4 text-center text-accent">
-          {session.name}
-        </h1>
-        <div className="flex justify-center items-center mb-3">
-          <div className="flex flex-col items-center justify-center mx-8">
-            <h2 className="text-lg font-bold mb-2 text-center text-secondary">
-              Tip
-            </h2>
-            <p className="text-2xl font-bold text-center text-accent">{`${session.tip}%`}</p>
-          </div>
-          <div className="flex flex-col items-center justify-center mx-8">
-            <h2 className="text-lg font-bold mb-2 text-center text-secondary">
-              Tax
-            </h2>
-            <p className="text-2xl font-bold text-center text-accent">{`${session.tax}%`}</p>
-          </div>
-          <div className="flex flex-col items-center justify-center mx-8">
-            <h2 className="text-lg font-bold mb-2 text-center text-secondary">
-              Total
-            </h2>
-            <p className="text-2xl font-bold text-center underline text-accent">{`$${session.bill}`}</p>
-          </div>
-        </div>
-        <div className="flex justify-center">
-          <h2 className="text-xl font-bold text-center text-base-content mr-6">
-            {`Owner: ${
-              session.ownerName === userName ? 'You' : session.ownerName
-            }`}
-          </h2>
-        </div>
-      </section>
+    <>
       <section
         id="session-split-and-items"
         className="flex flex-col items-center flex-grow"
@@ -118,9 +89,7 @@ const SessionFinalized = ({ session, userSession }: SessionProps) => {
                     <td>
                       <div
                         className={`${
-                          id == session.ownerId
-                            ? 'font-bold text-secondary'
-                            : ''
+                          id == userId ? 'font-bold text-secondary' : ''
                         }`}
                       >
                         {name}
@@ -171,8 +140,7 @@ const SessionFinalized = ({ session, userSession }: SessionProps) => {
                             <li
                               key={itemEaten.itemId}
                               className={`inline mx-1 ${
-                                user.id == session.ownerId &&
-                                'font-bold text-secondary'
+                                user.id == userId && 'font-bold text-secondary'
                               }`}
                             >
                               {user.name}
@@ -187,7 +155,7 @@ const SessionFinalized = ({ session, userSession }: SessionProps) => {
           </div>
         )}
       </section>
-    </div>
+    </>
   );
 };
 
