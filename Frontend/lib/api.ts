@@ -162,3 +162,19 @@ export const login = async (user: LoginUser) => {
     }
   }
 };
+
+export const guestLogin = async (user: RegisterUser) => {
+  try {
+    const resp = await fetcher({
+      url: 'users/guest-login',
+      method: 'POST',
+      body: user,
+    });
+
+    return resp;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+  }
+};

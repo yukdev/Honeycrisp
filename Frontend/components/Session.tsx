@@ -7,9 +7,8 @@ import { SessionProps } from '@/lib/types';
 
 const Session = ({ session, userSession }: SessionProps) => {
   const router = useRouter();
-  const {
-    user: { id: userId, name: userName },
-  } = userSession;
+  const userId = userSession?.user?.id;
+  const userName = userSession?.user?.name;
   const { items, id: sessionId, itemsEaten } = session;
 
   const [selectedItems, setSelectedItems] = useState<string[]>(() => {

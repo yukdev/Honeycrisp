@@ -3,6 +3,7 @@ import Session from '@/components/Session';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../api/auth/[...nextauth]/route';
 import SessionFinalized from '@/components/SessionFinalized';
+import GuestLogin from '@/components/GuestLogin';
 
 interface Props {
   params: {
@@ -11,13 +12,11 @@ interface Props {
 }
 
 const SessionPage = async ({ params: { id } }: Props) => {
-  const userSession = (await getServerSession(authOptions)) as any;
-  const {
-    user: { id: userId },
-  } = userSession;
+  const userSession = ((await getServerSession(authOptions)) as any) ?? {};
+  const userId = userSession?.user?.id;
   const session = await getSession(id);
-
   const { finalized } = session;
+
   return (
     <div className="flex flex-col min-h-screen">
       <section id="session-info" className="w-full max-w-2xl mt-8">
@@ -49,6 +48,14 @@ const SessionPage = async ({ params: { id } }: Props) => {
             {`Owner: ${session.ownerId === userId ? 'You' : session.ownerName}`}
           </h2>
         </div>
+        {!userSession.user && !finalized && <GuestLogin id={id} />}
+        {userSession?.user?.isGuest && !finalized && (
+          <div className="flex justify-center">
+            <h2 className="text-center text-error">
+              {`Viewing as guest (${userSession.user.name})`}
+            </h2>
+          </div>
+        )}
       </section>
       {finalized ? (
         <SessionFinalized userSession={userSession} session={session} />

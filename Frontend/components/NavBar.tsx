@@ -25,7 +25,7 @@ interface NavBarProps {
       name: string;
       email: string;
       id: string;
-      image?: any;
+      isGuest: boolean;
     };
   };
 }
@@ -39,12 +39,14 @@ const NavBar = async ({ userSession }: NavBarProps) => {
         </Link>
       </div>
       <div className="navbar-center">
-        <Link
-          href="/sessions/new"
-          className="btn btn-ghost normal-case text-xl"
-        >
-          Create session
-        </Link>
+        {userSession?.user && (
+          <Link
+            href="/sessions/new"
+            className="btn btn-ghost normal-case text-xl"
+          >
+            Create session
+          </Link>
+        )}
       </div>
       <div className="navbar-end">
         <ul className="menu menu-horizontal px-1">
@@ -55,7 +57,7 @@ const NavBar = async ({ userSession }: NavBarProps) => {
                   <NavLink {...link} />
                 </li>
               ))}
-              <LogOutButton />
+              <LogOutButton userSession={userSession} />
             </>
           ) : (
             <>

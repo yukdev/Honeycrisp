@@ -2,20 +2,52 @@
 import { signOut } from 'next-auth/react';
 import React from 'react';
 
-const LogOutButton = () => {
+interface LogOutButtonProps {
+  userSession: {
+    user: {
+      id: string;
+      name: string;
+      email: string;
+      isGuest: boolean;
+    };
+  };
+}
+
+const LogOutButton = ({ userSession }: LogOutButtonProps) => {
   return (
-    <li>
-      <a
-        onClick={() =>
-          signOut({
-            redirect: true,
-            callbackUrl: '/',
-          })
-        }
-        className="mx-3"
-      >
-        Sign out
+    <li tabIndex={0}>
+      <a>
+        {`${userSession.user.name}${
+          userSession.user.isGuest ? ' (Guest)' : ''
+        }`}
+        <svg
+          className="fill-current"
+          xmlns="http://www.w3.org/2000/svg"
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+        >
+          <path d="M7.41,8.58L12,13.17L16.59,8.58L18,10L12,16L6,10L7.41,8.58Z" />
+        </svg>
       </a>
+      <ul className="p-2 bg-base-100">
+        <li>
+          <a>Submenu 1</a>
+        </li>
+        <li>
+          <a
+            onClick={() =>
+              signOut({
+                redirect: true,
+                callbackUrl: '/',
+              })
+            }
+            className="mx-3"
+          >
+            Sign out
+          </a>
+        </li>
+      </ul>
     </li>
   );
 };

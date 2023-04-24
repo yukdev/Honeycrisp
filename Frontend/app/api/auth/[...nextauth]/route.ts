@@ -36,16 +36,22 @@ export const authOptions: NextAuthOptions = {
           ...session.user,
           id: token.id,
           name: token.name,
+          isGuest: token.isGuest,
         },
       };
     },
     jwt: ({ token, user }) => {
       if (user) {
-        const u = user as unknown as { id: string; name: string };
+        const u = user as unknown as {
+          id: string;
+          name: string;
+          isGuest: boolean;
+        };
         return {
           ...token,
           id: u.id,
           name: u.name,
+          isGuest: u.isGuest,
         };
       }
       return token;
