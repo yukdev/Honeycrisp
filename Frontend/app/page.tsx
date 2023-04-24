@@ -4,7 +4,6 @@ import { authOptions } from './api/auth/[...nextauth]/route';
 
 const HomePage = async () => {
   const userSession = ((await getServerSession(authOptions)) as any) ?? {};
-  console.log('🚀 ~ file: page.tsx:7 ~ HomePage ~ userSession:', userSession);
 
   return (
     <div className="hero min-h-screen">
@@ -14,12 +13,12 @@ const HomePage = async () => {
             Hello {userSession?.user?.name}
           </h1>
           {!userSession?.user && (
-            <p className="py-6">
+            <p className="my-6">
               Welcome to Honeycrisp, your user-friendly bill-splitting app.
             </p>
           )}
           {userSession?.user && !userSession.user.isGuest && (
-            <div>
+            <div className="my-6">
               <Link href={'/sessions'} className="mx-2">
                 <button className="btn btn-primary">My Sessions</button>
               </Link>
@@ -31,7 +30,7 @@ const HomePage = async () => {
             </div>
           )}
           {!userSession?.user && (
-            <div className="text-primary-content flex justify-center">
+            <div className="my-6">
               <Link href={'/register'} className="mx-2">
                 <button className="btn btn-primary">Register</button>
               </Link>
@@ -41,7 +40,7 @@ const HomePage = async () => {
             </div>
           )}
           {userSession?.user && userSession.user.isGuest && (
-            <div className="text-primary-content flex flex-col justify-center my-3">
+            <div className="text-primary-content flex flex-col justify-center my-6">
               <p>How was Honeycrisp?</p>
               <p>Would you like to migrate your account to a full account?</p>
               <Link href={'/register'}>

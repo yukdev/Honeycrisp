@@ -5,13 +5,13 @@ import { authOptions } from '../../api/auth/[...nextauth]/route';
 import SessionFinalized from '@/components/SessionFinalized';
 import GuestLogin from '@/components/GuestLogin';
 
-interface Props {
+interface SessionPageProps {
   params: {
     id: string;
   };
 }
 
-const SessionPage = async ({ params: { id } }: Props) => {
+const SessionPage = async ({ params: { id } }: SessionPageProps) => {
   const userSession = ((await getServerSession(authOptions)) as any) ?? {};
   const userId = userSession?.user?.id;
   const session = await getSession(id);

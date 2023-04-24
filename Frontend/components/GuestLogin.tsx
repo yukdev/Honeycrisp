@@ -14,6 +14,7 @@ const GuestLogin = ({ id }: GuestLoginProps) => {
   const router = useRouter();
   const [showGuestForm, setShowGuestForm] = useState(false);
   const [guestName, setGuestName] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleJoinAsGuestClick = () => {
     setShowGuestForm(true);
@@ -28,6 +29,7 @@ const GuestLogin = ({ id }: GuestLoginProps) => {
   const handleGuestLogin = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     try {
+      setIsSubmitting(true);
       const guestEmail = `${uuid().slice(0, 8)}@guest.com`;
       const guestPassword = uuid().slice(0, 8);
 
@@ -48,6 +50,8 @@ const GuestLogin = ({ id }: GuestLoginProps) => {
       router.refresh();
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -61,8 +65,11 @@ const GuestLogin = ({ id }: GuestLoginProps) => {
             onChange={handleGuestNameChange}
             className="input input-sm input-bordered input-accent text-center max-w-xs mr-2"
           />
-          <button type="submit" className="btn btn-sm btn-accent">
-            Join
+          <button
+            type="submit"
+            className={`btn btn-sm btn-accent ${isSubmitting && 'loading'}`}
+          >
+            {isSubmitting ? 'Joining...' : 'Join'}
           </button>
         </form>
       ) : (

@@ -1,8 +1,3 @@
-import { setCookie } from 'nookies';
-import { config } from '@/lib/config';
-
-const { COOKIE_NAME } = config;
-
 const BASE_URL = 'http://localhost:3001/';
 interface RequestProps {
   url: string;
@@ -18,6 +13,13 @@ interface LoginUser {
 
 interface RegisterUser extends LoginUser {
   name: string;
+}
+
+interface UpdateUser {
+  name: string;
+  email: string;
+  password: string;
+  currentPassword: string;
 }
 
 interface Item {
@@ -59,122 +61,91 @@ export const fetcher = async ({
 
   if (!res.ok) {
     const { error } = JSON.parse(await res.text());
-    throw new Error(error);
+    throw typeof error === 'string'
+      ? new Error(error)
+      : new Error(error.message);
   }
 
   return json ? await res.json() : await res.text();
 };
 
-export const getSessions = async (userId: string) =>
-  fetcher({ url: `users/${userId}/sessions`, method: 'GET' });
+export const getSessions = async (userId: string) => {
+  return await fetcher({ url: `users/${userId}/sessions`, method: 'GET' });
+};
 
-export const getSession = async (id: string) =>
-  fetcher({ url: `sessions/${id}`, method: 'GET' });
+export const getSession = async (id: string) => {
+  return await fetcher({ url: `sessions/${id}`, method: 'GET' });
+};
 
 export const createSession = async (newSession: NewSession) => {
-  try {
-    const resp = await fetcher({
-      url: 'sessions',
-      method: 'POST',
-      body: newSession,
-    });
-    return resp;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-  }
+  return await fetcher({
+    url: 'sessions',
+    method: 'POST',
+    body: newSession,
+  });
 };
 
 export const eatSessionItems = async (eatenItems: EatenItems) => {
   const { items, userId, userName, sessionId } = eatenItems;
-  try {
-    const resp = await fetcher({
-      url: `sessions/${sessionId}/eat`,
-      method: 'PUT',
-      body: { userId, userName, items },
-    });
-    return resp;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-  }
+  return await fetcher({
+    url: `sessions/${sessionId}/eat`,
+    method: 'PUT',
+    body: { userId, userName, items },
+  });
 };
 
 export const togglePaid = async (sessionId: string, userId: string) => {
-  try {
-    const resp = await fetcher({
-      url: `sessions/${sessionId}/paid`,
-      method: 'POST',
-      body: { userId },
-    });
-    return resp;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-  }
+  return await fetcher({
+    url: `sessions/${sessionId}/paid`,
+    method: 'POST',
+    body: { userId },
+  });
 };
 
 export const finalizeSession = async (sessionId: string, userId: string) => {
-  try {
-    const resp = await fetcher({
-      url: `sessions/${sessionId}/finalize`,
-      method: 'POST',
-      body: { userId },
-    });
-    return resp;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-  }
+  return await fetcher({
+    url: `sessions/${sessionId}/finalize`,
+    method: 'POST',
+    body: { userId },
+  });
 };
 
 export const register = async (user: RegisterUser) => {
-  try {
-    const resp = await fetcher({
-      url: 'users/register',
-      method: 'POST',
-      body: user,
-    });
-    return resp;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-  }
+  return await fetcher({
+    url: 'users/register',
+    method: 'POST',
+    body: user,
+  });
 };
 
 export const login = async (user: LoginUser) => {
-  try {
-    const resp = await fetcher({
-      url: 'users/login',
-      method: 'POST',
-      body: user,
-    });
-
-    return resp;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-  }
+  return await fetcher({
+    url: 'users/login',
+    method: 'POST',
+    body: user,
+  });
 };
 
 export const guestLogin = async (user: RegisterUser) => {
-  try {
-    const resp = await fetcher({
-      url: 'users/guest-login',
-      method: 'POST',
-      body: user,
-    });
+  return await fetcher({
+    url: 'users/guest-login',
+    method: 'POST',
+    body: user,
+  });
+};
 
-    return resp;
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-  }
+export const guestUpdate = async (userId: string, user: RegisterUser) => {
+  return await fetcher({
+    url: `users/${userId}`,
+    method: 'PUT',
+    body: { ...user, isGuest: true },
+  });
+};
+
+export const userUpdate = async (userId: string, user: UpdateUser) => {
+  return await fetcher({
+    url: `users/${userId}`,
+    method: 'PUT',
+    body: user,
+  });
 };

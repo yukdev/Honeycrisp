@@ -1,5 +1,6 @@
 'use client';
 import { signOut } from 'next-auth/react';
+import Link from 'next/link';
 import React from 'react';
 
 interface LogOutButtonProps {
@@ -32,7 +33,7 @@ const LogOutButton = ({ userSession }: LogOutButtonProps) => {
       </a>
       <ul className="p-2 bg-base-100">
         <li>
-          <a>Submenu 1</a>
+          <Link href={`users/${userSession.user.id}`}>Profile</Link>
         </li>
         <li>
           <a
@@ -42,7 +43,6 @@ const LogOutButton = ({ userSession }: LogOutButtonProps) => {
                 callbackUrl: '/',
               })
             }
-            className="mx-3"
           >
             Sign out
           </a>
