@@ -12,7 +12,10 @@ export default function NavLink({ label, path }: NavLinkProps) {
 
   const isActive = pathName === path;
   return (
-    <Link className={`${isActive && 'bg-primary-focus'} mx-3`} href={path}>
+    <Link
+      className={`${isActive && 'bg-primary-focus'} text-lg mx-3`}
+      href={path}
+    >
       {label}
     </Link>
   );

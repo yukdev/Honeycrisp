@@ -15,6 +15,10 @@ const SessionPage = async ({ params: { id } }: SessionPageProps) => {
   const userSession = ((await getServerSession(authOptions)) as any) ?? {};
   const userId = userSession?.user?.id;
   const session = await getSession(id);
+  console.log(
+    '🚀 ~ file: page.tsx:18 ~ SessionPage ~ session:',
+    JSON.stringify(session),
+  );
   const { finalized } = session;
 
   return (

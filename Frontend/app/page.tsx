@@ -43,10 +43,8 @@ const HomePage = async () => {
             <div className="text-primary-content flex flex-col justify-center my-6">
               <p>How was Honeycrisp?</p>
               <p>Would you like to migrate your account to a full account?</p>
-              <Link href={'/register'}>
-                <button className="btn btn-sm btn-primary mt-2">
-                  Register
-                </button>
+              <Link href={`/users/${userSession.user.id}`}>
+                <button className="btn btn-sm btn-primary mt-2">Migrate</button>
               </Link>
             </div>
           )}

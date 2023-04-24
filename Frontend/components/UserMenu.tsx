@@ -3,7 +3,7 @@ import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import React from 'react';
 
-interface LogOutButtonProps {
+interface UserMenuProps {
   userSession: {
     user: {
       id: string;
@@ -14,10 +14,10 @@ interface LogOutButtonProps {
   };
 }
 
-const LogOutButton = ({ userSession }: LogOutButtonProps) => {
+const UserMenu = ({ userSession }: UserMenuProps) => {
   return (
     <li tabIndex={0}>
-      <a>
+      <a className="text-lg">
         {`${userSession.user.name}${
           userSession.user.isGuest ? ' (Guest)' : ''
         }`}
@@ -52,4 +52,4 @@ const LogOutButton = ({ userSession }: LogOutButtonProps) => {
   );
 };
 
-export default LogOutButton;
+export default UserMenu;

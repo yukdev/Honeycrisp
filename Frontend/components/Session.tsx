@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { SessionProps } from '@/lib/types';
 
 const Session = ({ session, userSession }: SessionProps) => {
+  console.log('🚀 ~ file: Session.tsx:9 ~ Session ~ userSession:', userSession);
   const router = useRouter();
   const userId = userSession?.user?.id;
   const userName = userSession?.user?.name;
@@ -64,6 +65,8 @@ const Session = ({ session, userSession }: SessionProps) => {
       router.refresh();
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsFinalizing(false);
     }
   };
 

@@ -19,7 +19,7 @@ const SessionFinalized = ({ session, userSession }: SessionProps) => {
   const [processingUserId, setProcessingUserId] = useState<string | null>(null);
 
   const {
-    user: { name: userName, id: userId },
+    user: { id: userId },
   } = userSession;
 
   const handlePaidChange = async (id: string) => {

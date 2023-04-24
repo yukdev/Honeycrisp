@@ -104,26 +104,26 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
           <p>{formContent.subheader}</p>
           <form onSubmit={handleSubmit}>
             {mode === 'register' && (
-              <div className="form-control w-full max-w-xs">
+              <div className="form-control w-full max-w-xs flex flex-col justify-center items-center">
                 <label className="label">
                   <span className="label-text">Name</span>
                 </label>
                 <input
                   type="text"
-                  className="input input-sm input-bordered input-primary w-full max-w-xs"
+                  className="input input-sm input-bordered input-primary w-full max-w-xs text-center"
                   name="name"
                   value={formData.name}
                   onChange={handleFormChange}
                 />
               </div>
             )}
-            <div className="form-control w-full max-w-xs">
+            <div className="form-control w-full max-w-xs flex flex-col justify-center items-center">
               <label className="label">
                 <span className="label-text">Email</span>
               </label>
               <input
                 type="email"
-                className="input input-sm input-bordered input-primary w-full max-w-xs"
+                className="input input-sm input-bordered input-primary w-full max-w-xs text-center"
                 name="email"
                 value={formData.email}
                 onChange={handleFormChange}
@@ -133,7 +133,7 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
               </label>
               <input
                 type="password"
-                className="input input-sm input-bordered input-primary w-full max-w-xs"
+                className="input input-sm input-bordered input-primary w-full max-w-xs text-center"
                 name="password"
                 value={formData.password}
                 onChange={handleFormChange}

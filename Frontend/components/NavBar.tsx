@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import NavLink from './NavLink';
-import LogOutButton from './LogOutButton';
+import UserMenu from './UserMenu';
 const userlinks = [
   {
     label: 'My sessions',
@@ -57,7 +57,7 @@ const NavBar = async ({ userSession }: NavBarProps) => {
                   <NavLink {...link} />
                 </li>
               ))}
-              <LogOutButton userSession={userSession} />
+              <UserMenu userSession={userSession} />
             </>
           ) : (
             <>

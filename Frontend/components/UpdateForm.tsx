@@ -18,7 +18,7 @@ interface UpdateFormProps {
 
 const UpdateForm = ({ id, userSession }: UpdateFormProps) => {
   const initialFormData = {
-    email: userSession.user.email,
+    email: userSession.user.isGuest ? '' : userSession.user.email,
     name: userSession.user.name,
     password: '',
     currentPassword: '',
@@ -27,6 +27,8 @@ const UpdateForm = ({ id, userSession }: UpdateFormProps) => {
   const [formData, setFormData] = useState(initialFormData);
   const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState('');
+
+  const isGuest = userSession.user.isGuest;
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -68,55 +70,55 @@ const UpdateForm = ({ id, userSession }: UpdateFormProps) => {
   return (
     <div className="container min-h-screen flex justify-center items-center">
       <div className="card w-96 bg-neutral text-neutral-content">
-        <div className="card-body items-center text-center">
-          <h3 className="card-title text-primary text-3xl">
-            Update your information
+        <div className="card-body items-center flex flex-col">
+          <h3 className="card-title text-primary text-3xl text-center">
+            {isGuest ? 'Fill out' : 'Update'} your information
           </h3>
-          <form onSubmit={handleSubmit}>
-            <div className="form-control w-full max-w-xs">
-              <label className="label">
+          <form onSubmit={handleSubmit} className="w-75">
+            <div className="form-control w-full max-w-xs flex flex-col justify-center items-center">
+              <label className="label flex justify-center items-center">
                 <span className="label-text">Name</span>
               </label>
               <input
                 type="text"
-                className="input input-sm input-bordered input-primary w-full max-w-xs"
+                className="input input-sm input-bordered input-primary w-full max-w-xs text-center"
                 name="name"
                 value={formData.name}
                 onChange={handleFormChange}
               />
             </div>
-            <div className="form-control w-full max-w-xs">
-              <label className="label">
+            <div className="form-control w-full max-w-xs flex flex-col justify-center items-center">
+              <label className="label flex justify-center items-center">
                 <span className="label-text">Email</span>
               </label>
               <input
                 type="email"
-                className="input input-sm input-bordered input-primary w-full max-w-xs"
+                className="input input-sm input-bordered input-primary w-full max-w-xs text-center"
                 name="email"
                 value={formData.email}
                 onChange={handleFormChange}
               />
-              <label className="label">
+              <label className="label flex justify-center items-center">
                 <span className="label-text">
                   {!userSession.user.isGuest && 'New '}Password
                 </span>
               </label>
               <input
                 type="password"
-                className="input input-sm input-bordered input-primary w-full max-w-xs"
+                className="input input-sm input-bordered input-primary w-full max-w-xs text-center"
                 name="password"
                 value={formData.password}
                 onChange={handleFormChange}
                 minLength={4}
               />
-              {!userSession.user.isGuest && (
+              {!isGuest && (
                 <>
-                  <label className="label">
+                  <label className="label flex justify-center items-center">
                     <span className="label-text">Current Password</span>
                   </label>
                   <input
                     type="password"
-                    className="input input-sm input-bordered input-primary w-full max-w-xs"
+                    className="input input-sm input-bordered input-primary w-full max-w-xs text-center"
                     name="currentPassword"
                     value={formData.currentPassword}
                     onChange={handleFormChange}
@@ -145,13 +147,19 @@ const UpdateForm = ({ id, userSession }: UpdateFormProps) => {
                 </div>
               </div>
             )}
-            <div className="my-3">
+            <div className="mt-5 flex justify-center">
               <button
                 className={`btn btn-sm btn-secondary ${
                   isUpdating && 'loading'
                 }`}
               >
-                {isUpdating ? 'Updating...' : 'Update'}
+                {isUpdating
+                  ? userSession.user.isGuest
+                    ? 'Migrating...'
+                    : 'Updating...'
+                  : userSession.user.isGuest
+                  ? 'Migrate'
+                  : 'Update'}
               </button>
             </div>
           </form>
