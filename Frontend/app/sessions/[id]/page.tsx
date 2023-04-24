@@ -4,6 +4,8 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../../api/auth/[...nextauth]/route';
 import SessionFinalized from '@/components/SessionFinalized';
 import GuestLogin from '@/components/GuestLogin';
+import { FaShare } from 'react-icons/fa';
+import ShareModal from '@/components/ShareModal';
 
 interface SessionPageProps {
   params: {
@@ -15,17 +17,25 @@ const SessionPage = async ({ params: { id } }: SessionPageProps) => {
   const userSession = ((await getServerSession(authOptions)) as any) ?? {};
   const userId = userSession?.user?.id;
   const session = await getSession(id);
-  console.log(
-    '🚀 ~ file: page.tsx:18 ~ SessionPage ~ session:',
-    JSON.stringify(session),
-  );
   const { finalized } = session;
 
   return (
     <div className="flex flex-col min-h-screen">
+      <ShareModal link={`localhost:3000/sessions/${id}`} />
       <section id="session-info" className="w-full max-w-2xl mt-8">
-        <h1 className="text-3xl font-bold mb-4 text-center text-accent">
-          {session.name}
+        <h1 className="text-3xl font-bold mb-4 text-center text-accent flex justify-center">
+          <p>{session.name}</p>
+          {session.ownerId === userId && (
+            <div className="flex items-center ml-3">
+              <label
+                htmlFor="share-session"
+                className="btn btn-sm btn-secondary"
+              >
+                <p className="mr-1">Share</p>
+                <FaShare />
+              </label>
+            </div>
+          )}
         </h1>
         <div className="flex justify-center items-center mb-3">
           <div className="flex flex-col items-center justify-center mx-8">
