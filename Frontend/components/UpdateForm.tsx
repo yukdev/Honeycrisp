@@ -2,11 +2,9 @@
 
 import { guestUpdate, userUpdate } from '@/lib/api';
 import { signIn } from 'next-auth/react';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
 
-interface AuthFormProps {
+interface UpdateFormProps {
   id: string;
   userSession: {
     user: {
@@ -18,7 +16,7 @@ interface AuthFormProps {
   };
 }
 
-const Authform = ({ id, userSession }: AuthFormProps) => {
+const UpdateForm = ({ id, userSession }: UpdateFormProps) => {
   const initialFormData = {
     email: userSession.user.email,
     name: userSession.user.name,
@@ -27,73 +25,45 @@ const Authform = ({ id, userSession }: AuthFormProps) => {
   };
 
   const [formData, setFormData] = useState(initialFormData);
-  const [isUpdating, setisUpdating] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const [error, setError] = useState('');
 
-  const handleSubmit = useCallback(
-    async (event: React.FormEvent<HTMLFormElement>) => {
-      event.preventDefault();
-      if (userSession.user.isGuest) {
-        try {
-          setisUpdating(true);
-          const response = await guestUpdate(id, {
-            name: formData.name,
-            email: formData.email,
-            password: formData.password,
-          });
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    try {
+      setIsUpdating(true);
+      const updateData = {
+        name: formData.name,
+        email: formData.email,
+        password: formData.password,
+      };
 
-          if (response) {
-            await signIn('login', {
-              email: formData.email,
-              password: formData.password,
-              redirect: true,
-              callbackUrl: `/users/${id}`,
-            });
-          }
-        } catch (error) {
-          if (error instanceof Error) {
-            setError(error.message);
-          }
-        } finally {
-          setisUpdating(false);
-        }
-      } else {
-        try {
-          setisUpdating(true);
-          const response = await userUpdate(id, {
-            name: formData.name,
-            email: formData.email,
-            password: formData.password,
+      await (userSession.user.isGuest
+        ? guestUpdate(id, updateData)
+        : userUpdate(id, {
+            ...updateData,
             currentPassword: formData.currentPassword,
-          });
+          }));
 
-          if (response) {
-            await signIn('login', {
-              email: formData.email,
-              password: formData.password,
-              redirect: true,
-              callbackUrl: `/users/${id}`,
-            });
-          }
-        } catch (error) {
-          if (error instanceof Error) {
-            setError(error.message);
-          }
-        } finally {
-          setisUpdating(false);
-        }
+      await signIn('login', {
+        email: formData.email,
+        password: formData.password || formData.currentPassword,
+        redirect: true,
+        callbackUrl: `/users/${id}`,
+      });
+    } catch (error) {
+      if (error instanceof Error) {
+        setError(error.message);
       }
-    },
-    [formData, id, userSession.user.isGuest],
-  );
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
-  const handleFormChange = useCallback(
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const { name, value } = event.target;
-      setFormData((prevData) => ({ ...prevData, [name]: value }));
-    },
-    [],
-  );
+  const handleFormChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
 
   return (
     <div className="container min-h-screen flex justify-center items-center">
@@ -191,4 +161,4 @@ const Authform = ({ id, userSession }: AuthFormProps) => {
   );
 };
 
-export default Authform;
+export default UpdateForm;
