@@ -6,7 +6,6 @@ import { useRouter } from 'next/navigation';
 import { SessionProps } from '@/lib/types';
 
 const Session = ({ session, userSession }: SessionProps) => {
-  console.log('🚀 ~ file: Session.tsx:9 ~ Session ~ userSession:', userSession);
   const router = useRouter();
   const userId = userSession?.user?.id;
   const userName = userSession?.user?.name;
@@ -22,6 +21,8 @@ const Session = ({ session, userSession }: SessionProps) => {
   const [eatenItems, setEatenItems] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFinalizing, setIsFinalizing] = useState(false);
+  const [finalizeError, setFinalizeError] = useState('');
+  const [submitError, setSubmitError] = useState('');
 
   const handleItemClick = useCallback(
     (itemId: string) => {
@@ -49,7 +50,9 @@ const Session = ({ session, userSession }: SessionProps) => {
       setEatenItems(newEatenItems);
       router.refresh();
     } catch (error) {
-      console.log(error);
+      if (error instanceof Error) {
+        setSubmitError(error.message);
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -64,7 +67,9 @@ const Session = ({ session, userSession }: SessionProps) => {
       await finalizeSession(sessionId, userId);
       router.refresh();
     } catch (error) {
-      console.log(error);
+      if (error instanceof Error) {
+        setFinalizeError(error.message);
+      }
     } finally {
       setIsFinalizing(false);
     }
@@ -76,6 +81,26 @@ const Session = ({ session, userSession }: SessionProps) => {
         id="session-items"
         className="flex flex-col items-center flex-grow"
       >
+        {finalizeError && (
+          <div className="alert alert-error shadow-lg mt-3  ">
+            <div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="stroke-current flex-shrink-0 h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>{finalizeError}</span>
+            </div>
+          </div>
+        )}
         {session.ownerId === userId && (
           <div className="my-3">
             <button
@@ -119,6 +144,26 @@ const Session = ({ session, userSession }: SessionProps) => {
             <p className="text-center text-red-500">
               Please select what you ate before submitting.
             </p>
+          </div>
+        )}
+        {submitError && (
+          <div className="alert alert-error shadow-lg mt-3  ">
+            <div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="stroke-current flex-shrink-0 h-6 w-6"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+              <span>{submitError}</span>
+            </div>
           </div>
         )}
         <button

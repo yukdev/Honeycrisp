@@ -21,7 +21,7 @@ export const metadata = {
   description: 'Your user-friendly bill-splitting app',
 };
 
-export default async function RootLayout({ children }: RootLayoutProps) {
+const RootLayout = async ({ children }: RootLayoutProps) => {
   const userSession = await getServerSession(authOptions);
 
   return (
@@ -36,4 +36,6 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       </body>
     </html>
   );
-}
+};
+
+export default RootLayout;

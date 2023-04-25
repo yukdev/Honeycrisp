@@ -317,14 +317,12 @@ router.post('/:sessionId/finalize', async (req, res, next) => {
       throw new NotFoundError(`Session not found with id ${sessionId}`);
     }
 
-    // Check if session has already been finalized
     if (session.finalized) {
       throw new BadRequestError(
         `Session with id ${sessionId} has already been finalized`,
       );
     }
 
-    // Check if it's the owner finalizing the session
     if (session.ownerId !== userId) {
       throw new BadRequestError(
         `Only the owner of the session can finalize it`,
@@ -333,7 +331,6 @@ router.post('/:sessionId/finalize', async (req, res, next) => {
 
     const split = calculateSplit(session as Session);
 
-    // Update the session with the split
     await prisma.session.update({
       where: { id: sessionId },
       data: { split, finalized: true },
@@ -345,6 +342,55 @@ router.post('/:sessionId/finalize', async (req, res, next) => {
   }
 });
 
+/**
+ * POST /sessions/:sessionId/unfinalize
+ *
+ * Unfinalizes a session
+ */
+router.post('/:sessionId/unfinalize', async (req, res, next) => {
+  try {
+    const { sessionId } = req.params;
+    const { userId } = req.body;
+
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: { owner: true },
+    });
+
+    if (!session) {
+      throw new NotFoundError(`Session not found with id ${sessionId}`);
+    }
+
+    if (!session.finalized) {
+      throw new BadRequestError(
+        `Session with id ${sessionId} has not been finalized`,
+      );
+    }
+
+    if (session.ownerId !== userId) {
+      throw new BadRequestError(
+        `Only the owner of the session can unfinalize it`,
+      );
+    }
+
+    await prisma.session.update({
+      where: { id: sessionId },
+      data: { finalized: false },
+    });
+
+    res.json({
+      message: `Successfully unfinalized session with ID ${sessionId}`,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ * POST /sessions/:sessionId/paid
+ *
+ * Marks a user as paid for a session
+ */
 router.post('/:sessionId/paid', async (req, res, next) => {
   try {
     const { sessionId } = req.params;

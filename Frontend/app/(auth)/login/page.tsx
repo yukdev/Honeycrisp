@@ -1,5 +1,7 @@
 import AuthForm from '@/components/AuthForm';
 
-export default async function Login() {
+const Login = async () => {
   return <AuthForm mode="login" />;
-}
+};
+
+export default Login;

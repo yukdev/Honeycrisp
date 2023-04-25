@@ -110,6 +110,14 @@ export const finalizeSession = async (sessionId: string, userId: string) => {
   });
 };
 
+export const unfinalizeSession = async (sessionId: string, userId: string) => {
+  return await fetcher({
+    url: `sessions/${sessionId}/unfinalize`,
+    method: 'POST',
+    body: { userId },
+  });
+};
+
 export const register = async (user: RegisterUser) => {
   return await fetcher({
     url: 'users/register',

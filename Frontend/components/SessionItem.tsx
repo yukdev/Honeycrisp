@@ -1,4 +1,5 @@
-import { memo, useEffect, useState } from 'react';
+'use client';
+import { useEffect, useState } from 'react';
 
 interface ItemEaten {
   name: string;
@@ -23,7 +24,7 @@ interface SessionItemProps {
   onItemClick: (itemId: string) => void;
 }
 
-const SessionItem = memo(function SessionItem({
+function SessionItem({
   index,
   item,
   itemsEaten,
@@ -78,6 +79,6 @@ const SessionItem = memo(function SessionItem({
       </td>
     </tr>
   );
-});
+}
 
 export default SessionItem;

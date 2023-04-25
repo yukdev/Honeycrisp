@@ -52,7 +52,6 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
           if (response) {
             const { error, url } = response;
             if (error) {
-              console.log(error);
               setError(error);
             }
             if (url) {
