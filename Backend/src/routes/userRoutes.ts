@@ -4,7 +4,9 @@ import prisma from '../db';
 import { BadRequestError } from '../expressErrors';
 import userRegister from '../schemas/userRegister.json';
 import userLogin from '../schemas/userLogin.json';
-import { hashPassword, comparePassword, generateToken } from '../helpers/auth';
+import userUpdate from '../schemas/userUpdate.json';
+import guestUpdate from '../schemas/guestUpdate.json';
+import { hashPassword, comparePassword } from '../helpers/auth';
 
 const router = Router();
 
@@ -88,6 +90,110 @@ router.post('/login', async (req, res, next) => {
     }
 
     return res.status(200).json(user);
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(400).json({ error: error.message });
+    }
+  }
+});
+
+/**
+ * PUT /users/:id
+ *
+ * Updates a user's information
+ */
+router.put('/:id', async (req, res, next) => {
+  try {
+    const { isGuest, name, email, password, currentPassword } = req.body;
+
+    let updatedUser;
+    const { id } = req.params;
+
+    if (isGuest) {
+      const validator = validate(req.body, guestUpdate, { required: true });
+
+      if (!validator.valid) {
+        const errors = validator.errors.map((e) => e.stack).join('\n');
+        throw new BadRequestError(errors);
+      }
+
+      updatedUser = await prisma.user.update({
+        where: { id },
+        data: {
+          name,
+          email,
+          password: await hashPassword(password),
+          isGuest: false,
+        },
+      });
+    } else {
+      const validator = validate(req.body, userUpdate, { required: true });
+
+      if (!validator.valid) {
+        const errors = validator.errors.map((e) => e.stack).join('\n');
+        throw new BadRequestError(errors);
+      }
+
+      const user = await prisma.user.findUnique({ where: { id } });
+      if (!user) {
+        throw new BadRequestError('User not found');
+      }
+
+      const validPassword = await comparePassword(
+        currentPassword,
+        user.password,
+      );
+
+      if (!validPassword) {
+        throw new BadRequestError('Invalid password');
+      }
+
+      if (!password) {
+        updatedUser = await prisma.user.update({
+          where: { id },
+          data: {
+            name,
+            email,
+          },
+        });
+      } else {
+        updatedUser = await prisma.user.update({
+          where: { id },
+          data: {
+            name,
+            email,
+            password: await hashPassword(password),
+          },
+        });
+      }
+    }
+
+    return res.json(updatedUser);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
+ *
+ * POST /users/guest-login
+ *
+ * Logs in a guest user
+ */
+router.post('/guest-login', async (req, res, next) => {
+  try {
+    const { name, email, password } = req.body;
+
+    const newUser = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: await hashPassword(password),
+        isGuest: true,
+      },
+    });
+
+    return res.status(200).json(newUser);
   } catch (error) {
     if (error instanceof Error) {
       return res.status(400).json({ error: error.message });

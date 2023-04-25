@@ -1,7 +1,7 @@
 // import { Item } from '@prisma/client';
 // import prisma from '../db';
 
-interface Item1 {
+interface BillItem {
   id: string;
   quantity: number;
   price: number;
@@ -19,10 +19,10 @@ export interface Session {
   tip: number;
   bill: number;
   split: JSON | null;
-  items: Item[];
+  items: SplitItem[];
 }
 
-interface Item {
+interface SplitItem {
   id: string;
   name: string;
   price: number;
@@ -51,7 +51,7 @@ export interface UserSplit {
 }
 
 export function calculateBill(
-  items: Item1[],
+  items: BillItem[],
   tax: number,
   tip: number,
 ): number {
@@ -67,7 +67,7 @@ export function calculateBill(
 
 export function calculateSplit(
   session: Session,
-): { id: number; name: string; split: number }[] {
+): { id: string; name: string; split: number }[] {
   const userBills: Record<string, number> = {};
   const { items, tax, tip } = session;
 
@@ -93,7 +93,7 @@ export function calculateSplit(
 
   const userId = session.ownerId;
   return Object.entries(split).map(([id, split]) => ({
-    id: parseInt(id),
+    id,
     name:
       session.items
         .flatMap((item) => item.userItems)
