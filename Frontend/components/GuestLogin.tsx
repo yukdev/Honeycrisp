@@ -5,6 +5,7 @@ import { guestLogin } from '@/lib/api';
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { FaExclamationTriangle } from 'react-icons/fa';
 
 interface GuestLoginProps {
   id: string;
@@ -21,9 +22,7 @@ const GuestLogin = ({ id }: GuestLoginProps) => {
     setShowGuestForm(true);
   };
 
-  const handleGuestNameChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
+  const handleGuestNameInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setGuestName(event.target.value);
   };
 
@@ -61,21 +60,9 @@ const GuestLogin = ({ id }: GuestLoginProps) => {
   return (
     <div className="flex justify-center my-2">
       {error && (
-        <div className="alert alert-error shadow-lg mt-3  ">
+        <div className="alert alert-error shadow-lg my-3">
           <div>
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="stroke-current flex-shrink-0 h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-              />
-            </svg>
+            <FaExclamationTriangle />
             <span>{error}</span>
           </div>
         </div>
@@ -85,7 +72,7 @@ const GuestLogin = ({ id }: GuestLoginProps) => {
           <input
             type="text"
             placeholder="Enter your name"
-            onChange={handleGuestNameChange}
+            onChange={handleGuestNameInput}
             className="input input-sm input-bordered input-accent text-center max-w-xs mr-2"
           />
           <button

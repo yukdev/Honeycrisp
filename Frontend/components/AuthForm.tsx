@@ -5,6 +5,7 @@ import { signIn } from 'next-auth/react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useCallback, useState } from 'react';
+import { FaExclamationTriangle } from 'react-icons/fa';
 
 const registerContent = {
   linkUrl: '/login',
@@ -40,6 +41,7 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
       setIsSubmitting(true);
+      setError('');
       if (mode === 'login') {
         try {
           const response = await signIn('login', {
@@ -147,26 +149,14 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
               />
             </div>
             {error && (
-              <div className="alert alert-error shadow-lg mt-3  ">
+              <div className="alert alert-error shadow-lg mt-3">
                 <div>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    className="stroke-current flex-shrink-0 h-6 w-6"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-                    />
-                  </svg>
+                  <FaExclamationTriangle />
                   <span>{error}</span>
                 </div>
               </div>
             )}
-            <div className="my-3">
+            <div className="mt-3">
               <button
                 className={`btn btn-sm btn-secondary ${
                   isSubmitting && 'loading'
