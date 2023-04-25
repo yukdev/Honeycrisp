@@ -6,6 +6,7 @@ import SessionFinalized from '@/components/SessionFinalized';
 import GuestLogin from '@/components/GuestLogin';
 import { FaShare } from 'react-icons/fa';
 import ShareModal from '@/components/ShareModal';
+import NotFound from '@/components/NotFound';
 
 interface SessionPageProps {
   params: {
@@ -16,7 +17,12 @@ interface SessionPageProps {
 const SessionPage = async ({ params: { id } }: SessionPageProps) => {
   const userSession = ((await getServerSession(authOptions)) as any) ?? {};
   const userId = userSession?.user?.id;
-  const session = await getSession(id);
+  let session;
+  try {
+    session = await getSession(id);
+  } catch (error) {
+    return <NotFound errorMessage={`Session not found with id: ${id}`} />;
+  }
   const { finalized } = session;
 
   return (

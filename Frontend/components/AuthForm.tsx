@@ -12,6 +12,7 @@ const registerContent = {
   header: 'Create a new account',
   subheader: 'Please enter your details',
   buttonText: 'Register',
+  buttonTextLoading: 'Registering...',
 };
 
 const loginContent = {
@@ -20,6 +21,7 @@ const loginContent = {
   header: 'Welcome back!',
   subheader: 'Please login to your account',
   buttonText: 'Login',
+  buttonTextLoading: 'Logging in...',
 };
 
 const initialFormData = {
@@ -31,11 +33,13 @@ const initialFormData = {
 const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
   const [formData, setFormData] = useState(initialFormData);
   const [error, setError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
   const handleSubmit = useCallback(
     async (event: React.FormEvent<HTMLFormElement>) => {
       event.preventDefault();
+      setIsSubmitting(true);
       if (mode === 'login') {
         try {
           const response = await signIn('login', {
@@ -60,6 +64,8 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
           if (error instanceof Error) {
             setError(error.message);
           }
+        } finally {
+          setIsSubmitting(false);
         }
       } else {
         const { name, email, password } = formData;
@@ -78,6 +84,8 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
           if (error instanceof Error) {
             setError(error.message);
           }
+        } finally {
+          setIsSubmitting(false);
         }
       }
     },
@@ -160,8 +168,14 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
               </div>
             )}
             <div className="my-3">
-              <button className="btn btn-sm btn-secondary">
-                {formContent.buttonText}
+              <button
+                className={`btn btn-sm btn-secondary ${
+                  isSubmitting && 'loading'
+                }`}
+              >
+                {isSubmitting
+                  ? formContent.buttonTextLoading
+                  : formContent.buttonText}
               </button>
             </div>
             <div>
