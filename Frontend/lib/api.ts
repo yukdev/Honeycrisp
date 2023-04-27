@@ -15,6 +15,10 @@ interface RegisterUser extends LoginUser {
   name: string;
 }
 
+interface GuestUser extends RegisterUser {
+  sessionId: string;
+}
+
 interface UpdateUser {
   name: string;
   email: string;
@@ -134,7 +138,7 @@ export const login = async (user: LoginUser) => {
   });
 };
 
-export const guestLogin = async (user: RegisterUser) => {
+export const guestLogin = async (user: GuestUser) => {
   return await fetcher({
     url: 'users/guest-login',
     method: 'POST',

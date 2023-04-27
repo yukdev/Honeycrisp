@@ -182,7 +182,7 @@ router.put('/:id', async (req, res, next) => {
  */
 router.post('/guest-login', async (req, res, next) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, password, sessionId } = req.body;
 
     const newUser = await prisma.user.create({
       data: {
@@ -193,7 +193,24 @@ router.post('/guest-login', async (req, res, next) => {
       },
     });
 
-    return res.status(200).json(newUser);
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+    });
+
+    if (!session) {
+      throw new BadRequestError('Session not found');
+    }
+
+    const updatedSession = await prisma.session.update({
+      where: { id: sessionId },
+      data: {
+        guests: Array.isArray(session.guests)
+          ? session.guests.concat({ id: newUser.id, name: newUser.name })
+          : [{ id: newUser.id, name: newUser.name }],
+      },
+    });
+
+    return res.status(200).json({ newUser, updatedSession });
   } catch (error) {
     if (error instanceof Error) {
       return res.status(400).json({ error: error.message });

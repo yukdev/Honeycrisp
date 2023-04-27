@@ -33,10 +33,11 @@ const GuestLogin = ({ id }: GuestLoginProps) => {
       const guestEmail = `${uuid().slice(0, 8)}@guest.com`;
       const guestPassword = uuid().slice(0, 8);
 
-      const newUser = await guestLogin({
+      const { newUser } = await guestLogin({
         name: guestName,
         email: guestEmail,
         password: guestPassword,
+        sessionId: id,
       });
 
       if (newUser) {

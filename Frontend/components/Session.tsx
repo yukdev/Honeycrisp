@@ -5,7 +5,7 @@ import { eatSessionItems, finalizeSession } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { FaExclamationTriangle } from 'react-icons/fa';
 import OwnerGuestsPanel from './OwnerGuestsPanel';
-import { DetailedSession, userSession } from '@/lib/types';
+import { DetailedSession, Guest, userSession } from '@/lib/types';
 interface SessionProps {
   session: DetailedSession;
   userSession: userSession;
@@ -29,6 +29,7 @@ const Session = ({ session, userSession }: SessionProps) => {
   const [isFinalizing, setIsFinalizing] = useState(false);
   const [finalizeError, setFinalizeError] = useState('');
   const [submitError, setSubmitError] = useState('');
+  const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
 
   const handleItemClick = useCallback(
     (itemId: string) => {
@@ -83,6 +84,14 @@ const Session = ({ session, userSession }: SessionProps) => {
     }
   };
 
+  const handleGuestSelect = (guest: Guest | null) => {
+    console.log(
+      '🚀 ~ file: Session.tsx:90 ~ handleGuestSelect ~ guest:',
+      guest,
+    );
+    setSelectedGuest(guest);
+  };
+
   return (
     <section
       id="session-items"
@@ -97,16 +106,29 @@ const Session = ({ session, userSession }: SessionProps) => {
         </div>
       )}
       {session.ownerId === userId && (
-        <div className="my-3">
+        <div className="my-3 flex flex-col justify-center items-center">
           <button
             onClick={handleFinalize}
             className={`btn btn-accent btn-sm ${isFinalizing && 'loading'}`}
           >
             {isFinalizing ? 'Finalizing...' : 'Finalize'}
           </button>
+          <div className="collapse collapse-arrow ml-2">
+            <input type="checkbox" />
+            <div className="collapse-title text-xl font-medium text-center">
+              <p>Confirm on behalf of guests</p>
+            </div>
+            <div className="collapse-content">
+              <OwnerGuestsPanel
+                sessionId={sessionId}
+                guests={session.guests}
+                selectedGuest={selectedGuest}
+                handleGuestSelect={handleGuestSelect}
+              />
+            </div>
+          </div>
         </div>
       )}
-      <OwnerGuestsPanel guests={session.guests} />
       <div className="w-full max-w-2xl text-center">
         <h2 className="text-2xl font-bold text-accent">Session Items</h2>
       </div>
