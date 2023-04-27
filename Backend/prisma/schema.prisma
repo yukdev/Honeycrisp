@@ -34,6 +34,7 @@ model Session {
   tip       Int      @default(20)
   bill      Float
   split     Json?
+  guests    Json?
 }
 
 model Item {

@@ -3,6 +3,7 @@ import { createSession } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaExclamationTriangle, FaTimes } from 'react-icons/fa';
+import { NewSessionData, NewItem } from '@/lib/types';
 
 interface NewSessionFormProps {
   userSession: {
@@ -15,22 +16,9 @@ interface NewSessionFormProps {
   };
 }
 
-interface Item {
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-interface SessionData {
-  name: string;
-  tax: number;
-  tip: number;
-  items: Item[];
-}
-
 const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
   const router = useRouter();
-  const [sessionData, setSessionData] = useState<SessionData>({
+  const [sessionData, setSessionData] = useState<NewSessionData>({
     name: '',
     tax: 8.875,
     tip: 20,
@@ -51,7 +39,7 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
 
   const handleItemChange = (
     index: number,
-    field: keyof Item,
+    field: keyof NewItem,
     value: string | number,
   ) => {
     const newItems = [...sessionData.items];

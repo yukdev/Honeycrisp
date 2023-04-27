@@ -2,7 +2,7 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]/route';
 import { getSessions } from '@/lib/api';
 import Link from 'next/link';
-import { UsersSession } from '@/lib/types';
+import { Session } from '@/lib/types';
 
 const SessionsPage = async () => {
   const userSession = (await getServerSession(authOptions)) as any;
@@ -10,7 +10,7 @@ const SessionsPage = async () => {
     user: { id: userId },
   } = userSession;
 
-  let sessions = (await getSessions(userId)) as UsersSession[];
+  let sessions = (await getSessions(userId)) as Session[];
   sessions.sort((a, b) => +new Date(b.updatedAt) - +new Date(a.updatedAt));
 
   const finalizedSessions = sessions.filter((session) => session.finalized);
@@ -40,7 +40,7 @@ const SessionsPage = async () => {
       )}
       <div className="flex flex-col w-full">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {unfinalizedSessions.map((session: UsersSession) => (
+          {unfinalizedSessions.map((session: Session) => (
             <Link
               href={`/sessions/${session.id}`}
               key={session.id}
@@ -74,7 +74,7 @@ const SessionsPage = async () => {
           </h1>
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {finalizedSessions.map((session: UsersSession) => (
+          {finalizedSessions.map((session: Session) => (
             <Link
               href={`/sessions/${session.id}`}
               key={session.id}
@@ -101,8 +101,8 @@ const SessionsPage = async () => {
                   </div>
                   <progress
                     className="progress progress-accent w-100 mt-2"
-                    value={session.split.filter((s) => s.paid).length}
-                    max={session.split.length}
+                    value={session.split!.filter((s) => s.paid).length}
+                    max={session.split!.length}
                   ></progress>
                 </div>
               </div>

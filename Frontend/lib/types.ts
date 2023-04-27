@@ -1,13 +1,4 @@
-export interface SessionItem {
-  id: string;
-  name: string;
-  price: number;
-  createdAt: string;
-  updatedAt: string;
-  sessionId: string;
-}
-
-export interface UsersSession {
+export interface Session {
   id: string;
   name: string;
   createdAt: string;
@@ -18,12 +9,55 @@ export interface UsersSession {
   tax: number;
   tip: number;
   bill: number;
-  split: {
-    id: string;
+  split?: Split[];
+  guests?: Guest[];
+}
+
+export interface Split {
+  id: string;
+  name: string;
+  split: number;
+  paid: boolean;
+}
+
+export interface Guest {
+  id: string;
+  name: string;
+}
+
+export interface DetailedSession {
+  id: string;
+  name: string;
+  createdAt: string;
+  updatedAt: string;
+  ownerId: string;
+  ownerName: string;
+  finalized: boolean;
+  tax: number;
+  tip: number;
+  bill: number;
+  split: Split[];
+  guests: Guest[];
+  items: SessionItem[];
+  itemsEaten: ItemEaten[];
+}
+
+export interface userSession {
+  user: {
     name: string;
-    paid: boolean;
-    split: number;
-  }[];
+    email: string;
+    id: string;
+    isGuest: boolean;
+  };
+}
+
+export interface SessionItem {
+  id: string;
+  name: string;
+  price: number;
+  createdAt: string;
+  updatedAt: string;
+  sessionId: string;
 }
 
 export interface ItemEaten {
@@ -35,28 +69,16 @@ export interface ItemEaten {
   }[];
 }
 
-export interface SessionProps {
-  userSession: {
-    user: {
-      name: string;
-      email: string;
-      id: string;
-      image?: any;
-    };
-  };
-  session: {
-    id: string;
-    name: string;
-    createdAt: string;
-    updatedAt: string;
-    ownerId: string;
-    ownerName: string;
-    finalized: boolean;
-    tax: number;
-    tip: number;
-    bill: number;
-    split: JSON;
-    items: SessionItem[];
-    itemsEaten: ItemEaten[];
-  };
+// new session types
+export interface NewItem {
+  name: string;
+  price: number;
+  quantity: number;
+}
+
+export interface NewSessionData {
+  name: string;
+  tax: number;
+  tip: number;
+  items: NewItem[];
 }

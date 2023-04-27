@@ -3,8 +3,13 @@ import { useState, useCallback } from 'react';
 import SessionItem from './SessionItem';
 import { eatSessionItems, finalizeSession } from '@/lib/api';
 import { useRouter } from 'next/navigation';
-import { SessionProps } from '@/lib/types';
 import { FaExclamationTriangle } from 'react-icons/fa';
+import OwnerGuestsPanel from './OwnerGuestsPanel';
+import { DetailedSession, userSession } from '@/lib/types';
+interface SessionProps {
+  session: DetailedSession;
+  userSession: userSession;
+}
 
 const Session = ({ session, userSession }: SessionProps) => {
   const router = useRouter();
@@ -101,6 +106,7 @@ const Session = ({ session, userSession }: SessionProps) => {
           </button>
         </div>
       )}
+      <OwnerGuestsPanel guests={session.guests} />
       <div className="w-full max-w-2xl text-center">
         <h2 className="text-2xl font-bold text-accent">Session Items</h2>
       </div>
@@ -146,7 +152,7 @@ const Session = ({ session, userSession }: SessionProps) => {
       )}
       <button
         onClick={handleSubmit}
-        className={`btn btn-primary mt-3 ${isSubmitting && 'loading'}`}
+        className={`btn btn-primary my-3 ${isSubmitting && 'loading'}`}
       >
         {isSubmitting ? 'Submitting...' : 'Submit'}
       </button>

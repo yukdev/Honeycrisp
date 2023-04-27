@@ -1,20 +1,19 @@
 'use client';
-import { SessionProps } from '@/lib/types';
 import { useState } from 'react';
 import { togglePaid, unfinalizeSession } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { FaExclamationTriangle } from 'react-icons/fa';
-interface UserSplit {
-  id: string;
-  name: string;
-  split: number;
-  paid: boolean;
+import { DetailedSession, Split, userSession } from '@/lib/types';
+
+interface SessionFinalizedProps {
+  session: DetailedSession;
+  userSession: userSession;
 }
 
-const SessionFinalized = ({ session, userSession }: SessionProps) => {
+const SessionFinalized = ({ session, userSession }: SessionFinalizedProps) => {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState('split');
-  const [split, setSplit] = useState<UserSplit[]>(
+  const [split, setSplit] = useState<Split[]>(
     JSON.parse(JSON.stringify(session.split)),
   );
   const [processingUserId, setProcessingUserId] = useState<string | null>(null);
@@ -36,7 +35,7 @@ const SessionFinalized = ({ session, userSession }: SessionProps) => {
     }
     try {
       setProcessingUserId(id);
-      const updatedSplit = split.map((user: UserSplit) => {
+      const updatedSplit = split.map((user: Split) => {
         if (user.id === id) {
           return { ...user, paid: !user.paid };
         }
