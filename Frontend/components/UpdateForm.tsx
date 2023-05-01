@@ -73,13 +73,13 @@ const UpdateForm = ({ id, userSession }: UpdateFormProps) => {
     <div className="container min-h-screen flex justify-center items-center">
       <div className="card w-96 bg-neutral text-neutral-content">
         <div className="card-body items-center flex flex-col">
-          <h3 className="card-title text-primary text-3xl text-center">
+          <h3 className="card-title text-3xl text-center">
             {isGuest ? 'Fill out' : 'Update'} your information
           </h3>
           <form onSubmit={handleSubmit} className="w-75">
             <div className="form-control w-full max-w-xs flex flex-col justify-center items-center">
               <label className="label flex justify-center items-center">
-                <span className="label-text">Name</span>
+                <span className="label-text text-neutral-content">Name</span>
               </label>
               <input
                 type="text"
@@ -91,7 +91,7 @@ const UpdateForm = ({ id, userSession }: UpdateFormProps) => {
             </div>
             <div className="form-control w-full max-w-xs flex flex-col justify-center items-center">
               <label className="label flex justify-center items-center">
-                <span className="label-text">Email</span>
+                <span className="label-text text-neutral-content">Email</span>
               </label>
               <input
                 type="email"
@@ -101,7 +101,7 @@ const UpdateForm = ({ id, userSession }: UpdateFormProps) => {
                 onChange={handleFormChange}
               />
               <label className="label flex justify-center items-center">
-                <span className="label-text">
+                <span className="label-text text-neutral-content">
                   {!userSession.user.isGuest && 'New '}Password
                 </span>
               </label>
@@ -116,7 +116,9 @@ const UpdateForm = ({ id, userSession }: UpdateFormProps) => {
               {!isGuest && (
                 <>
                   <label className="label flex justify-center items-center">
-                    <span className="label-text">Current Password</span>
+                    <span className="label-text text-neutral-content">
+                      Current Password
+                    </span>
                   </label>
                   <input
                     type="password"

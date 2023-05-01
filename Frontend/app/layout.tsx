@@ -25,12 +25,12 @@ const RootLayout = async ({ children }: RootLayoutProps) => {
   const userSession = await getServerSession(authOptions);
 
   return (
-    <html lang="en" data-theme="forest">
+    <html lang="en" data-theme="business">
       <body className={openSans.className}>
         <Provider>
           {/* @ts-expect-error Server Component */}
           <NavBar userSession={userSession} />
-          <main className="flex justify-center bg-base-200">{children}</main>
+          <main className="flex justify-center bg-base-100">{children}</main>
           <Footer />
         </Provider>
       </body>

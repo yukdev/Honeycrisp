@@ -177,7 +177,7 @@ const SessionFinalized = ({ session, userSession }: SessionFinalizedProps) => {
                           <li
                             key={itemEaten.itemId}
                             className={`inline mx-1 ${
-                              user.id == userId && 'font-bold text-secondary'
+                              user.id == userId && 'font-bold text-primary'
                             }`}
                           >
                             {user.name}

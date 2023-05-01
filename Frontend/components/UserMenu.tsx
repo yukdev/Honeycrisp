@@ -24,7 +24,7 @@ const UserMenu = ({ userSession }: UserMenuProps) => {
         }`}
         <FaBars />
       </a>
-      <ul className="p-2 bg-base-100">
+      <ul className="p-2 bg-base-100 text-base-content">
         <li>
           <Link href={`users/${userSession.user.id}`}>Profile</Link>
         </li>

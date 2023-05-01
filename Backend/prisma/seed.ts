@@ -2,60 +2,58 @@ import prisma from '../src/db';
 import { hashPassword } from '../src/helpers/auth';
 
 async function seed() {
-  // Delete all existing data
   await prisma.userItem.deleteMany();
   await prisma.item.deleteMany();
   await prisma.session.deleteMany();
   await prisma.user.deleteMany();
 
-  // Create users
   const user1 = await prisma.user.create({
     data: {
       id: '1',
-      email: 'georgeweng@example.com',
+      email: 'georgedeng@email.com',
       name: 'George',
-      password: await hashPassword('yukiho'),
+      password: await hashPassword('georgedeng'),
       isAdmin: true,
     },
   });
   const user2 = await prisma.user.create({
     data: {
       id: '2',
-      email: 'ericlin@example.com',
+      email: 'ericbin@email.com',
       name: 'Eric',
-      password: await hashPassword('yooks'),
+      password: await hashPassword('ericbin'),
     },
   });
   const user3 = await prisma.user.create({
     data: {
       id: '3',
-      email: 'williechoi@example.com',
+      email: 'bobslop@email.com',
       name: 'Bob',
-      password: await hashPassword('bob'),
+      password: await hashPassword('bobslop'),
     },
   });
   const user4 = await prisma.user.create({
     data: {
       id: '4',
-      email: 'kenyu@example.com',
-      name: 'Ken',
-      password: await hashPassword('knhr'),
+      email: 'kennyyu@email.com',
+      name: 'Kenny',
+      password: await hashPassword('kennyyu'),
     },
   });
   const user5 = await prisma.user.create({
     data: {
       id: '5',
-      email: 'johnsong@example.com',
+      email: 'johndon@email.com',
       name: 'John',
-      password: await hashPassword('jong'),
+      password: await hashPassword('johndon'),
     },
   });
   const user6 = await prisma.user.create({
     data: {
       id: '6',
-      email: 'chengjason@example.com',
-      name: 'Cheng',
-      password: await hashPassword('jason'),
+      email: 'jasonsin@example.com',
+      name: 'Jason',
+      password: await hashPassword('jasonsin'),
     },
   });
 

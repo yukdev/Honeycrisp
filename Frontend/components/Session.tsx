@@ -129,7 +129,7 @@ const Session = ({ session, userSession }: SessionProps) => {
           </div>
         </div>
       )}
-      <div className="w-full max-w-2xl text-center">
+      <div className="w-full max-w-2xl text-center mb-2">
         <h2 className="text-2xl font-bold text-accent">Session Items</h2>
       </div>
       <div className="overflow-x-auto">

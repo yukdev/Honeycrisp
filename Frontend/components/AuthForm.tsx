@@ -115,7 +115,7 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
             {mode === 'register' && (
               <div className="form-control w-full max-w-xs flex flex-col justify-center items-center">
                 <label className="label">
-                  <span className="label-text">Name</span>
+                  <span className="label-text text-neutral-content">Name</span>
                 </label>
                 <input
                   type="text"
@@ -128,7 +128,7 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
             )}
             <div className="form-control w-full max-w-xs flex flex-col justify-center items-center">
               <label className="label">
-                <span className="label-text">Email</span>
+                <span className="label-text text-neutral-content">Email</span>
               </label>
               <input
                 type="email"
@@ -138,7 +138,9 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
                 onChange={handleFormChange}
               />
               <label className="label">
-                <span className="label-text">Password</span>
+                <span className="label-text text-neutral-content">
+                  Password
+                </span>
               </label>
               <input
                 type="password"
@@ -150,13 +152,11 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
             </div>
             {error && (
               <div className="alert alert-error shadow-lg mt-3">
-                <div>
-                  <FaExclamationTriangle />
-                  <span>{error}</span>
-                </div>
+                <FaExclamationTriangle />
+                <span>{error}</span>
               </div>
             )}
-            <div className="mt-3">
+            <div className="mt-4">
               <button
                 className={`btn btn-sm btn-secondary ${
                   isSubmitting && 'loading'
@@ -167,7 +167,7 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
                   : formContent.buttonText}
               </button>
             </div>
-            <div>
+            <div className="mt-3">
               <Link href={formContent.linkUrl} className="text-accent">
                 {formContent.linkText}
               </Link>

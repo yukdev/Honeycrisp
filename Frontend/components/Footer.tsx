@@ -2,7 +2,7 @@ import { FaGithub, FaLink, FaLinkedin } from 'react-icons/fa';
 
 const Footer = () => {
   return (
-    <footer className="footer p-10 bg-neutral text-neutral-content">
+    <footer className="footer p-7 bg-neutral text-neutral-content">
       <div>
         <span className="footer-title">Project Repo</span>
         <div className="grid grid-flow-col gap-4">

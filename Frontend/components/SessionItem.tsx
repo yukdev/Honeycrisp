@@ -59,7 +59,7 @@ function SessionItem({
         {itemsEaten[index]?.eatenBy.map((eater, index) => (
           <div
             key={index}
-            className={eater.id === userId ? 'font-bold text-secondary' : ''}
+            className={eater.id === userId ? 'font-bold text-primary' : ''}
           >
             {eater.name}
           </div>
