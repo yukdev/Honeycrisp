@@ -1,4 +1,9 @@
-// TODO: fix
 export const requireAdmin = async (req: any, res: any, next: any) => {
-  return next();
+  const { secret } = req.body;
+
+  if (secret !== process.env.SECRET_KEY) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  next();
 };
