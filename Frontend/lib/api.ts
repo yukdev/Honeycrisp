@@ -7,7 +7,7 @@ import {
   UpdateUser,
 } from './types';
 
-const BASE_URL = 'http://localhost:3001/';
+const BASE_URL = process.env.BASE_URL;
 interface RequestProps {
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
