@@ -24,7 +24,6 @@ const SessionPage = async ({ params: { id } }: SessionPageProps) => {
   } catch (error) {
     return <NotFound errorMessage={`Session not found with id: ${id}`} />;
   }
-  console.log('🚀 ~ file: page.tsx:28 ~ SessionPage ~ session:', session);
   const { finalized } = session;
 
   return (
