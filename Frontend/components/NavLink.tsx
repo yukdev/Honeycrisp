@@ -5,13 +5,23 @@ import { usePathname } from 'next/navigation';
 interface NavLinkProps {
   label: string;
   path: string;
+  center?: boolean;
 }
 
-const NavLink = ({ label, path }: NavLinkProps) => {
+const NavLink = ({ label, path, center }: NavLinkProps) => {
   const pathName = usePathname();
 
   const isActive = pathName === path;
-  return (
+  return center ? (
+    <Link
+      className={`${
+        isActive && 'bg-primary-focus'
+      } btn btn-ghost normal-case text-xl`}
+      href={path}
+    >
+      {label}
+    </Link>
+  ) : (
     <Link
       className={`${isActive && 'bg-primary-focus'} text-lg mx-3`}
       href={path}

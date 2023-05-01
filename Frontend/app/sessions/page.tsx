@@ -49,7 +49,7 @@ const SessionsPage = async () => {
               <div className="card w-96 bg-accent text-accent-content">
                 <div className="card-body">
                   <h2 className="card-title">{session.name}</h2>
-                  <p className="text-accent-content   mt-2">
+                  <p className="text-accent-content mt-2">
                     Owner: {session.ownerName}
                   </p>
                   <div className="flex items-center justify-between">

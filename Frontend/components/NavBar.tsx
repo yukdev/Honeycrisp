@@ -40,12 +40,7 @@ const NavBar = async ({ userSession }: NavBarProps) => {
       </div>
       <div className="navbar-center">
         {userSession?.user && (
-          <Link
-            href="/sessions/new"
-            className="btn btn-ghost normal-case text-xl"
-          >
-            Create session
-          </Link>
+          <NavLink label="Create session" path="/sessions/new" center={true} />
         )}
       </div>
       <div className="navbar-end">
