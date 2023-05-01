@@ -40,7 +40,7 @@ router.get('/', requireAdmin, async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
   try {
-    const { ownerId, ownerName, name, items, tax, tip } = req.body;
+    const { ownerId, ownerName, name, items, tax, tip, tipType } = req.body;
 
     const validator = validate(req.body, sessionCreate, { required: true });
 
@@ -49,7 +49,7 @@ router.post('/', async (req, res, next) => {
       throw new BadRequestError(errors);
     }
 
-    const bill = calculateBill(items, tax, tip);
+    const bill = calculateBill(items, tax, tip, tipType);
 
     const itemsWithQuantity = [];
 
@@ -72,6 +72,7 @@ router.post('/', async (req, res, next) => {
         },
         tax,
         tip,
+        tipType,
         bill,
       },
       include: { items: true },

@@ -152,8 +152,10 @@ const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
             </div>
             {error && (
               <div className="alert alert-error shadow-lg mt-3">
-                <FaExclamationTriangle />
-                <span>{error}</span>
+                <span>
+                  <FaExclamationTriangle />
+                  {error}
+                </span>
               </div>
             )}
             <div className="mt-4">

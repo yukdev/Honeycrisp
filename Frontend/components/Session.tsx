@@ -1,5 +1,5 @@
 'use client';
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import SessionItem from './SessionItem';
 import { eatSessionItems, finalizeSession } from '@/lib/api';
 import { useRouter } from 'next/navigation';
@@ -17,13 +17,7 @@ const Session = ({ session, userSession }: SessionProps) => {
   const userName = userSession?.user?.name;
   const { items, id: sessionId, itemsEaten } = session;
 
-  const [selectedItems, setSelectedItems] = useState<string[]>(() => {
-    const itemsEatenByUser = itemsEaten.filter((itemEaten) =>
-      itemEaten.eatenBy.some((user) => user.id === userId),
-    );
-    return itemsEatenByUser.map((item) => item.itemId);
-  });
-
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [eatenItems, setEatenItems] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isFinalizing, setIsFinalizing] = useState(false);
@@ -48,14 +42,25 @@ const Session = ({ session, userSession }: SessionProps) => {
     try {
       setIsSubmitting(true);
       setSubmitError('');
-      const response = await eatSessionItems({
-        items: selectedItems,
-        userId,
-        userName,
-        sessionId,
-      });
-      const newEatenItems = response.eatenItems;
-      setEatenItems(newEatenItems);
+      if (!selectedGuest) {
+        const response = await eatSessionItems({
+          items: selectedItems,
+          userId,
+          userName,
+          sessionId,
+        });
+        const newEatenItems = response.eatenItems;
+        setEatenItems(newEatenItems);
+      } else {
+        const response = await eatSessionItems({
+          items: selectedItems,
+          userId: selectedGuest.id,
+          userName: selectedGuest.name,
+          sessionId,
+        });
+        const newEatenItems = response.eatenItems;
+        setEatenItems(newEatenItems);
+      }
       router.refresh();
     } catch (error) {
       if (error instanceof Error) {
@@ -85,12 +90,26 @@ const Session = ({ session, userSession }: SessionProps) => {
   };
 
   const handleGuestSelect = (guest: Guest | null) => {
-    console.log(
-      '🚀 ~ file: Session.tsx:90 ~ handleGuestSelect ~ guest:',
-      guest,
-    );
     setSelectedGuest(guest);
   };
+
+  useEffect(() => {
+    if (!selectedGuest) {
+      setSelectedItems(() => {
+        const itemsEatenByUser = itemsEaten.filter((itemEaten) =>
+          itemEaten.eatenBy.some((user) => user.id === userId),
+        );
+        return itemsEatenByUser.map((item) => item.itemId);
+      });
+    } else {
+      setSelectedItems(() => {
+        const itemsEatenbyGuest = itemsEaten.filter((itemEaten) =>
+          itemEaten.eatenBy.some((user) => user.id === selectedGuest!.id),
+        );
+        return itemsEatenbyGuest.map((item) => item.itemId);
+      });
+    }
+  }, [selectedGuest, itemsEaten, userId]);
 
   return (
     <section
@@ -149,7 +168,7 @@ const Session = ({ session, userSession }: SessionProps) => {
                 key={item.id}
                 index={index}
                 item={item}
-                userId={userId}
+                userId={!selectedGuest ? userId : selectedGuest.id}
                 itemsEaten={itemsEaten}
                 onItemClick={handleItemClick}
               />

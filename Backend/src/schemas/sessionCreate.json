@@ -42,8 +42,12 @@
     "tip": {
       "type": "number",
       "minimum": 0
+    },
+    "tipType": {
+      "type": "string",
+      "enum": ["FLAT", "PERCENTAGE"]
     }
   },
   "additionalProperties": false,
-  "required": ["ownerId", "ownerName", "name", "items", "tax", "tip"]
+  "required": ["ownerId", "ownerName", "name", "items", "tax", "tip", "tipType"]
 }

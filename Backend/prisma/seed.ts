@@ -1,3 +1,4 @@
+import { TipType } from '@prisma/client';
 import prisma from '../src/db';
 import { hashPassword } from '../src/helpers/auth';
 
@@ -170,7 +171,9 @@ async function seed() {
       },
       owner: { connect: { id: user1.id } },
       ownerName: user1.name,
-      bill: 23.84,
+      bill: 25.14,
+      tip: 5,
+      tipType: TipType.FLAT,
     },
     include: { items: true },
   });

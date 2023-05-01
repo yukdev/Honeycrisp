@@ -5,6 +5,7 @@ import { authOptions } from '../../api/auth/[...nextauth]/route';
 import SessionFinalized from '@/components/SessionFinalized';
 import GuestLogin from '@/components/GuestLogin';
 import { FaShare } from 'react-icons/fa';
+import { TipType } from '@/lib/types';
 import ShareModal from '@/components/ShareModal';
 import NotFound from '@/components/NotFound';
 
@@ -23,6 +24,7 @@ const SessionPage = async ({ params: { id } }: SessionPageProps) => {
   } catch (error) {
     return <NotFound errorMessage={`Session not found with id: ${id}`} />;
   }
+  console.log('🚀 ~ file: page.tsx:28 ~ SessionPage ~ session:', session);
   const { finalized } = session;
 
   return (
@@ -48,7 +50,11 @@ const SessionPage = async ({ params: { id } }: SessionPageProps) => {
             <h2 className="text-lg font-bold mb-2 text-center text-secondary">
               Tip
             </h2>
-            <p className="text-2xl font-bold text-center text-accent">{`${session.tip}%`}</p>
+            <p className="text-2xl font-bold text-center text-accent">{`${
+              session.tipType === TipType.FLAT
+                ? `$${session.tip}`
+                : `${session.tip}%`
+            }`}</p>
           </div>
           <div className="flex flex-col items-center justify-center mx-8">
             <h2 className="text-lg font-bold mb-2 text-center text-secondary">

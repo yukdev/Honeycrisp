@@ -3,7 +3,7 @@ import { createSession } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaExclamationTriangle, FaTimes } from 'react-icons/fa';
-import { NewSessionData, NewItem } from '@/lib/types';
+import { NewSessionData, TipType, NewItem } from '@/lib/types';
 
 interface NewSessionFormProps {
   userSession: {
@@ -22,6 +22,7 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
     name: '',
     tax: 8.875,
     tip: 20,
+    tipType: TipType.PERCENTAGE,
     items: [{ name: '', price: 0, quantity: 1 }],
   });
   const [error, setError] = useState('');
@@ -118,6 +119,10 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
     return errorMessage;
   };
 
+  const handleTipTypeChange = (type: TipType) => {
+    setSessionData({ ...sessionData, tipType: type });
+  };
+
   return (
     <div className="flex flex-col items-center container min-h-screen mt-5">
       <div className="w-full max-w-2xl">
@@ -125,9 +130,9 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
           Create a new session
         </h1>
       </div>
-      <div className="flex justify-center flex-col">
-        <div className="flex flex-col items-center mb-4">
-          <label className="block font-bold mb-2 text-center" htmlFor="name">
+      <div id="session-info" className="flex justify-center flex-col">
+        <div className="flex flex-col items-center mb-2">
+          <label className="block font-bold mb-1 text-center" htmlFor="name">
             Session Name:
           </label>
           <input
@@ -138,30 +143,52 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
             onChange={handleInputChange}
           />
         </div>
-        <div className="flex justify-between items-center">
-          <label className="block font-bold text-center" htmlFor="tax">
-            Tax:
-          </label>
-          <input
-            className="input input-bordered input-sm input-primary w-24 text-center mx-2"
-            type="number"
-            name="tax"
-            value={sessionData.tax}
-            onChange={handleInputChange}
-          />
-          <label className="block font-bold text-center" htmlFor="tip">
-            Tip:
-          </label>
-          <input
-            className="input input-bordered input-sm input-primary w-24 text-center mx-2"
-            type="number"
-            name="tip"
-            value={sessionData.tip}
-            onChange={handleInputChange}
-          />
+        <div className="flex flex-col items-center">
+          <div className="flex justify-center items-center mb-2">
+            <label className="block font-bold text-center" htmlFor="tax">
+              Tax %:
+            </label>
+            <input
+              className="input input-bordered input-sm input-primary w-24 text-center mx-2"
+              type="number"
+              name="tax"
+              value={sessionData.tax}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="flex justify-center items-center">
+            <label className="block font-bold text-center" htmlFor="tip">
+              Tip:
+            </label>
+            <input
+              className="input input-bordered input-sm input-primary w-24 text-center mx-2"
+              type="number"
+              name="tip"
+              value={sessionData.tip}
+              onChange={handleInputChange}
+            />
+            <div className="btn-group">
+              <button
+                className={`btn btn-sm ${
+                  sessionData.tipType === TipType.PERCENTAGE && 'btn-primary'
+                }`}
+                onClick={() => handleTipTypeChange(TipType.PERCENTAGE)}
+              >
+                %
+              </button>
+              <button
+                className={`btn btn-sm ${
+                  sessionData.tipType === TipType.FLAT && 'btn-primary'
+                }`}
+                onClick={() => handleTipTypeChange(TipType.FLAT)}
+              >
+                Flat
+              </button>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="mt-8">
+      <div className="mt-4">
         <table className="table table-zebra w-full">
           <thead>
             <tr>

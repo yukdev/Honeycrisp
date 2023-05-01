@@ -1,51 +1,18 @@
+import {
+  EatenItems,
+  GuestUser,
+  LoginUser,
+  NewSession,
+  RegisterUser,
+  UpdateUser,
+} from './types';
+
 const BASE_URL = 'http://localhost:3001/';
 interface RequestProps {
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
   body?: any;
   json?: boolean;
-}
-
-interface LoginUser {
-  email: string;
-  password: string;
-}
-
-interface RegisterUser extends LoginUser {
-  name: string;
-}
-
-interface GuestUser extends RegisterUser {
-  sessionId: string;
-}
-
-interface UpdateUser {
-  name: string;
-  email: string;
-  password: string;
-  currentPassword: string;
-}
-
-interface Item {
-  name: string;
-  price: number;
-  quantity: number;
-}
-
-interface NewSession {
-  ownerId: string;
-  ownerName: string;
-  name: string;
-  items: Item[];
-  tax: number;
-  tip: number;
-}
-
-interface EatenItems {
-  items: string[];
-  userId: string;
-  userName: string;
-  sessionId: string;
 }
 
 export const fetcher = async ({

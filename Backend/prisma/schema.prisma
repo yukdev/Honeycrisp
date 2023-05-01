@@ -32,6 +32,7 @@ model Session {
   items     Item[]
   tax       Float    @default(8.875)
   tip       Int      @default(20)
+  tipType   TipType  @default(PERCENTAGE)
   bill      Float
   split     Json?
   guests    Json?
@@ -56,4 +57,9 @@ model UserItem {
   userId    String
   item      Item     @relation(fields: [itemId], references: [id])
   itemId    String
+}
+
+enum TipType {
+  PERCENTAGE
+  FLAT
 }

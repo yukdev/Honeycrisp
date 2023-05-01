@@ -56,6 +56,7 @@ const OwnerGuestsPanel = ({
       }
     } finally {
       setIsSubmitting(false);
+      handleAddGuestClick();
     }
   };
 

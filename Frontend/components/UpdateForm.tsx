@@ -134,8 +134,10 @@ const UpdateForm = ({ id, userSession }: UpdateFormProps) => {
             {error && (
               <div className="alert alert-error shadow-lg mt-3">
                 <div>
-                  <FaExclamationTriangle />
-                  <span>{error}</span>
+                  <span>
+                    <FaExclamationTriangle />
+                    {error}
+                  </span>
                 </div>
               </div>
             )}

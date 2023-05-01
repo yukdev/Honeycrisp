@@ -1,6 +1,8 @@
 // import { Item } from '@prisma/client';
 // import prisma from '../db';
 
+import { TipType } from '@prisma/client';
+
 interface BillItem {
   id: string;
   quantity: number;
@@ -17,6 +19,7 @@ export interface Session {
   finalized: boolean;
   tax: number;
   tip: number;
+  tipType: TipType;
   bill: number;
   split: JSON | null;
   items: SplitItem[];
@@ -54,13 +57,19 @@ export function calculateBill(
   items: BillItem[],
   tax: number,
   tip: number,
+  tipType: TipType,
 ): number {
   const subtotal = items.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0,
   );
   const taxAmount = subtotal * (tax / 100);
-  const tipAmount = subtotal * (tip / 100);
+  let tipAmount = 0;
+  if (tipType === TipType.PERCENTAGE) {
+    tipAmount = subtotal * (tip / 100);
+  } else {
+    tipAmount = tip;
+  }
   const total = subtotal + taxAmount + tipAmount;
   return Number(total.toFixed(2));
 }
@@ -69,7 +78,7 @@ export function calculateSplit(
   session: Session,
 ): { id: string; name: string; split: number }[] {
   const userBills: Record<string, number> = {};
-  const { items, tax, tip } = session;
+  const { items, tax, tip, tipType } = session;
 
   items.forEach((item) => {
     const numEaters = item.userItems.length;
@@ -87,7 +96,13 @@ export function calculateSplit(
       .flatMap((item) => item.userItems)
       .find((userItem) => userItem.user.id === userId)?.user.name;
     if (userName) {
-      split[userId] = roundToTwoDecimals(value * (1 + tip / 100 + tax / 100));
+      let total = value * (1 + tax / 100);
+      if (tipType === TipType.PERCENTAGE) {
+        total += total * (tip / 100);
+      } else {
+        total += tip;
+      }
+      split[userId] = roundToTwoDecimals(total);
     }
   });
 
