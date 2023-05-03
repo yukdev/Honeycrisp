@@ -160,19 +160,23 @@ const Session = ({ session, userSession }: SessionProps) => {
               <th>Price</th>
               <th>Eaten By</th>
               <th>Ate?</th>
+              {session.ownerId === userId && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
-            {items.map((item, index) => (
-              <SessionItem
-                key={item.id}
-                index={index}
-                item={item}
-                userId={!selectedGuest ? userId : selectedGuest.id}
-                itemsEaten={itemsEaten}
-                onItemClick={handleItemClick}
-              />
-            ))}
+            {items
+              .sort((a, b) => a.name.localeCompare(b.name))
+              .map((item, index) => (
+                <SessionItem
+                  key={item.id}
+                  index={index}
+                  item={item}
+                  userId={!selectedGuest ? userId : selectedGuest.id}
+                  itemsEaten={itemsEaten}
+                  onItemClick={handleItemClick}
+                  isOwner={session.ownerId === userId}
+                />
+              ))}
           </tbody>
         </table>
       </div>

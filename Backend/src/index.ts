@@ -3,6 +3,7 @@ import cors from 'cors';
 import { NotFoundError } from './expressErrors';
 import userRoutes from './routes/userRoutes';
 import sessionRoutes from './routes/sessionRoutes';
+import itemRoutes from './routes/itemRoutes';
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.json());
 
 app.use('/users', userRoutes);
 app.use('/sessions', sessionRoutes);
+app.use('/items', itemRoutes);
 
 app.get('/', (req, res) => {
   res.send('This is the backend for the Honeycrisp App!');

@@ -42,6 +42,7 @@ export interface DetailedSession {
   finalized: boolean;
   tax: number;
   tip: number;
+  tipType: TipType;
   bill: number;
   split: Split[];
   guests: Guest[];
@@ -76,7 +77,6 @@ export interface ItemEaten {
   }[];
 }
 
-// new session types
 export interface NewItem {
   name: string;
   price: number;
@@ -89,6 +89,20 @@ export interface NewSessionData {
   tip: number;
   tipType: TipType;
   items: NewItem[];
+}
+
+export interface EditSessionData {
+  name: string;
+  tax: number;
+  tip: number;
+  tipType: TipType;
+  items: EditItem[];
+}
+
+export interface EditItem {
+  id: string;
+  name: string;
+  price: number;
 }
 
 export interface NewSession {
