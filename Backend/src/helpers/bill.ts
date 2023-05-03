@@ -4,8 +4,7 @@
 import { TipType } from '@prisma/client';
 
 interface BillItem {
-  id: string;
-  quantity: number;
+  name: string;
   price: number;
 }
 
@@ -59,10 +58,7 @@ export function calculateBill(
   tip: number,
   tipType: TipType,
 ): number {
-  const subtotal = items.reduce(
-    (acc, item) => acc + item.price * item.quantity,
-    0,
-  );
+  const subtotal = items.reduce((acc, item) => acc + item.price, 0);
   const taxAmount = subtotal * (tax / 100);
   let tipAmount = 0;
   if (tipType === TipType.PERCENTAGE) {

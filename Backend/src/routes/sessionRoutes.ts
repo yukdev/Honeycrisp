@@ -49,8 +49,6 @@ router.post('/', async (req, res, next) => {
       throw new BadRequestError(errors);
     }
 
-    const bill = calculateBill(items, tax, tip, tipType);
-
     const itemsWithQuantity = [];
 
     for (const item of items) {
@@ -61,6 +59,8 @@ router.post('/', async (req, res, next) => {
         });
       }
     }
+
+    const bill = calculateBill(itemsWithQuantity, tax, tip, tipType);
 
     const newSession = await prisma.session.create({
       data: {

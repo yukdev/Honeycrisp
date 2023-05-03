@@ -65,7 +65,9 @@ const SessionPage = async ({ params: { id } }: SessionPageProps) => {
             <h2 className="text-lg font-bold mb-2 text-center text-secondary">
               Total
             </h2>
-            <p className="text-2xl font-bold text-center underline text-accent">{`$${session.bill}`}</p>
+            <p className="text-2xl font-bold text-center underline text-accent">{`$${session.bill.toFixed(
+              2,
+            )}`}</p>
           </div>
         </div>
         <div className="flex justify-center">

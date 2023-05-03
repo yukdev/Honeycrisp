@@ -23,7 +23,6 @@ export const fetcher = async ({
   body,
   json = true,
 }: RequestProps) => {
-  console.log('dada', process.env.BASE_URL);
   const res = await fetch(`${BASE_URL}${url}`, {
     method,
     body: json ? JSON.stringify(body) : body,
