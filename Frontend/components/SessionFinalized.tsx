@@ -170,20 +170,22 @@ const SessionFinalized = ({ session, userSession }: SessionFinalizedProps) => {
                   <td>{item.name}</td>
                   <td>${item.price.toFixed(2)}</td>
                   <td>
-                    {session.itemsEaten
-                      .filter((itemEaten) => itemEaten.itemId === item.id)
-                      .map((itemEaten) =>
-                        itemEaten.eatenBy.map((user) => (
-                          <li
-                            key={itemEaten.itemId}
-                            className={`inline mx-1 ${
-                              user.id == userId && 'font-bold text-primary'
-                            }`}
-                          >
-                            {user.name}
-                          </li>
-                        )),
-                      )}
+                    <div className="flex flex-col items-center space-y-1">
+                      {session.itemsEaten
+                        .filter((itemEaten) => itemEaten.itemId === item.id)
+                        .map((itemEaten) =>
+                          itemEaten.eatenBy.map((user) => (
+                            <div
+                              key={itemEaten.itemId}
+                              className={`badge badge-sm ${
+                                user.id == userId && 'badge-primary'
+                              }`}
+                            >
+                              {user.name}
+                            </div>
+                          )),
+                        )}
+                    </div>
                   </td>
                 </tr>
               ))}

@@ -139,7 +139,7 @@ const Session = ({ session, userSession }: SessionProps) => {
           >
             {isFinalizing ? 'Finalizing...' : 'Finalize'}
           </button>
-          <div className="collapse collapse-arrow ml-2">
+          <div className="collapse collapse-arrow ml-2 mt-2 bg-base-200 rounded-box">
             <input type="checkbox" />
             <div className="collapse-title text-xl font-medium text-center">
               <p>Confirm on behalf of guests</p>
@@ -177,20 +177,19 @@ const Session = ({ session, userSession }: SessionProps) => {
                 const { eatenBy } = itemsEaten.find(
                   (itemEaten) => itemEaten.itemId === item.id,
                 ) as ItemEaten;
+
+                const isSelected = selectedItems.includes(item.id);
+
                 return (
                   <SessionItem
                     key={item.id}
                     index={index}
                     item={item}
                     isOwner={session.ownerId === userId}
-                    isSelected={eatenBy.some(
-                      (user) =>
-                        user.id ===
-                        (!selectedGuest ? userId : selectedGuest.id),
-                    )}
                     userId={!selectedGuest ? userId : selectedGuest.id}
                     eatenBy={eatenBy}
                     onItemClick={handleItemClick}
+                    isSelected={isSelected}
                   />
                 );
               })}

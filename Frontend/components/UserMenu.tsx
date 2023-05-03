@@ -2,6 +2,7 @@
 import { signOut } from 'next-auth/react';
 import Link from 'next/link';
 import React from 'react';
+import NavLink from './NavLink';
 import { FaBars } from 'react-icons/fa';
 
 interface UserMenuProps {
@@ -17,31 +18,24 @@ interface UserMenuProps {
 
 const UserMenu = ({ userSession }: UserMenuProps) => {
   return (
-    <li tabIndex={0}>
-      <a className="text-lg">
-        {`${userSession.user.name}${
-          userSession.user.isGuest ? ' (Guest)' : ''
-        }`}
-        <FaBars />
-      </a>
-      <ul className="p-2 bg-base-100 text-base-content">
-        <li>
-          <Link href={`users/${userSession.user.id}`}>Profile</Link>
-        </li>
-        <li>
-          <a
-            onClick={() =>
-              signOut({
-                redirect: true,
-                callbackUrl: '/',
-              })
-            }
-          >
-            Sign out
-          </a>
-        </li>
-      </ul>
-    </li>
+    <>
+      <li>
+        <NavLink label="Profile" path={`/users/${userSession.user.id}`} />
+      </li>
+      <li>
+        <a
+          className="text-lg mx-3"
+          onClick={() =>
+            signOut({
+              redirect: true,
+              callbackUrl: '/',
+            })
+          }
+        >
+          Sign out
+        </a>
+      </li>
+    </>
   );
 };
 

@@ -10,9 +10,9 @@ interface SessionItemProps {
   index: number;
   item: SessionItem;
   isOwner: boolean;
-  isSelected: boolean;
   userId: string;
   eatenBy: EatenBy[];
+  isSelected: boolean;
   onItemClick: (itemId: string) => void;
 }
 
@@ -20,9 +20,9 @@ function SessionItem({
   index,
   item,
   isOwner,
-  isSelected,
   userId,
   eatenBy,
+  isSelected,
   onItemClick,
 }: SessionItemProps) {
   const { id, name, price } = item;
@@ -32,12 +32,11 @@ function SessionItem({
   const [editedName, setEditedName] = useState(name);
   const [editedPrice, setEditedPrice] = useState(price);
 
-  const [selected, SetSelected] = useState(isSelected);
+  console.log(`this is ${item.name} and I am ${isSelected}`);
 
   const router = useRouter();
 
   const handleCheckboxChange = () => {
-    SetSelected(!selected);
     onItemClick(id);
   };
 
@@ -131,7 +130,7 @@ function SessionItem({
             <input
               type="checkbox"
               className="checkbox checkbox-primary"
-              checked={selected}
+              checked={isSelected}
               onChange={handleCheckboxChange}
             />
           </label>
