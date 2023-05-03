@@ -1,60 +1,43 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { editItem } from '@/lib/api';
 import { useRouter } from 'next/navigation';
+import { EatenBy, SessionItem } from '@/lib/types';
 
 const SECONDS = 1000;
 
-interface ItemEaten {
-  name: string;
-  eatenBy: {
-    id: string;
-    name: string;
-  }[];
-}
-
 interface SessionItemProps {
   index: number;
-  item: {
-    id: string;
-    name: string;
-    price: number;
-    createdAt: string;
-    updatedAt: string;
-    sessionId: string;
-  };
-  itemsEaten: ItemEaten[];
-  userId: string;
-  onItemClick: (itemId: string) => void;
+  item: SessionItem;
   isOwner: boolean;
+  isSelected: boolean;
+  userId: string;
+  eatenBy: EatenBy[];
+  onItemClick: (itemId: string) => void;
 }
 
 function SessionItem({
   index,
   item,
-  itemsEaten,
-  userId,
-  onItemClick,
   isOwner,
+  isSelected,
+  userId,
+  eatenBy,
+  onItemClick,
 }: SessionItemProps) {
   const { id, name, price } = item;
-  const [isSelected, setIsSelected] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [editedName, setEditedName] = useState(name);
   const [editedPrice, setEditedPrice] = useState(price);
 
+  const [selected, SetSelected] = useState(isSelected);
+
   const router = useRouter();
 
-  useEffect(() => {
-    setIsSelected(
-      itemsEaten[index]?.eatenBy.some((user) => user.id === userId),
-    );
-  }, [itemsEaten, index, userId]);
-
   const handleCheckboxChange = () => {
-    setIsSelected(!isSelected);
+    SetSelected(!selected);
     onItemClick(id);
   };
 
@@ -129,14 +112,18 @@ function SessionItem({
         )}
       </td>
       <td>
-        {itemsEaten[index]?.eatenBy.map((eater, index) => (
-          <div
-            key={index}
-            className={eater.id === userId ? 'font-bold text-primary' : ''}
-          >
-            {eater.name}
-          </div>
-        ))}
+        <div className="flex flex-col items-center space-y-1">
+          {eatenBy.map((eater) => (
+            <div
+              key={eater.id}
+              className={`badge badge-sm ${
+                userId === eater.id && 'badge-primary'
+              }`}
+            >
+              {eater.name}
+            </div>
+          ))}
+        </div>
       </td>
       <td>
         <div className="form-control">
@@ -144,7 +131,7 @@ function SessionItem({
             <input
               type="checkbox"
               className="checkbox checkbox-primary"
-              checked={isSelected}
+              checked={selected}
               onChange={handleCheckboxChange}
             />
           </label>

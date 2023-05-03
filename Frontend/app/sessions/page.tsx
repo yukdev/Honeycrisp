@@ -60,7 +60,7 @@ const SessionsPage = async () => {
                     </div>
                     <div className="card-actions">
                       <button
-                        className={`btn btn-no-animation ${
+                        className={`btn ${
                           userId === session.ownerId && 'btn-accent'
                         }`}
                       >
@@ -101,7 +101,7 @@ const SessionsPage = async () => {
                     </div>
                     <div className="card-actions">
                       <button
-                        className={`btn no-animation ${
+                        className={`btn ${
                           userId === session.ownerId && 'btn-accent'
                         }`}
                       >

@@ -5,7 +5,7 @@ import { eatSessionItems, finalizeSession } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { FaExclamationTriangle } from 'react-icons/fa';
 import OwnerGuestsPanel from './OwnerGuestsPanel';
-import { DetailedSession, Guest, userSession } from '@/lib/types';
+import { DetailedSession, Guest, ItemEaten, userSession } from '@/lib/types';
 const SECONDS = 1000;
 interface SessionProps {
   session: DetailedSession;
@@ -18,13 +18,13 @@ const Session = ({ session, userSession }: SessionProps) => {
   const userName = userSession?.user?.name;
   const { items, id: sessionId, itemsEaten } = session;
 
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
-  const [eatenItems, setEatenItems] = useState<string[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [confirmError, setConfirmError] = useState('');
   const [confirmation, setConfirmation] = useState('');
   const [isFinalizing, setIsFinalizing] = useState(false);
   const [finalizeError, setFinalizeError] = useState('');
-  const [submitError, setSubmitError] = useState('');
+
+  const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
 
   const handleItemClick = useCallback(
@@ -42,26 +42,22 @@ const Session = ({ session, userSession }: SessionProps) => {
 
   const handleSubmit = async () => {
     try {
-      setIsSubmitting(true);
-      setSubmitError('');
+      setIsConfirming(true);
+      setConfirmError('');
       if (!selectedGuest) {
-        const response = await eatSessionItems({
+        await eatSessionItems({
           items: selectedItems,
           userId,
           userName,
           sessionId,
         });
-        const newEatenItems = response.eatenItems;
-        setEatenItems(newEatenItems);
       } else {
-        const response = await eatSessionItems({
+        await eatSessionItems({
           items: selectedItems,
           userId: selectedGuest.id,
           userName: selectedGuest.name,
           sessionId,
         });
-        const newEatenItems = response.eatenItems;
-        setEatenItems(newEatenItems);
       }
       router.refresh();
       setConfirmation('Thanks for confirming what you ate!');
@@ -70,10 +66,10 @@ const Session = ({ session, userSession }: SessionProps) => {
       }, 3 * SECONDS);
     } catch (error) {
       if (error instanceof Error) {
-        setSubmitError(error.message);
+        setConfirmError(error.message);
       }
     } finally {
-      setIsSubmitting(false);
+      setIsConfirming(false);
     }
   };
 
@@ -93,6 +89,11 @@ const Session = ({ session, userSession }: SessionProps) => {
     } finally {
       setIsFinalizing(false);
     }
+  };
+
+  const handleAdditem = () => {
+    // TODO: Add item to session
+    return;
   };
 
   const handleGuestSelect = (guest: Guest | null) => {
@@ -131,7 +132,7 @@ const Session = ({ session, userSession }: SessionProps) => {
         </div>
       )}
       {session.ownerId === userId && (
-        <div className="my-3 flex flex-col justify-center items-center">
+        <div className="mt-3 flex flex-col justify-center items-center">
           <button
             onClick={handleFinalize}
             className={`btn btn-accent btn-sm ${isFinalizing && 'loading'}`}
@@ -172,40 +173,48 @@ const Session = ({ session, userSession }: SessionProps) => {
           <tbody>
             {items
               .sort((a, b) => a.name.localeCompare(b.name))
-              .map((item, index) => (
-                <SessionItem
-                  key={item.id}
-                  index={index}
-                  item={item}
-                  userId={!selectedGuest ? userId : selectedGuest.id}
-                  itemsEaten={itemsEaten}
-                  onItemClick={handleItemClick}
-                  isOwner={session.ownerId === userId}
-                />
-              ))}
+              .map((item, index) => {
+                const { eatenBy } = itemsEaten.find(
+                  (itemEaten) => itemEaten.itemId === item.id,
+                ) as ItemEaten;
+                return (
+                  <SessionItem
+                    key={item.id}
+                    index={index}
+                    item={item}
+                    isOwner={session.ownerId === userId}
+                    isSelected={eatenBy.some(
+                      (user) =>
+                        user.id ===
+                        (!selectedGuest ? userId : selectedGuest.id),
+                    )}
+                    userId={!selectedGuest ? userId : selectedGuest.id}
+                    eatenBy={eatenBy}
+                    onItemClick={handleItemClick}
+                  />
+                );
+              })}
           </tbody>
         </table>
       </div>
-      {selectedItems.length === 0 && (
-        <div className="mt-3">
-          <p className="text-center text-red-500">
-            Please select what you ate before submitting.
-          </p>
-        </div>
+      {userId === session.ownerId && (
+        <button onClick={handleAdditem} className="btn btn-sm btn-warning mt-3">
+          Add Item
+        </button>
       )}
-      {submitError && (
+      {confirmError && (
         <div className="alert alert-error shadow-lg mt-3">
           <div>
             <FaExclamationTriangle />
-            <span>{submitError}</span>
+            <span>{confirmError}</span>
           </div>
         </div>
       )}
       <button
         onClick={handleSubmit}
-        className={`btn btn-primary my-3 ${isSubmitting && 'loading'}`}
+        className={`btn btn-primary my-3 ${isConfirming && 'loading'}`}
       >
-        {isSubmitting ? 'Submitting...' : 'Submit'}
+        {isConfirming ? 'Confirming...' : 'Confirm'}
       </button>
       {confirmation && (
         <div className="toast">

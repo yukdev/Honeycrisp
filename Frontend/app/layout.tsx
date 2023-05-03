@@ -25,7 +25,7 @@ const RootLayout = async ({ children }: RootLayoutProps) => {
   const userSession = await getServerSession(authOptions);
 
   return (
-    <html lang="en" data-theme="business">
+    <html lang="en" data-theme="dark">
       <body className={openSans.className}>
         <Provider>
           {/* @ts-expect-error Server Component */}

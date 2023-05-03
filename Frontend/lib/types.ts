@@ -71,10 +71,12 @@ export interface SessionItem {
 export interface ItemEaten {
   itemId: string;
   name: string;
-  eatenBy: {
-    id: string;
-    name: string;
-  }[];
+  eatenBy: EatenBy[];
+}
+
+export interface EatenBy {
+  id: string;
+  name: string;
 }
 
 export interface NewItem {
