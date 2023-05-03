@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { FaExclamationTriangle } from 'react-icons/fa';
 import OwnerGuestsPanel from './OwnerGuestsPanel';
 import { DetailedSession, Guest, userSession } from '@/lib/types';
+const SECONDS = 1000;
 interface SessionProps {
   session: DetailedSession;
   userSession: userSession;
@@ -20,6 +21,7 @@ const Session = ({ session, userSession }: SessionProps) => {
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [eatenItems, setEatenItems] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [confirmation, setConfirmation] = useState('');
   const [isFinalizing, setIsFinalizing] = useState(false);
   const [finalizeError, setFinalizeError] = useState('');
   const [submitError, setSubmitError] = useState('');
@@ -62,6 +64,10 @@ const Session = ({ session, userSession }: SessionProps) => {
         setEatenItems(newEatenItems);
       }
       router.refresh();
+      setConfirmation('Thanks for confirming what you ate!');
+      setTimeout(() => {
+        setConfirmation('');
+      }, 3 * SECONDS);
     } catch (error) {
       if (error instanceof Error) {
         setSubmitError(error.message);
@@ -201,11 +207,11 @@ const Session = ({ session, userSession }: SessionProps) => {
       >
         {isSubmitting ? 'Submitting...' : 'Submit'}
       </button>
-      {eatenItems.length > 0 && (
+      {confirmation && (
         <div className="toast">
           <div className="alert alert-success">
             <div>
-              <span>Thanks for confirming what you ate!</span>
+              <span>{confirmation}</span>
             </div>
           </div>
         </div>
