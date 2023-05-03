@@ -1,5 +1,6 @@
 import {
   EatenItems,
+  EditItem,
   GuestUser,
   LoginUser,
   NewSession,
@@ -7,7 +8,6 @@ import {
   UpdateUser,
 } from './types';
 
-const BASE_URL = process.env.BASE_URL;
 interface RequestProps {
   url: string;
   method: 'GET' | 'POST' | 'PUT' | 'DELETE';
@@ -15,12 +15,15 @@ interface RequestProps {
   json?: boolean;
 }
 
+const BASE_URL = process.env.BASE_URL;
+
 export const fetcher = async ({
   url,
   method,
   body,
   json = true,
 }: RequestProps) => {
+  console.log('dada', process.env.BASE_URL);
   const res = await fetch(`${BASE_URL}${url}`, {
     method,
     body: json ? JSON.stringify(body) : body,
@@ -62,6 +65,15 @@ export const eatSessionItems = async (eatenItems: EatenItems) => {
     url: `sessions/${sessionId}/eat`,
     method: 'PUT',
     body: { userId, userName, items },
+  });
+};
+
+export const editItem = async (item: EditItem) => {
+  const { id, name, price } = item;
+  return await fetcher({
+    url: `items/${id}`,
+    method: 'PUT',
+    body: { name, price },
   });
 };
 
