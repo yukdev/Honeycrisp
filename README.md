@@ -6,7 +6,7 @@ An application to split bills between friends.
 
 ### Backend
 
-Create your own `.env` file like the provided `.env.example` file.
+Create your own `.env.local` file like the provided `.env.local.example` file.
 
 ```bash
 # Install dependencies
