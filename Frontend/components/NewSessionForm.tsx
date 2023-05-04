@@ -196,6 +196,7 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
               <th className="text-center font-bold">Name</th>
               <th className="text-center font-bold">Price</th>
               <th className="text-center font-bold">Quantity</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>

@@ -34,92 +34,90 @@ const SessionsPage = async () => {
         </div>
       )}
       {unfinalizedSessions.length > 0 && (
-        <h1 className="text-3xl font-bold text-base-content text-center my-5">
-          Pending Sessions
-        </h1>
-      )}
-      <div className="flex flex-col w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {unfinalizedSessions.map((session: Session) => (
-            <Link
-              href={`/sessions/${session.id}`}
-              key={session.id}
-              className="hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
-            >
-              <div
-                className={
-                  'card card-bordered w-96 text-primary-content bg-primary'
-                }
+        <div className="flex flex-col w-full">
+          <h1 className="text-3xl font-bold text-base-content text-center my-5">
+            Pending Sessions
+          </h1>
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {unfinalizedSessions.map((session: Session) => (
+              <Link
+                href={`/sessions/${session.id}`}
+                key={session.id}
+                className="hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
               >
-                <div className="card-body">
-                  <h2 className="card-title">{session.name}</h2>
-                  <p className="mt-2">Owner: {session.ownerName}</p>
-                  <div className="flex items-center justify-between">
-                    <div className="text-lg font-bold">
-                      Bill: ${session.bill ?? 'N/A'}
-                    </div>
-                    <div className="card-actions">
-                      <button
-                        className={`btn ${
-                          userId === session.ownerId && 'btn-accent'
-                        }`}
-                      >
-                        View
-                      </button>
+                <div className="card card-bordered w-full text-primary-content bg-primary">
+                  <div className="card-body">
+                    <h2 className="card-title">{session.name}</h2>
+                    <p className="mt-2">Owner: {session.ownerName}</p>
+                    <div className="flex items-center justify-between">
+                      <div className="text-lg font-bold">
+                        Bill: ${session.bill ?? 'N/A'}
+                      </div>
+                      <div className="card-actions">
+                        <button
+                          className={`btn ${
+                            userId === session.ownerId && 'btn-accent'
+                          }`}
+                        >
+                          View
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
+          </div>
         </div>
-        {unfinalizedSessions.length > 0 && finalizedSessions.length > 0 && (
-          <div className="divider my-8"></div>
-        )}
-        {finalizedSessions.length > 0 && (
+      )}
+      {unfinalizedSessions.length > 0 && finalizedSessions.length > 0 && (
+        <div className="divider my-8"></div>
+      )}
+      {finalizedSessions.length > 0 && (
+        <div className="flex flex-col w-full">
           <h1 className="text-3xl font-bold text-base-content text-center mb-5">
             Finalized Sessions
           </h1>
-        )}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {finalizedSessions.map((session: Session) => (
-            <Link
-              href={`/sessions/${session.id}`}
-              key={session.id}
-              className="hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
-            >
-              <div className="card card-bordered w-96 text-secondary-content bg-secondary">
-                <div className="card-body">
-                  <h2 className="card-title">{session.name}</h2>
-                  <p className="mt-2">
-                    Owner:{' '}
-                    {userId == session.ownerId ? 'You' : session.ownerName}
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <div className="text-lg font-bold">
-                      Bill: ${session.bill ?? 'N/A'}
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {finalizedSessions.map((session: Session) => (
+              <Link
+                href={`/sessions/${session.id}`}
+                key={session.id}
+                className="hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
+              >
+                <div className="card card-bordered w-full text-secondary-content bg-secondary">
+                  <div className="card-body">
+                    <h2 className="card-title">{session.name}</h2>
+                    <p className="mt-2">
+                      Owner:{' '}
+                      {userId == session.ownerId ? 'You' : session.ownerName}
+                    </p>
+                    <div className="flex items-center justify-between">
+                      <div className="text-lg font-bold">
+                        Bill: ${session.bill ?? 'N/A'}
+                      </div>
+                      <div className="card-actions">
+                        <button
+                          className={`btn ${
+                            userId === session.ownerId && 'btn-accent'
+                          }`}
+                        >
+                          View
+                        </button>
+                      </div>
                     </div>
-                    <div className="card-actions">
-                      <button
-                        className={`btn ${
-                          userId === session.ownerId && 'btn-accent'
-                        }`}
-                      >
-                        View
-                      </button>
-                    </div>
+                    <progress
+                      className="progress progress-accent w-100 mt-2"
+                      value={session.split!.filter((s) => s.paid).length}
+                      max={session.split!.length}
+                    ></progress>
                   </div>
-                  <progress
-                    className="progress progress-accent w-100 mt-2"
-                    value={session.split!.filter((s) => s.paid).length}
-                    max={session.split!.length}
-                  ></progress>
                 </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

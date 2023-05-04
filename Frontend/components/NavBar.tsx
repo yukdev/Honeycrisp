@@ -40,7 +40,7 @@ const NavBar = async ({ userSession }: NavBarProps) => {
           Honeycrisp
         </Link>
         <div className="dropdown">
-          <label tabIndex={0} className="btn btn-ghost lg:hidden">
+          <label tabIndex={0} className="btn btn-ghost md:hidden">
             <FaBars />
           </label>
           <ul
@@ -68,7 +68,7 @@ const NavBar = async ({ userSession }: NavBarProps) => {
           </ul>
         </div>
       </div>
-      <div className="navbar-center hidden lg:flex">
+      <div className="navbar-center hidden md:flex">
         <ul className="menu menu-horizontal px-1">
           {userSession?.user ? (
             <>

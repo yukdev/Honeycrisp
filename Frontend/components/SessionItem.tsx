@@ -32,8 +32,6 @@ function SessionItem({
   const [editedName, setEditedName] = useState(name);
   const [editedPrice, setEditedPrice] = useState(price);
 
-  console.log(`this is ${item.name} and I am ${isSelected}`);
-
   const router = useRouter();
 
   const handleCheckboxChange = () => {
