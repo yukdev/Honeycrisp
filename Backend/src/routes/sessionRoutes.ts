@@ -4,6 +4,7 @@ import prisma from '../db';
 import { requireAdmin } from '../middleware/auth';
 import { BadRequestError, NotFoundError } from '../expressErrors';
 import sessionCreate from '../schemas/sessionCreate.json';
+import sessionEdit from '../schemas/sessionEdit.json';
 import sessionItemsEaten from '../schemas/sessionItemsEaten.json';
 import sessionItemAdd from '../schemas/sessionItemAdd.json';
 import { Session, calculateBill, calculateSplit } from '../helpers/bill';
@@ -15,6 +16,12 @@ interface SplitUser {
   name: string;
   split: number;
   paid: boolean;
+}
+
+interface EditItem {
+  id: string;
+  name: string;
+  price: number;
 }
 
 /**
@@ -156,6 +163,88 @@ router.get('/:sessionId', async (req, res, next) => {
 });
 
 /**
+ * PUT /sessions/:sessionId/
+ *
+ * Updates a session
+ */
+router.put('/:sessionId', async (req, res, next) => {
+  try {
+    const { sessionId } = req.params;
+    const { name, tax, tip, tipType, items } = req.body;
+
+    const session = await prisma.session.findUnique({
+      where: { id: sessionId },
+      include: { items: true },
+    });
+
+    if (!session) {
+      throw new NotFoundError(`Session not found with id ${sessionId}`);
+    }
+
+    if (session.finalized) {
+      throw new BadRequestError(
+        `Session with id ${sessionId} has already been finalized`,
+      );
+    }
+
+    const validator = validate(req.body, sessionEdit, { required: true });
+
+    if (!validator.valid) {
+      const errors = validator.errors.map((e) => e.stack).join('\n');
+      throw new BadRequestError(errors);
+    }
+
+    const deletedItemIds = session.items
+      .map((item) => item.id)
+      .filter((itemId) => !items.some((item: EditItem) => item.id === itemId));
+    await prisma.item.deleteMany({ where: { id: { in: deletedItemIds } } });
+
+    const updatedItems = await Promise.all(
+      items.map(async (item: EditItem) => {
+        if (session.items.some((sessionItem) => sessionItem.id === item.id)) {
+          return await prisma.item.update({
+            where: { id: item.id },
+            data: {
+              name: item.name,
+              price: item.price,
+            },
+          });
+        } else {
+          return await prisma.item.create({
+            data: {
+              name: item.name,
+              price: item.price,
+              sessionId,
+            },
+          });
+        }
+      }),
+    );
+
+    const bill = calculateBill(items, tax, tip, tipType);
+
+    const updatedSession = await prisma.session.update({
+      where: { id: sessionId },
+      data: {
+        name,
+        tax,
+        tip,
+        tipType,
+        bill,
+        items: {
+          connect: updatedItems.map((item) => ({ id: item.id })),
+        },
+      },
+      include: { items: true },
+    });
+
+    res.json(updatedSession);
+  } catch (err) {
+    next(err);
+  }
+});
+
+/**
  * POST /sessions/:sessionId/add
  *
  * Updates the items eaten for a session
@@ -174,7 +263,6 @@ router.post('/:sessionId/add', async (req, res, next) => {
       throw new NotFoundError(`Session not found with id ${sessionId}`);
     }
 
-    // Check if session has already been finalized
     if (session.finalized) {
       throw new BadRequestError(
         `Session with id ${sessionId} has already been finalized`,
@@ -216,11 +304,11 @@ router.post('/:sessionId/add', async (req, res, next) => {
 });
 
 /**
- * PUT /sessions/:sessionId
+ * POST /sessions/:sessionId/eat
  *
  * Marks items as eaten for a session.
  */
-router.put('/:sessionId/eat', async (req, res, next) => {
+router.post('/:sessionId/eat', async (req, res, next) => {
   try {
     const { sessionId } = req.params;
     const { items, userId, userName } = req.body;
@@ -234,14 +322,12 @@ router.put('/:sessionId/eat', async (req, res, next) => {
       throw new NotFoundError(`Session not found with id ${sessionId}`);
     }
 
-    // Check if session has already been finalized
     if (session.finalized) {
       throw new BadRequestError(
         `Session with id ${sessionId} has already been finalized`,
       );
     }
 
-    // Validate request body
     const validator = validate(req.body, sessionItemsEaten, { required: true });
 
     if (!validator.valid) {
@@ -249,7 +335,6 @@ router.put('/:sessionId/eat', async (req, res, next) => {
       throw new BadRequestError(errors);
     }
 
-    // Remove all previous UserItem records for the user in the session
     await prisma.userItem.deleteMany({
       where: {
         userId: userId,
@@ -259,10 +344,8 @@ router.put('/:sessionId/eat', async (req, res, next) => {
       },
     });
 
-    // Find all items that the user ate
     const eatenItems = session.items.filter((item) => items.includes(item.id));
 
-    // Create a UserItem record for each eaten item
     await Promise.all(
       eatenItems.map((item) =>
         prisma.userItem.create({

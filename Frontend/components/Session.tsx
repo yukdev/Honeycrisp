@@ -23,7 +23,6 @@ const Session = ({ session, userSession }: SessionProps) => {
   const [confirmation, setConfirmation] = useState('');
   const [isFinalizing, setIsFinalizing] = useState(false);
   const [finalizeError, setFinalizeError] = useState('');
-
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
 
@@ -91,11 +90,6 @@ const Session = ({ session, userSession }: SessionProps) => {
     }
   };
 
-  const handleAdditem = () => {
-    // TODO: Add item to session
-    return;
-  };
-
   const handleGuestSelect = (guest: Guest | null) => {
     setSelectedGuest(guest);
   };
@@ -155,7 +149,7 @@ const Session = ({ session, userSession }: SessionProps) => {
           </div>
         </div>
       )}
-      <div className="w-full max-w-2xl text-center mb-2">
+      <div className="w-full max-w-2xl text-center mt-1 mb-2">
         <h2 className="text-2xl font-bold text-accent">Session Items</h2>
       </div>
       <div className="overflow-x-auto">
@@ -167,7 +161,6 @@ const Session = ({ session, userSession }: SessionProps) => {
               <th>Price</th>
               <th>Eaten By</th>
               <th>Ate?</th>
-              {session.ownerId === userId && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
@@ -185,7 +178,6 @@ const Session = ({ session, userSession }: SessionProps) => {
                     key={item.id}
                     index={index}
                     item={item}
-                    isOwner={session.ownerId === userId}
                     userId={!selectedGuest ? userId : selectedGuest.id}
                     eatenBy={eatenBy}
                     onItemClick={handleItemClick}
@@ -196,11 +188,6 @@ const Session = ({ session, userSession }: SessionProps) => {
           </tbody>
         </table>
       </div>
-      {userId === session.ownerId && (
-        <button onClick={handleAdditem} className="btn btn-sm btn-warning mt-3">
-          Add Item
-        </button>
-      )}
       {confirmError && (
         <div className="alert alert-error shadow-lg mt-3">
           <div>

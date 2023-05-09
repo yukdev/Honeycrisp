@@ -1,9 +1,7 @@
 'use client';
 import { signOut } from 'next-auth/react';
-import Link from 'next/link';
 import React from 'react';
 import NavLink from './NavLink';
-import { FaBars } from 'react-icons/fa';
 
 interface UserMenuProps {
   userSession: {

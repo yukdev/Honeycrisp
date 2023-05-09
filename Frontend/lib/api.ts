@@ -1,6 +1,7 @@
 import {
   EatenItems,
-  EditItem,
+  EditedItem,
+  EditedSessionData,
   GuestUser,
   LoginUser,
   NewSession,
@@ -58,17 +59,28 @@ export const createSession = async (newSession: NewSession) => {
   });
 };
 
+export const editSession = async (
+  sessionId: string,
+  editedSession: EditedSessionData,
+) => {
+  return await fetcher({
+    url: `sessions/${sessionId}`,
+    method: 'PUT',
+    body: editedSession,
+  });
+};
+
 export const eatSessionItems = async (eatenItems: EatenItems) => {
   const { items, userId, userName, sessionId } = eatenItems;
   return await fetcher({
     url: `sessions/${sessionId}/eat`,
-    method: 'PUT',
+    method: 'POST',
     body: { userId, userName, items },
   });
 };
 
-export const editItem = async (item: EditItem) => {
-  const { id, name, price } = item;
+export const editItem = async (editedItem: EditedItem) => {
+  const { id, name, price } = editedItem;
   return await fetcher({
     url: `items/${id}`,
     method: 'PUT',

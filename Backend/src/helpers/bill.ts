@@ -4,6 +4,7 @@
 import { TipType } from '@prisma/client';
 
 interface BillItem {
+  id?: string;
   name: string;
   price: number;
 }

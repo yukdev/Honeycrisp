@@ -93,15 +93,15 @@ export interface NewSessionData {
   items: NewItem[];
 }
 
-export interface EditSessionData {
+export interface EditedSessionData {
   name: string;
   tax: number;
   tip: number;
   tipType: TipType;
-  items: EditItem[];
+  items: EditedItem[];
 }
 
-export interface EditItem {
+export interface EditedItem {
   id: string;
   name: string;
   price: number;
