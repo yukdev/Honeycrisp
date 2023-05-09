@@ -31,14 +31,14 @@ const SessionPage = async ({ params: { id } }: SessionPageProps) => {
       <ShareModal link={`localhost:3000/sessions/${id}`} />
       <section id="session-info" className="w-full max-w-2xl mt-8">
         <div className="flex justify-center items-center mb-3">
-          <h1 className="text-4xl font-bold text-center text-accent">
+          <h1 className="text-3xl md:text-4xl font-bold text-center text-accent">
             {session.name}
           </h1>
           {session.ownerId === userId && (
             <div className="flex items-center pt-1 ml-3">
               <label
                 htmlFor="share-session"
-                className="btn btn-sm btn-secondary"
+                className="btn btn-xs md:btn-sm btn-secondary"
               >
                 <p className="mr-1">Share</p>
                 <FaShare />
@@ -48,26 +48,26 @@ const SessionPage = async ({ params: { id } }: SessionPageProps) => {
         </div>
         <div className="flex justify-center items-center mb-3">
           <div className="flex flex-col items-center justify-center mx-8">
-            <h2 className="text-lg font-bold mb-2 text-center text-secondary">
+            <h2 className="text-xl md:text-2xl font-bold mb-2 text-center text-secondary">
               Tip
             </h2>
-            <p className="text-2xl font-bold text-center text-accent">{`${
+            <p className="text-xl md:text-2xl font-bold text-center text-accent">{`${
               session.tipType === TipType.FLAT
                 ? `$${session.tip}`
                 : `${session.tip}%`
             }`}</p>
           </div>
           <div className="flex flex-col items-center justify-center mx-8">
-            <h2 className="text-lg font-bold mb-2 text-center text-secondary">
+            <h2 className="text-xl md:text-2xl font-bold mb-2 text-center text-secondary">
               Tax
             </h2>
-            <p className="text-2xl font-bold text-center text-accent">{`${session.tax}%`}</p>
+            <p className="text-xl md:text-2xl font-bold text-center text-accent">{`${session.tax}%`}</p>
           </div>
           <div className="flex flex-col items-center justify-center mx-8">
-            <h2 className="text-lg font-bold mb-2 text-center text-secondary">
+            <h2 className="text-xl md:text-2xl font-bold mb-2 text-center text-secondary">
               Total
             </h2>
-            <p className="text-2xl font-bold text-center underline text-accent">{`$${session.bill.toFixed(
+            <p className="text-xl md:text-2xl font-bold text-center underline text-accent">{`$${session.bill.toFixed(
               2,
             )}`}</p>
           </div>

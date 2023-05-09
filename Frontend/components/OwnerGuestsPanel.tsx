@@ -98,7 +98,7 @@ const OwnerGuestsPanel = ({
         <div className="flex flex-col items-center mt-3">
           <select
             id="guests-select"
-            className="select select-secondary select-xs sm:select-sm w-full max-w-xs text-center"
+            className="select select-secondary select-sm max-w-xs text-center"
             value={selectedGuest?.id || ''}
             onChange={(e) => {
               const guestId = e.target.value;

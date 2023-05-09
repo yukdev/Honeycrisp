@@ -138,7 +138,7 @@ const SessionFinalized = ({ session, userSession }: SessionFinalizedProps) => {
                       <label className="label cursor-pointer">
                         <input
                           type="checkbox"
-                          className="checkbox checkbox-primary checkbox-xs sm:checkbox-sm md:checkbox-md lg:checkbox-lg"
+                          className="checkbox checkbox-primary checkbox-sm md:checkbox-md"
                           checked={paid}
                           onChange={() => handlePaidChange(id)}
                           disabled={processingUserId === id}

@@ -36,7 +36,10 @@ const NavBar = async ({ userSession }: NavBarProps) => {
   return (
     <div className="navbar bg-primary text-primary-content sticky top-0 z-50">
       <div className="navbar-start">
-        <Link href="/" className="btn btn-ghost normal-case text-2xl">
+        <Link
+          href="/"
+          className="btn btn-ghost normal-case text-xl md:text-2xl"
+        >
           Honeycrisp
         </Link>
         <div className="dropdown">
@@ -95,7 +98,7 @@ const NavBar = async ({ userSession }: NavBarProps) => {
           <NavBarLink
             label="Create session"
             path="/sessions/new"
-            center={true}
+            emphasize={true}
           />
         )}
       </div>

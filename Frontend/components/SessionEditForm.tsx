@@ -138,11 +138,14 @@ const SessionEditForm = ({ session, userId }: SessionEditFormProps) => {
       </div>
       <div id="session-info" className="flex justify-center flex-col">
         <div className="flex flex-col items-center mb-2">
-          <label className="block font-bold mb-1 text-center" htmlFor="name">
+          <label
+            className="block font-bold text-center text-lg mb-1"
+            htmlFor="name"
+          >
             Session Name:
           </label>
           <input
-            className="input input-bordered input-sm input-primary w-full max-w-xs text-center"
+            className="input input-bordered input-sm input-primary w-full max-w-xs text-center text-lg"
             type="text"
             name="name"
             value={sessionData.name}
@@ -151,11 +154,14 @@ const SessionEditForm = ({ session, userId }: SessionEditFormProps) => {
         </div>
         <div className="flex flex-col items-center">
           <div className="flex justify-center items-center mb-2">
-            <label className="block font-bold text-center" htmlFor="tax">
+            <label
+              className="block font-bold text-center text-lg"
+              htmlFor="tax"
+            >
               Tax %:
             </label>
             <input
-              className="input input-bordered input-sm input-primary w-24 text-center mx-2"
+              className="input input-bordered input-sm input-primary w-24 text-center text-lg mx-2"
               type="number"
               name="tax"
               value={sessionData.tax}
@@ -163,11 +169,14 @@ const SessionEditForm = ({ session, userId }: SessionEditFormProps) => {
             />
           </div>
           <div className="flex justify-center items-center">
-            <label className="block font-bold text-center" htmlFor="tip">
+            <label
+              className="block font-bold text-center text-lg"
+              htmlFor="tip"
+            >
               Tip:
             </label>
             <input
-              className="input input-bordered input-sm input-primary w-24 text-center mx-2"
+              className="input input-bordered input-sm input-primary w-24 text-center text-lg mx-2"
               type="number"
               name="tip"
               value={sessionData.tip}
@@ -216,7 +225,7 @@ const SessionEditForm = ({ session, userId }: SessionEditFormProps) => {
                   <td>{index + 1}</td>
                   <td>
                     <input
-                      className="input input-bordered input-sm input-primary w-full max-w-xs text-center"
+                      className="input input-bordered input-xs md:input-sm input-primary w-full max-w-xs text-center text-md md:text-lg"
                       type="text"
                       value={item.name}
                       onChange={(event) =>
@@ -226,7 +235,7 @@ const SessionEditForm = ({ session, userId }: SessionEditFormProps) => {
                   </td>
                   <td>
                     <input
-                      className="input input-bordered input-sm input-primary w-full max-w-xs text-center"
+                      className="input input-bordered input-xs md:input-sm input-primary w-full max-w-xs text-center text-md md:text-lg"
                       type="number"
                       value={item.price}
                       onChange={(event) =>

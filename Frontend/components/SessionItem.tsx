@@ -52,7 +52,7 @@ function SessionItem({
           <label className="label cursor-pointer">
             <input
               type="checkbox"
-              className="checkbox checkbox-primary checkbox-xs sm:checkbox-sm md:checkbox-md lg:checkbox-lg"
+              className="checkbox checkbox-primary checkbox-sm md:checkbox-md"
               checked={isSelected}
               onChange={handleCheckboxChange}
             />

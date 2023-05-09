@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { FaExclamationTriangle } from 'react-icons/fa';
 import OwnerGuestsPanel from './OwnerGuestsPanel';
 import { DetailedSession, Guest, ItemEaten, userSession } from '@/lib/types';
+import Link from 'next/link';
 const SECONDS = 1000;
 interface SessionProps {
   session: DetailedSession;
@@ -127,12 +128,20 @@ const Session = ({ session, userSession }: SessionProps) => {
       )}
       {session.ownerId === userId && (
         <div className="mt-3 flex flex-col justify-center items-center">
-          <button
-            onClick={handleFinalize}
-            className={`btn btn-accent btn-sm ${isFinalizing && 'loading'}`}
-          >
-            {isFinalizing ? 'Finalizing...' : 'Finalize'}
-          </button>
+          <span>
+            <Link
+              href={`/sessions/${sessionId}/edit`}
+              className="btn btn-warning btn-sm mr-2"
+            >
+              Edit
+            </Link>
+            <button
+              onClick={handleFinalize}
+              className={`btn btn-success btn-sm ${isFinalizing && 'loading'}`}
+            >
+              {isFinalizing ? 'Finalizing...' : 'Finalize'}
+            </button>
+          </span>
           <div className="collapse collapse-arrow ml-2 mt-2 bg-base-200 rounded-box">
             <input type="checkbox" />
             <div className="collapse-title text-xl font-medium text-center">

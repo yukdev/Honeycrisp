@@ -22,7 +22,7 @@ const NavBarUserMenu = ({ userSession }: NavBarUserMenuProps) => {
       </li>
       <li>
         <a
-          className="text-lg mx-3"
+          className="text-md md:text-lg mx-3"
           onClick={() =>
             signOut({
               redirect: true,
