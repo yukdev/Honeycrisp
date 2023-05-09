@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { validate } from 'jsonschema';
 import prisma from '../db';
-import { requireAdmin } from '../middleware/auth';
+import { requireSecret } from '../middleware/auth';
 import { BadRequestError, NotFoundError } from '../expressErrors';
 import sessionCreate from '../schemas/sessionCreate.json';
 import sessionEdit from '../schemas/sessionEdit.json';
@@ -29,7 +29,7 @@ interface EditItem {
  *
  * Returns a list of all sessions
  */
-router.get('/', requireAdmin, async (req, res, next) => {
+router.get('/', requireSecret, async (req, res, next) => {
   try {
     const sessions = await prisma.session.findMany({
       include: { items: true },
@@ -523,7 +523,7 @@ router.post('/:sessionId/paid', async (req, res, next) => {
  *
  * Deletes a session by ID
  */
-router.delete('/:sessionId', requireAdmin, async (req, res, next) => {
+router.delete('/:sessionId', requireSecret, async (req, res, next) => {
   try {
     const { sessionId } = req.params;
 
