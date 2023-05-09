@@ -34,6 +34,7 @@ const initialFormData = {
 const Authform = ({ mode }: { mode: 'register' | 'login' }) => {
   const [formData, setFormData] = useState(initialFormData);
   const [error, setError] = useState('');
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
