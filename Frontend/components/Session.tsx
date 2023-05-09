@@ -153,7 +153,7 @@ const Session = ({ session, userSession }: SessionProps) => {
         <h2 className="text-2xl font-bold text-accent">Session Items</h2>
       </div>
       <div className="overflow-x-auto">
-        <table className="table table-zebra w-full text-center">
+        <table className="table table-compact md:table-normal table-zebra w-full text-center">
           <thead>
             <tr>
               <th></th>

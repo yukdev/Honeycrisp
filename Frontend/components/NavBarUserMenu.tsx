@@ -1,9 +1,9 @@
 'use client';
 import { signOut } from 'next-auth/react';
 import React from 'react';
-import NavLink from './NavLink';
+import NavLink from './NavBarLink';
 
-interface UserMenuProps {
+interface NavBarUserMenuProps {
   userSession: {
     user: {
       id: string;
@@ -14,7 +14,7 @@ interface UserMenuProps {
   };
 }
 
-const UserMenu = ({ userSession }: UserMenuProps) => {
+const NavBarUserMenu = ({ userSession }: NavBarUserMenuProps) => {
   return (
     <>
       <li>
@@ -37,4 +37,4 @@ const UserMenu = ({ userSession }: UserMenuProps) => {
   );
 };
 
-export default UserMenu;
+export default NavBarUserMenu;

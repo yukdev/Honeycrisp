@@ -30,10 +30,12 @@ const SessionPage = async ({ params: { id } }: SessionPageProps) => {
     <div className="flex flex-col items-center min-h-screen">
       <ShareModal link={`localhost:3000/sessions/${id}`} />
       <section id="session-info" className="w-full max-w-2xl mt-8">
-        <h1 className="text-4xl font-bold mb-4 text-center text-accent flex justify-center">
-          <p>{session.name}</p>
+        <div className="flex justify-center items-center mb-3">
+          <h1 className="text-4xl font-bold text-center text-accent">
+            {session.name}
+          </h1>
           {session.ownerId === userId && (
-            <div className="flex items-center ml-3">
+            <div className="flex items-center pt-1 ml-3">
               <label
                 htmlFor="share-session"
                 className="btn btn-sm btn-secondary"
@@ -43,7 +45,7 @@ const SessionPage = async ({ params: { id } }: SessionPageProps) => {
               </label>
             </div>
           )}
-        </h1>
+        </div>
         <div className="flex justify-center items-center mb-3">
           <div className="flex flex-col items-center justify-center mx-8">
             <h2 className="text-lg font-bold mb-2 text-center text-secondary">

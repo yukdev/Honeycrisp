@@ -2,13 +2,13 @@
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 
-interface NavLinkProps {
+interface NavBarLinkProps {
   label: string;
   path: string;
   center?: boolean;
 }
 
-const NavLink = ({ label, path, center }: NavLinkProps) => {
+const NavBarLink = ({ label, path, center }: NavBarLinkProps) => {
   const pathName = usePathname();
 
   const isActive = pathName === path;
@@ -31,4 +31,4 @@ const NavLink = ({ label, path, center }: NavLinkProps) => {
   );
 };
 
-export default NavLink;
+export default NavBarLink;

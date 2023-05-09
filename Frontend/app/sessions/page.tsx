@@ -38,14 +38,14 @@ const SessionsPage = async () => {
           <h1 className="text-3xl font-bold text-base-content text-center my-5">
             Pending Sessions
           </h1>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-3">
             {unfinalizedSessions.map((session: Session) => (
               <Link
                 href={`/sessions/${session.id}`}
                 key={session.id}
                 className="hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
               >
-                <div className="card card-bordered w-full text-primary-content bg-primary">
+                <div className="card card-compact md:card-normal card-bordered w-full text-primary-content bg-primary">
                   <div className="card-body">
                     <h2 className="card-title">{session.name}</h2>
                     <p className="mt-2">Owner: {session.ownerName}</p>
@@ -78,14 +78,14 @@ const SessionsPage = async () => {
           <h1 className="text-3xl font-bold text-base-content text-center mb-5">
             Finalized Sessions
           </h1>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 px-3">
             {finalizedSessions.map((session: Session) => (
               <Link
                 href={`/sessions/${session.id}`}
                 key={session.id}
                 className="hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
               >
-                <div className="card card-bordered w-full text-secondary-content bg-secondary">
+                <div className="card card-compact md:card-normal card-bordered w-full text-secondary-content bg-secondary">
                   <div className="card-body">
                     <h2 className="card-title">{session.name}</h2>
                     <p className="mt-2">

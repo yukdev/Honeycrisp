@@ -2,7 +2,7 @@ import { getSession } from '@/lib/api';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../api/auth/[...nextauth]/route';
 import NotFound from '@/components/NotFound';
-import EditSessionForm from '@/components/EditSessionForm';
+import SessionEditForm from '@/components/SessionEditForm';
 import Unauthorized from '@/components/Unauthorized';
 
 interface SessionEditPageProps {
@@ -27,7 +27,7 @@ const SessionEditPage = async ({ params: { id } }: SessionEditPageProps) => {
 
   return (
     <div>
-      <EditSessionForm session={session} userId={userId} />
+      <SessionEditForm session={session} userId={userId} />
     </div>
   );
 };

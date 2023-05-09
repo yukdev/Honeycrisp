@@ -1,35 +1,35 @@
 'use client';
-import { createSession } from '@/lib/api';
+import { editSession } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { FaExclamationTriangle, FaTimes } from 'react-icons/fa';
-import { NewSessionData, TipType, NewItem } from '@/lib/types';
+import {
+  TipType,
+  DetailedSession,
+  EditedSessionData,
+  EditedItem,
+} from '@/lib/types';
+import { v4 as uuid } from 'uuid';
 
-interface NewSessionFormProps {
-  userSession: {
-    user: {
-      name: string;
-      email: string;
-      id: string;
-      image?: any;
-    };
-  };
+interface SessionEditFormProps {
+  session: DetailedSession;
+  userId: string;
 }
 
-const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
+const SessionEditForm = ({ session, userId }: SessionEditFormProps) => {
   const router = useRouter();
-  const [sessionData, setSessionData] = useState<NewSessionData>({
-    name: '',
-    tax: 8.875,
-    tip: 20,
-    tipType: TipType.PERCENTAGE,
-    items: [{ name: '', price: 0, quantity: 1 }],
+  const [sessionData, setSessionData] = useState<EditedSessionData>({
+    name: session.name,
+    tax: session.tax,
+    tip: session.tip,
+    tipType: session.tipType,
+    items: session.items.sort(
+      (a, b) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+    ),
   });
   const [error, setError] = useState('');
-
-  const {
-    user: { name: ownerName, id: ownerId },
-  } = userSession;
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -39,11 +39,12 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
   };
 
   const handleItemChange = (
-    index: number,
-    field: keyof NewItem,
+    id: string,
+    field: keyof EditedItem,
     value: string | number,
   ) => {
     const newItems = [...sessionData.items];
+    const index = newItems.findIndex((item) => item.id === id);
     newItems[index][field] = value as never;
     setSessionData({ ...sessionData, items: newItems });
   };
@@ -51,44 +52,39 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
   const handleAddItem = () => {
     setSessionData({
       ...sessionData,
-      items: [...sessionData.items, { name: '', price: 0, quantity: 1 }],
+      items: [...sessionData.items, { id: uuid(), name: '', price: 0 }],
     });
   };
 
-  const handleRemoveItem = (index: number) => {
+  const handleRemoveItem = (id: string) => {
     if (sessionData.items.length === 1) {
       setSessionData({
         ...sessionData,
-        items: [{ name: '', price: 0, quantity: 1 }],
+        items: [{ id: uuid(), name: '', price: 0 }],
       });
     } else {
-      const newItems = [...sessionData.items];
-      newItems.splice(index, 1);
+      const newItems = sessionData.items.filter((item) => item.id !== id);
       setSessionData({ ...sessionData, items: newItems });
     }
   };
 
   const handleSubmit = async () => {
+    setIsSubmitting(true);
+    setError('');
     const errorMessage = validateForm();
     if (errorMessage) {
       setError(errorMessage);
       return;
     }
-
     try {
-      setError('');
-      const response = await createSession({
-        ...sessionData,
-        ownerName,
-        ownerId,
-      });
-
-      const { id } = response;
-      router.push(`/sessions/${id}`);
+      await editSession(session.id, sessionData);
+      router.push(`/sessions/${session.id}`);
     } catch (error) {
       if (error instanceof Error) {
         setError(error.message);
       }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -137,7 +133,7 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
     <div className="flex flex-col items-center container min-h-screen text-base-content mt-5">
       <div className="w-full max-w-2xl">
         <h1 className="text-3xl font-bold mb-4 text-center text-accent">
-          Create a new session
+          Edit Session Details
         </h1>
       </div>
       <div id="session-info" className="flex justify-center flex-col">
@@ -199,68 +195,74 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
         </div>
       </div>
       <div className="mt-4">
-        <table className="table table-zebra w-full">
+        <table className="table table-compact md:table-normal table-zebra w-full">
           <thead>
             <tr>
               <th className="text-center font-bold">#</th>
               <th className="text-center font-bold">Name</th>
               <th className="text-center font-bold">Price</th>
-              <th className="text-center font-bold">Quantity</th>
+              <th className="text-center font-bold">Eaten By</th>
               <th></th>
             </tr>
           </thead>
           <tbody>
-            {sessionData.items.map((item, index) => (
-              <tr key={index}>
-                <td>{index + 1}</td>
-                <td>
-                  <input
-                    className="input input-bordered input-sm input-primary w-full max-w-xs text-center"
-                    type="text"
-                    value={item.name}
-                    onChange={(event) =>
-                      handleItemChange(index, 'name', event.target.value)
-                    }
-                  />
-                </td>
-                <td>
-                  <input
-                    className="input input-bordered input-sm input-primary w-full max-w-xs text-center"
-                    type="number"
-                    value={item.price}
-                    onChange={(event) =>
-                      handleItemChange(
-                        index,
-                        'price',
-                        Number(event.target.value),
-                      )
-                    }
-                  />
-                </td>
-                <td>
-                  <input
-                    className="input input-bordered input-sm input-primary w-full max-w-xs text-center"
-                    type="number"
-                    value={item.quantity}
-                    onChange={(event) =>
-                      handleItemChange(
-                        index,
-                        'quantity',
-                        Number(event.target.value),
-                      )
-                    }
-                  />
-                </td>
-                <td>
-                  <button
-                    className="btn btn-error btn-circle btn-outline btn-sm"
-                    onClick={() => handleRemoveItem(index)}
-                  >
-                    <FaTimes />
-                  </button>
-                </td>
-              </tr>
-            ))}
+            {sessionData.items.map((item, index) => {
+              const eatenBy = session.itemsEaten.find(
+                (itemEaten) => itemEaten.itemId === item.id,
+              )?.eatenBy;
+
+              return (
+                <tr key={item.id}>
+                  <td>{index + 1}</td>
+                  <td>
+                    <input
+                      className="input input-bordered input-sm input-primary w-full max-w-xs text-center"
+                      type="text"
+                      value={item.name}
+                      onChange={(event) =>
+                        handleItemChange(item.id, 'name', event.target.value)
+                      }
+                    />
+                  </td>
+                  <td>
+                    <input
+                      className="input input-bordered input-sm input-primary w-full max-w-xs text-center"
+                      type="number"
+                      value={item.price}
+                      onChange={(event) =>
+                        handleItemChange(
+                          item.id,
+                          'price',
+                          Number(event.target.value),
+                        )
+                      }
+                    />
+                  </td>
+                  <td>
+                    <div className="flex flex-col items-center space-y-1">
+                      {eatenBy?.map((eater) => (
+                        <div
+                          key={eater.id}
+                          className={`badge badge-sm ${
+                            userId === eater.id && 'badge-primary'
+                          }`}
+                        >
+                          {eater.name}
+                        </div>
+                      ))}
+                    </div>
+                  </td>
+                  <td>
+                    <button
+                      className="btn btn-error btn-circle btn-outline btn-sm"
+                      onClick={() => handleRemoveItem(item.id)}
+                    >
+                      <FaTimes />
+                    </button>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
         <div className="flex justify-center mt-4">
@@ -277,11 +279,14 @@ const NewSessionForm = ({ userSession }: NewSessionFormProps) => {
           </div>
         </div>
       )}
-      <button className="btn btn-accent my-3" onClick={() => handleSubmit()}>
-        Create Session
+      <button
+        className={`btn btn-accent my-3 ${isSubmitting && 'loading'}`}
+        onClick={() => handleSubmit()}
+      >
+        {isSubmitting ? 'Submitting...' : 'Submit Changes'}
       </button>
     </div>
   );
 };
 
-export default NewSessionForm;
+export default SessionEditForm;

@@ -69,7 +69,7 @@ const SessionFinalized = ({ session, userSession }: SessionFinalizedProps) => {
   return (
     <section
       id="session-split-and-items"
-      className="flex flex-col items-center flex-grow"
+      className="flex flex-col items-center flex-grow mb-5 container"
     >
       {unfinalizeError && (
         <div className="alert alert-error shadow-lg mt-3">
@@ -91,7 +91,7 @@ const SessionFinalized = ({ session, userSession }: SessionFinalizedProps) => {
       )}
       <div className="tabs">
         <a
-          className={`tab tab-lg tab-lifted ${
+          className={`tab tab-sm md:tab-md lg:tab-lg tab-lifted ${
             activeTab === 'split' ? 'tab-active font-bold' : ''
           }`}
           onClick={() => setActiveTab('split')}
@@ -99,7 +99,7 @@ const SessionFinalized = ({ session, userSession }: SessionFinalizedProps) => {
           Bill split
         </a>
         <a
-          className={`tab tab-lg tab-lifted ${
+          className={`tab tab-sm md:tab-md lg:tab-lg tab-lifted ${
             activeTab === 'items' ? 'tab-active font-bold' : ''
           }`}
           onClick={() => setActiveTab('items')}
@@ -110,7 +110,7 @@ const SessionFinalized = ({ session, userSession }: SessionFinalizedProps) => {
 
       {activeTab === 'split' && (
         <div className="overflow-x-auto">
-          <table className="table table-zebra w-full text-center">
+          <table className="table table-compact md:table-normal table-zebra w-full text-center">
             <thead>
               <tr>
                 <th>#</th>
@@ -138,7 +138,7 @@ const SessionFinalized = ({ session, userSession }: SessionFinalizedProps) => {
                       <label className="label cursor-pointer">
                         <input
                           type="checkbox"
-                          className="checkbox checkbox-primary"
+                          className="checkbox checkbox-primary checkbox-xs sm:checkbox-sm md:checkbox-md lg:checkbox-lg"
                           checked={paid}
                           onChange={() => handlePaidChange(id)}
                           disabled={processingUserId === id}
@@ -154,7 +154,7 @@ const SessionFinalized = ({ session, userSession }: SessionFinalizedProps) => {
       )}
       {activeTab === 'items' && (
         <div id="session-items">
-          <table className="table table-zebra w-full text-center">
+          <table className="table table-compact md:table-normal table-zebra w-full text-center">
             <thead>
               <tr>
                 <th>#</th>
@@ -164,31 +164,33 @@ const SessionFinalized = ({ session, userSession }: SessionFinalizedProps) => {
               </tr>
             </thead>
             <tbody>
-              {session.items.map((item, index) => (
-                <tr key={item.id}>
-                  <td>{index + 1}</td>
-                  <td>{item.name}</td>
-                  <td>${item.price.toFixed(2)}</td>
-                  <td>
-                    <div className="flex flex-col items-center space-y-1">
-                      {session.itemsEaten
-                        .filter((itemEaten) => itemEaten.itemId === item.id)
-                        .map((itemEaten) =>
-                          itemEaten.eatenBy.map((user) => (
-                            <div
-                              key={itemEaten.itemId}
-                              className={`badge badge-sm ${
-                                user.id == userId && 'badge-primary'
-                              }`}
-                            >
-                              {user.name}
-                            </div>
-                          )),
-                        )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
+              {session.items
+                .sort((a, b) => a.name.localeCompare(b.name))
+                .map((item, index) => (
+                  <tr key={item.id}>
+                    <td>{index + 1}</td>
+                    <td>{item.name}</td>
+                    <td>${item.price.toFixed(2)}</td>
+                    <td>
+                      <div className="flex flex-col items-center space-y-1">
+                        {session.itemsEaten
+                          .filter((itemEaten) => itemEaten.itemId === item.id)
+                          .map((itemEaten) =>
+                            itemEaten.eatenBy.map((user) => (
+                              <div
+                                key={`${itemEaten.itemId}-${user.id}`}
+                                className={`badge badge-xs md:badge-sm ${
+                                  user.id == userId && 'badge-primary'
+                                }`}
+                              >
+                                {user.name}
+                              </div>
+                            )),
+                          )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>

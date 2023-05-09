@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import NavLink from './NavLink';
-import UserMenu from './UserMenu';
+import NavBarLink from './NavBarLink';
+import NavBarUserMenu from './NavBarUserMenu';
 import { FaBars } from 'react-icons/fa';
 
 const userlinks = [
@@ -51,16 +51,16 @@ const NavBar = async ({ userSession }: NavBarProps) => {
               <>
                 {userlinks.map((link) => (
                   <li key={link.label}>
-                    <NavLink {...link} />
+                    <NavBarLink {...link} />
                   </li>
                 ))}
-                <UserMenu userSession={userSession} />
+                <NavBarUserMenu userSession={userSession} />
               </>
             ) : (
               <>
                 {guestlinks.map((link) => (
                   <li key={link.label}>
-                    <NavLink {...link} />
+                    <NavBarLink {...link} />
                   </li>
                 ))}
               </>
@@ -74,16 +74,16 @@ const NavBar = async ({ userSession }: NavBarProps) => {
             <>
               {userlinks.map((link) => (
                 <li key={link.label}>
-                  <NavLink {...link} />
+                  <NavBarLink {...link} />
                 </li>
               ))}
-              <UserMenu userSession={userSession} />
+              <NavBarUserMenu userSession={userSession} />
             </>
           ) : (
             <>
               {guestlinks.map((link) => (
                 <li key={link.label}>
-                  <NavLink {...link} />
+                  <NavBarLink {...link} />
                 </li>
               ))}
             </>
@@ -92,47 +92,15 @@ const NavBar = async ({ userSession }: NavBarProps) => {
       </div>
       <div className="navbar-end">
         {userSession?.user && (
-          <NavLink label="Create session" path="/sessions/new" center={true} />
+          <NavBarLink
+            label="Create session"
+            path="/sessions/new"
+            center={true}
+          />
         )}
       </div>
     </div>
   );
-  // return (
-  //   <div className="navbar bg-primary text-primary-content sticky top-0 z-50">
-  //     <div className="navbar-start">
-  // <Link href="/" className="btn btn-ghost normal-case text-2xl">
-  //   Honeycrisp
-  // </Link>
-  //     </div>
-  //     <div className="navbar-center">
-  // {userSession?.user && (
-  //   <NavLink label="Create session" path="/sessions/new" center={true} />
-  // )}
-  //     </div>
-  //     <div className="navbar-end">
-  //       <ul className="menu menu-horizontal px-1">
-  // {userSession?.user ? (
-  //   <>
-  //     {userlinks.map((link) => (
-  //       <li key={link.label}>
-  //         <NavLink {...link} />
-  //       </li>
-  //     ))}
-  //     <UserMenu userSession={userSession} />
-  //   </>
-  // ) : (
-  //   <>
-  //     {guestlinks.map((link) => (
-  //       <li key={link.label}>
-  //         <NavLink {...link} />
-  //       </li>
-  //     ))}
-  //   </>
-  // )}
-  //       </ul>
-  //     </div>
-  //   </div>
-  // );
 };
 
 export default NavBar;

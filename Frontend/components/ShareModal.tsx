@@ -25,13 +25,13 @@ const ShareModal = ({ link }: ShareModalProps) => {
           <div className="flex items-center justify-center">
             <input
               type="text"
-              className="input input-bordered input-accent w-full max-w-xs"
+              className="input input-sm md:input-md input-bordered input-accent w-full max-w-xs"
               value={link}
               readOnly
             />
             <button
               type="button"
-              className="btn btn-primary ml-2"
+              className="btn btn-sm md:btn-md btn-primary ml-2"
               onClick={handleCopyLink}
             >
               {copied ? 'Copied!' : 'Copy'}
