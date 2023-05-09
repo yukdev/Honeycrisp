@@ -7,6 +7,7 @@ import userLogin from '../schemas/userLogin.json';
 import userUpdate from '../schemas/userUpdate.json';
 import guestUpdate from '../schemas/guestUpdate.json';
 import { hashPassword, comparePassword } from '../helpers/auth';
+import { requireSecret } from 'middleware/auth';
 
 const router = Router();
 
@@ -15,7 +16,7 @@ const router = Router();
  *
  * Returns a list of all users
  */
-router.get('/', async (req, res, next) => {
+router.get('/', requireSecret, async (req, res, next) => {
   try {
     const users = await prisma.user.findMany();
     return res.json(users);
