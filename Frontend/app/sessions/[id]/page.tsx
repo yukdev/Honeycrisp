@@ -28,7 +28,7 @@ const SessionPage = async ({ params: { id } }: SessionPageProps) => {
 
   return (
     <div className="flex flex-col items-center min-h-screen">
-      <ShareModal link={`localhost:3000/sessions/${id}`} />
+      <ShareModal link={`${process.env.NEXTAUTH_URL}/sessions/${id}`} />
       <section id="session-info" className="w-full max-w-2xl mt-8">
         <div className="flex justify-center items-center mb-3">
           <h1 className="text-3xl md:text-4xl font-bold text-center text-accent">
