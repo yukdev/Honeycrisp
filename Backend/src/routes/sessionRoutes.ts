@@ -1,6 +1,6 @@
+import prisma from '../db';
 import { Router } from 'express';
 import { validate } from 'jsonschema';
-import prisma from '../db';
 import { requireSecret } from '../middleware/auth';
 import { BadRequestError, NotFoundError } from '../expressErrors';
 import sessionCreate from '../schemas/sessionCreate.json';

@@ -1,13 +1,13 @@
+import prisma from '../db';
 import { Router } from 'express';
 import { validate } from 'jsonschema';
-import prisma from '../db';
+import { hashPassword, comparePassword } from '../helpers/auth';
+import { requireSecret } from '../middleware/auth';
 import { BadRequestError } from '../expressErrors';
 import userRegister from '../schemas/userRegister.json';
 import userLogin from '../schemas/userLogin.json';
 import userUpdate from '../schemas/userUpdate.json';
 import guestUpdate from '../schemas/guestUpdate.json';
-import { hashPassword, comparePassword } from '../helpers/auth';
-import { requireSecret } from 'middleware/auth';
 
 const router = Router();
 
