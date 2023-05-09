@@ -1,4 +1,5 @@
 import express, { NextFunction, Request, Response } from 'express';
+import { config } from './config';
 import cors from 'cors';
 import { NotFoundError } from './expressErrors';
 import userRoutes from './routes/userRoutes';
@@ -31,6 +32,10 @@ app.use(function (err: any, req: Request, res: Response, next: NextFunction) {
   return res.status(status).json({
     error: { message, status },
   });
+});
+
+app.listen(config.PORT, () => {
+  console.log(`Started on http://localhost:${config.PORT}`);
 });
 
 export default app;
