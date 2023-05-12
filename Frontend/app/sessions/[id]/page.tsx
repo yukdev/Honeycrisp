@@ -28,27 +28,25 @@ const SessionPage = async ({ params: { id } }: SessionPageProps) => {
 
   return (
     <div className="flex flex-col items-center min-h-screen">
-      <ShareModal link={`${process.env.NEXTAUTH_URL}/sessions/${id}`} />
+      <ShareModal link={`${process.env.NEXTAUTH_URL}sessions/${id}`} />
       <section id="session-info" className="w-full max-w-2xl mt-8">
         <div className="flex justify-center items-center mb-3">
           <h1 className="text-3xl md:text-4xl font-bold text-center text-accent">
             {session.name}
           </h1>
-          {session.ownerId === userId && (
-            <div className="flex items-center pt-1 ml-3">
-              <label
-                htmlFor="share-session"
-                className="btn btn-xs md:btn-sm btn-secondary"
-              >
-                <p className="mr-1">Share</p>
-                <FaShare />
-              </label>
-            </div>
-          )}
+          <div className="flex items-center pt-1 ml-3">
+            <label
+              htmlFor="share-session"
+              className="btn btn-xs md:btn-sm btn-secondary"
+            >
+              <p className="mr-1">Share</p>
+              <FaShare />
+            </label>
+          </div>
         </div>
-        <div className="flex justify-center items-center mb-3">
-          <div className="flex flex-col items-center justify-center mx-8">
-            <h2 className="text-xl md:text-2xl font-bold mb-2 text-center text-secondary">
+        <div className="flex justify-center items-center">
+          <div className="flex flex-col items-center justify-center mx-6">
+            <h2 className="text-xl md:text-2xl font-bold mb-1 text-center text-secondary">
               Tip
             </h2>
             <p className="text-xl md:text-2xl font-bold text-center text-accent">{`${
@@ -57,23 +55,23 @@ const SessionPage = async ({ params: { id } }: SessionPageProps) => {
                 : `${session.tip}%`
             }`}</p>
           </div>
-          <div className="flex flex-col items-center justify-center mx-8">
-            <h2 className="text-xl md:text-2xl font-bold mb-2 text-center text-secondary">
+          <div className="flex flex-col items-center justify-center mx-6">
+            <h2 className="text-xl md:text-2xl font-bold mb-1 text-center text-secondary">
               Tax
             </h2>
             <p className="text-xl md:text-2xl font-bold text-center text-accent">{`${session.tax}%`}</p>
           </div>
-          <div className="flex flex-col items-center justify-center mx-8">
-            <h2 className="text-xl md:text-2xl font-bold mb-2 text-center text-secondary">
+          <div className="flex flex-col items-center justify-center mx-6">
+            <h2 className="text-xl md:text-2xl font-bold mb-1 text-center text-secondary">
               Total
             </h2>
-            <p className="text-xl md:text-2xl font-bold text-center underline text-accent">{`$${session.bill.toFixed(
+            <p className="text-xl md:text-2xl font-bold text-center text-accent">{`$${session.bill.toFixed(
               2,
             )}`}</p>
           </div>
         </div>
-        <div className="flex justify-center">
-          <h2 className="text-xl font-bold text-center text-base-content">
+        <div className="flex justify-center mt-1">
+          <h2 className="text-2xl font-bold text-center text-base-content">
             {`Owner: ${session.ownerId === userId ? 'You' : session.ownerName}`}
           </h2>
         </div>
