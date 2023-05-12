@@ -5,6 +5,7 @@ export interface Session {
   updatedAt: string;
   ownerId: string;
   ownerName: string;
+  ownerPaymentAddress: string | null;
   finalized: boolean;
   tax: number;
   taxType: TipType;
@@ -40,6 +41,7 @@ export interface DetailedSession {
   updatedAt: string;
   ownerId: string;
   ownerName: string;
+  ownerPaymentAddress: string | null;
   finalized: boolean;
   tax: number;
   tip: number;
@@ -112,6 +114,7 @@ export interface EditedItem {
 export interface NewSession {
   ownerId: string;
   ownerName: string;
+  ownerPaymentAddress: string | null;
   name: string;
   items: NewItem[];
   tax: number;
@@ -130,11 +133,13 @@ export interface RegisterUser extends LoginUser {
 
 export interface GuestUser extends RegisterUser {
   sessionId: string;
+  paymentAddress?: string;
 }
 
 export interface UpdateUser {
   name: string;
   email: string;
+  paymentAddress: string;
   password: string;
   currentPassword: string;
 }

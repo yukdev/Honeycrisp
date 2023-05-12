@@ -48,7 +48,16 @@ router.get('/', requireSecret, async (req, res, next) => {
  */
 router.post('/', async (req, res, next) => {
   try {
-    const { ownerId, ownerName, name, items, tax, tip, tipType } = req.body;
+    const {
+      ownerId,
+      ownerName,
+      ownerPaymentAddress,
+      name,
+      items,
+      tax,
+      tip,
+      tipType,
+    } = req.body;
 
     const validator = validate(req.body, sessionCreate, { required: true });
 
@@ -79,6 +88,7 @@ router.post('/', async (req, res, next) => {
       data: {
         ownerId,
         ownerName,
+        ownerPaymentAddress,
         name,
         items: {
           create: itemsWithQuantity,

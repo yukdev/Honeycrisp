@@ -105,7 +105,8 @@ router.post('/login', async (req, res, next) => {
  */
 router.put('/:id', async (req, res, next) => {
   try {
-    const { isGuest, name, email, password, currentPassword } = req.body;
+    const { isGuest, name, email, paymentAddress, password, currentPassword } =
+      req.body;
 
     let updatedUser;
     const { id } = req.params;
@@ -123,6 +124,7 @@ router.put('/:id', async (req, res, next) => {
         data: {
           name,
           email,
+          paymentAddress,
           password: await hashPassword(password),
           isGuest: false,
         },
@@ -155,6 +157,7 @@ router.put('/:id', async (req, res, next) => {
           data: {
             name,
             email,
+            paymentAddress,
           },
         });
       } else {
@@ -163,6 +166,7 @@ router.put('/:id', async (req, res, next) => {
           data: {
             name,
             email,
+            paymentAddress,
             password: await hashPassword(password),
           },
         });

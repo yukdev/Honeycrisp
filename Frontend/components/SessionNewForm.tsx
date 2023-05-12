@@ -11,7 +11,8 @@ interface SessionNewFormProps {
       name: string;
       email: string;
       id: string;
-      image?: any;
+      paymentAddress: string | null;
+      isGuest: boolean;
     };
   };
 }
@@ -44,7 +45,7 @@ const SessionNewForm = ({ userSession }: SessionNewFormProps) => {
   }, [sessionData]);
 
   const {
-    user: { name: ownerName, id: ownerId },
+    user: { name: ownerName, id: ownerId, paymentAddress: ownerPaymentAddress },
   } = userSession;
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,6 +98,7 @@ const SessionNewForm = ({ userSession }: SessionNewFormProps) => {
         ...sessionData,
         ownerName,
         ownerId,
+        ownerPaymentAddress,
       });
 
       const { id } = response;

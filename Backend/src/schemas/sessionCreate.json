@@ -10,6 +10,10 @@
       "type": "string",
       "minLength": 1
     },
+    "ownerPaymentAddress": {
+      "type": "string",
+      "minLength": 1
+    },
     "name": {
       "type": "string",
       "minLength": 1

@@ -13,6 +13,7 @@ interface UpdateFormProps {
       name: string;
       email: string;
       isGuest: boolean;
+      paymentAddress: string | null;
     };
   };
 }
@@ -23,6 +24,7 @@ const UpdateForm = ({ id, userSession }: UpdateFormProps) => {
     name: userSession.user.name,
     password: '',
     currentPassword: '',
+    paymentAddress: userSession.user.paymentAddress || '',
   };
 
   const [formData, setFormData] = useState(initialFormData);
@@ -40,6 +42,7 @@ const UpdateForm = ({ id, userSession }: UpdateFormProps) => {
         name: formData.name,
         email: formData.email,
         password: formData.password,
+        paymentAddress: formData.paymentAddress,
       };
 
       await (userSession.user.isGuest
@@ -100,6 +103,22 @@ const UpdateForm = ({ id, userSession }: UpdateFormProps) => {
                 value={formData.email}
                 onChange={handleFormChange}
               />
+            </div>
+            <div className="form-control w-full max-w-xs flex flex-col justify-center items-center">
+              <label className="label flex justify-center items-center">
+                <span className="label-text text-neutral-content">
+                  Payment Address
+                </span>
+              </label>
+              <input
+                type="text"
+                className="input input-sm input-bordered input-primary w-full max-w-xs text-center"
+                name="paymentAddress"
+                value={formData.paymentAddress}
+                onChange={handleFormChange}
+              />
+            </div>
+            <div className="form-control w-full max-w-xs flex flex-col justify-center items-center">
               <label className="label flex justify-center items-center">
                 <span className="label-text text-neutral-content">
                   {!userSession.user.isGuest && 'New '}Password
@@ -113,24 +132,24 @@ const UpdateForm = ({ id, userSession }: UpdateFormProps) => {
                 onChange={handleFormChange}
                 minLength={4}
               />
-              {!isGuest && (
-                <>
-                  <label className="label flex justify-center items-center">
-                    <span className="label-text text-neutral-content">
-                      Current Password
-                    </span>
-                  </label>
-                  <input
-                    type="password"
-                    className="input input-sm input-bordered input-primary w-full max-w-xs text-center"
-                    name="currentPassword"
-                    value={formData.currentPassword}
-                    onChange={handleFormChange}
-                    minLength={4}
-                  />
-                </>
-              )}
             </div>
+            {!isGuest && (
+              <div className="form-control w-full max-w-xs flex flex-col justify-center items-center">
+                <label className="label flex justify-center items-center">
+                  <span className="label-text text-neutral-content">
+                    Current Password
+                  </span>
+                </label>
+                <input
+                  type="password"
+                  className="input input-sm input-bordered input-primary w-full max-w-xs text-center"
+                  name="currentPassword"
+                  value={formData.currentPassword}
+                  onChange={handleFormChange}
+                  minLength={4}
+                />
+              </div>
+            )}
             {error && (
               <div className="alert alert-error shadow-lg mt-3">
                 <span>

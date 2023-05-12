@@ -5,9 +5,11 @@ import { authOptions } from '../../api/auth/[...nextauth]/route';
 import SessionFinalized from '@/components/SessionFinalized';
 import GuestLogin from '@/components/GuestLogin';
 import { FaShare } from 'react-icons/fa';
+import { IoColorFill, IoLogoVenmo } from 'react-icons/io5';
 import { TipType } from '@/lib/types';
 import ShareModal from '@/components/ShareModal';
 import NotFound from '@/components/NotFound';
+import Link from 'next/link';
 
 interface SessionPageProps {
   params: {
@@ -24,6 +26,7 @@ const SessionPage = async ({ params: { id } }: SessionPageProps) => {
   } catch (error) {
     return <NotFound errorMessage={`Session not found with id: ${id}`} />;
   }
+
   const { finalized } = session;
 
   return (
@@ -70,10 +73,16 @@ const SessionPage = async ({ params: { id } }: SessionPageProps) => {
             )}`}</p>
           </div>
         </div>
-        <div className="flex justify-center mt-1">
-          <h2 className="text-2xl font-bold text-center text-base-content">
-            {`Owner: ${session.ownerId === userId ? 'You' : session.ownerName}`}
+        <div className="flex justify-center items-center mt-1 text-2xl font-bold text-center text-base-content">
+          <h2>Owner:</h2>
+          <h2 className="mx-1">
+            {session.ownerId === userId ? 'You' : session.ownerName}
           </h2>
+          {session.ownerPaymentAddress && (
+            <Link href={session.ownerPaymentAddress}>
+              <IoLogoVenmo color="#008CFF" />
+            </Link>
+          )}
         </div>
         {!userSession.user && !finalized && <GuestLogin id={id} />}
         {userSession?.user?.isGuest && !finalized && (

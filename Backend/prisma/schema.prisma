@@ -8,35 +8,37 @@ generator client {
 }
 
 model User {
-  id        String     @id @default(uuid())
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
-  email     String     @unique
-  password  String
-  name      String
-  isAdmin   Boolean    @default(false)
-  isGuest   Boolean    @default(false)
-  userItems UserItem[]
-  Session   Session[]
+  id             String     @id @default(uuid())
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+  email          String     @unique
+  password       String
+  name           String
+  paymentAddress String?
+  isAdmin        Boolean    @default(false)
+  isGuest        Boolean    @default(false)
+  userItems      UserItem[]
+  Session        Session[]
 }
 
 model Session {
-  id        String   @id @default(uuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  owner     User     @relation(fields: [ownerId], references: [id])
-  ownerId   String
-  ownerName String
-  finalized Boolean  @default(false)
-  items     Item[]
-  tax       Float    @default(8.875)
-  tip       Float    @default(20)
-  tipType   TipType  @default(PERCENTAGE)
-  subtotal  Float?
-  bill      Float?
-  split     Json?
-  guests    Json?
+  id                  String   @id @default(uuid())
+  name                String
+  createdAt           DateTime @default(now())
+  updatedAt           DateTime @updatedAt
+  owner               User     @relation(fields: [ownerId], references: [id])
+  ownerId             String
+  ownerName           String
+  ownerPaymentAddress String?
+  finalized           Boolean  @default(false)
+  items               Item[]
+  tax                 Float    @default(8.875)
+  tip                 Float    @default(20)
+  tipType             TipType  @default(PERCENTAGE)
+  subtotal            Float?
+  bill                Float?
+  split               Json?
+  guests              Json?
 }
 
 model Item {
