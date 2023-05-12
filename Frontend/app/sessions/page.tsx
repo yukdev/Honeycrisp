@@ -51,7 +51,7 @@ const SessionsPage = async () => {
                     <p className="mt-2">Owner: {session.ownerName}</p>
                     <div className="flex items-center justify-between">
                       <div className="text-lg font-bold">
-                        Bill: ${session.bill ?? 'N/A'}
+                        Bill: ${session.bill.toFixed(2) ?? 'N/A'}
                       </div>
                       <div className="card-actions">
                         <button
@@ -94,7 +94,7 @@ const SessionsPage = async () => {
                     </p>
                     <div className="flex items-center justify-between">
                       <div className="text-lg font-bold">
-                        Bill: ${session.bill ?? 'N/A'}
+                        Bill: ${session.bill.toFixed(2) ?? 'N/A'}
                       </div>
                       <div className="card-actions">
                         <button
