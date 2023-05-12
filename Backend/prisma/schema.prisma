@@ -33,7 +33,8 @@ model Session {
   tax       Float    @default(8.875)
   tip       Float    @default(20)
   tipType   TipType  @default(PERCENTAGE)
-  bill      Float
+  subtotal  Float?
+  bill      Float?
   split     Json?
   guests    Json?
 }
