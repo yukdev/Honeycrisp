@@ -1,7 +1,7 @@
 'use client';
 import { editSession } from '@/lib/api';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaExclamationTriangle, FaTimes } from 'react-icons/fa';
 import {
   TipType,
@@ -28,8 +28,23 @@ const SessionEditForm = ({ session, userId }: SessionEditFormProps) => {
         new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
     ),
   });
+  const [runningTotal, setRunningTotal] = useState(session.bill);
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    const subtotal = sessionData.items.reduce(
+      (acc, item) => acc + item.price,
+      0,
+    );
+    const tax = subtotal * (sessionData.tax / 100);
+    const tip =
+      sessionData.tipType === TipType.PERCENTAGE
+        ? subtotal * (sessionData.tip / 100)
+        : sessionData.tip;
+    const total = subtotal + tax + tip;
+    setRunningTotal(total);
+  }, [sessionData]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -132,7 +147,7 @@ const SessionEditForm = ({ session, userId }: SessionEditFormProps) => {
   return (
     <div className="flex flex-col items-center container min-h-screen text-base-content mt-5">
       <div className="w-full max-w-2xl">
-        <h1 className="text-3xl font-bold mb-4 text-center text-accent">
+        <h1 className="text-3xl font-bold mb-2 text-center text-accent">
           Edit Session Details
         </h1>
       </div>
@@ -279,6 +294,11 @@ const SessionEditForm = ({ session, userId }: SessionEditFormProps) => {
             Add Item
           </button>
         </div>
+      </div>
+      <div className="flex justify-center mt-4">
+        <h2 className="text-2xl font-bold text-center text-accent">
+          Running Total: ${runningTotal.toFixed(2)}
+        </h2>
       </div>
       {error && (
         <div className="alert alert-error shadow-lg my-3">

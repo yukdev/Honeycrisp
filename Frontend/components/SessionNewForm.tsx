@@ -1,7 +1,7 @@
 'use client';
 import { createSession } from '@/lib/api';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { FaExclamationTriangle, FaTimes } from 'react-icons/fa';
 import { NewSessionData, TipType, NewItem } from '@/lib/types';
 
@@ -25,7 +25,22 @@ const SessionNewForm = ({ userSession }: SessionNewFormProps) => {
     tipType: TipType.PERCENTAGE,
     items: [{ name: '', price: 0, quantity: 1 }],
   });
+  const [runningTotal, setRunningTotal] = useState(0);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const subtotal = sessionData.items.reduce(
+      (acc, item) => acc + item.price * item.quantity,
+      0,
+    );
+    const tax = subtotal * (sessionData.tax / 100);
+    const tip =
+      sessionData.tipType === TipType.PERCENTAGE
+        ? subtotal * (sessionData.tip / 100)
+        : sessionData.tip;
+    const total = subtotal + tax + tip;
+    setRunningTotal(total);
+  }, [sessionData]);
 
   const {
     user: { name: ownerName, id: ownerId },
@@ -136,17 +151,20 @@ const SessionNewForm = ({ userSession }: SessionNewFormProps) => {
   return (
     <div className="flex flex-col items-center container min-h-screen text-base-content mt-5">
       <div className="w-full max-w-2xl">
-        <h1 className="text-3xl font-bold mb-4 text-center text-accent">
+        <h1 className="text-3xl font-bold mb-2 text-center text-accent">
           Create a new session
         </h1>
       </div>
       <div id="session-info" className="flex justify-center flex-col">
         <div className="flex flex-col items-center mb-2">
-          <label className="block font-bold mb-1 text-center" htmlFor="name">
+          <label
+            className="block font-bold mb-1 text-center text-lg mb-1"
+            htmlFor="name"
+          >
             Session Name:
           </label>
           <input
-            className="input input-bordered input-sm input-primary w-full max-w-xs text-center"
+            className="input input-bordered input-sm input-primary w-full max-w-xs text-center text-lg"
             type="text"
             name="name"
             value={sessionData.name}
@@ -155,11 +173,14 @@ const SessionNewForm = ({ userSession }: SessionNewFormProps) => {
         </div>
         <div className="flex flex-col items-center">
           <div className="flex justify-center items-center mb-2">
-            <label className="block font-bold text-center" htmlFor="tax">
+            <label
+              className="block font-bold text-center text-lg"
+              htmlFor="tax"
+            >
               Tax %:
             </label>
             <input
-              className="input input-bordered input-sm input-primary w-24 text-center mx-2"
+              className="input input-bordered input-sm input-primary w-24 text-center text-lg mx-2"
               type="number"
               name="tax"
               value={sessionData.tax}
@@ -167,11 +188,14 @@ const SessionNewForm = ({ userSession }: SessionNewFormProps) => {
             />
           </div>
           <div className="flex justify-center items-center">
-            <label className="block font-bold text-center" htmlFor="tip">
+            <label
+              className="block font-bold text-center text-lg"
+              htmlFor="tip"
+            >
               Tip:
             </label>
             <input
-              className="input input-bordered input-sm input-primary w-24 text-center mx-2"
+              className="input input-bordered input-sm input-primary w-24 text-center text-lg mx-2"
               type="number"
               name="tip"
               value={sessionData.tip}
@@ -215,7 +239,7 @@ const SessionNewForm = ({ userSession }: SessionNewFormProps) => {
                 <td>{index + 1}</td>
                 <td>
                   <input
-                    className="input input-bordered input-sm input-primary w-full max-w-xs text-center"
+                    className="input input-bordered input-sm input-primary w-full max-w-xs text-center text-md md:text-lg"
                     type="text"
                     value={item.name}
                     onChange={(event) =>
@@ -225,7 +249,7 @@ const SessionNewForm = ({ userSession }: SessionNewFormProps) => {
                 </td>
                 <td>
                   <input
-                    className="input input-bordered input-sm input-primary w-full max-w-xs text-center"
+                    className="input input-bordered input-sm input-primary w-full max-w-xs text-center text-md md:text-lg"
                     type="number"
                     value={item.price}
                     onChange={(event) =>
@@ -239,7 +263,7 @@ const SessionNewForm = ({ userSession }: SessionNewFormProps) => {
                 </td>
                 <td>
                   <input
-                    className="input input-bordered input-sm input-primary w-full max-w-xs text-center"
+                    className="input input-bordered input-sm input-primary w-full max-w-xs text-center text-md md:text-lg"
                     type="number"
                     value={item.quantity}
                     onChange={(event) =>
@@ -268,6 +292,12 @@ const SessionNewForm = ({ userSession }: SessionNewFormProps) => {
             Add Item
           </button>
         </div>
+      </div>
+      {/* display current subtotal */}
+      <div className="flex justify-center mt-4">
+        <h2 className="text-2xl font-bold text-center text-accent">
+          Running Total: ${runningTotal.toFixed(2)}
+        </h2>
       </div>
       {error && (
         <div className="alert alert-error shadow-lg my-3">
