@@ -10,6 +10,7 @@ export interface Session {
   taxType: TipType;
   tip: number;
   tipType: TipType;
+  subtotal: number;
   bill: number;
   split?: Split[];
   guests?: Guest[];
@@ -43,6 +44,7 @@ export interface DetailedSession {
   tax: number;
   tip: number;
   tipType: TipType;
+  subtotal: number;
   bill: number;
   split: Split[];
   guests: Guest[];

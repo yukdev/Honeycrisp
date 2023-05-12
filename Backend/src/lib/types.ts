@@ -17,8 +17,10 @@ export interface Session {
   tax: number;
   tip: number;
   tipType: TipType;
+  subtotal: number;
   bill: number;
   split: JSON | null;
+  guests: JSON | null;
   items: SplitItem[];
 }
 
@@ -28,7 +30,7 @@ export interface SplitItem {
   price: number;
   createdAt: Date;
   updatedAt: Date;
-  sessionId: string | null;
+  sessionId: string;
   userItems: UserItem[];
 }
 

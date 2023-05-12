@@ -68,7 +68,12 @@ router.post('/', async (req, res, next) => {
       }
     }
 
-    const bill = calculateBill(itemsWithQuantity, tax, tip, tipType);
+    const { subtotal, bill } = calculateBill(
+      itemsWithQuantity,
+      tax,
+      tip,
+      tipType,
+    );
 
     const newSession = await prisma.session.create({
       data: {
@@ -81,6 +86,7 @@ router.post('/', async (req, res, next) => {
         tax,
         tip,
         tipType,
+        subtotal,
         bill,
       },
       include: { items: true },
@@ -222,7 +228,7 @@ router.put('/:sessionId', async (req, res, next) => {
       }),
     );
 
-    const bill = calculateBill(items, tax, tip, tipType);
+    const { subtotal, bill } = calculateBill(items, tax, tip, tipType);
 
     const updatedSession = await prisma.session.update({
       where: { id: sessionId },
@@ -231,6 +237,7 @@ router.put('/:sessionId', async (req, res, next) => {
         tax,
         tip,
         tipType,
+        subtotal,
         bill,
         items: {
           connect: updatedItems.map((item) => ({ id: item.id })),
