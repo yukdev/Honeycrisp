@@ -89,7 +89,17 @@ const SessionFinalized = ({ session, userSession }: SessionFinalizedProps) => {
           </button>
         </div>
       )}
-      <div className="tabs">
+      {/* if you're not the owner and you're part of the session */}
+      {session.ownerId !== userId &&
+        session.split.some((user) => user.id === userId) && (
+          <div className="flex justify-center text-2xl font-bold text-center">
+            <h2 className="text-secondary mr-1">You owe:</h2>
+            <h2 className="text-accent underline">
+              ${split.find((user) => user.id === userId)?.split.toFixed(2)}
+            </h2>
+          </div>
+        )}
+      <div className="tabs mt-2">
         <a
           className={`tab tab-sm md:tab-md lg:tab-lg tab-lifted ${
             activeTab === 'split' ? 'tab-active font-bold' : ''

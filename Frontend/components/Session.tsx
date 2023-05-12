@@ -5,7 +5,13 @@ import { eatSessionItems, finalizeSession } from '@/lib/api';
 import { useRouter } from 'next/navigation';
 import { FaExclamationTriangle } from 'react-icons/fa';
 import OwnerGuestsPanel from './OwnerGuestsPanel';
-import { DetailedSession, Guest, ItemEaten, userSession } from '@/lib/types';
+import {
+  DetailedSession,
+  Guest,
+  ItemEaten,
+  TipType,
+  userSession,
+} from '@/lib/types';
 import Link from 'next/link';
 const SECONDS = 1000;
 interface SessionProps {
@@ -26,6 +32,36 @@ const Session = ({ session, userSession }: SessionProps) => {
   const [finalizeError, setFinalizeError] = useState('');
   const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [selectedGuest, setSelectedGuest] = useState<Guest | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string>(userId);
+  const [potentialBill, setPotentialBill] = useState<number>(0);
+
+  useEffect(() => {
+    if (selectedGuest) {
+      setCurrentUserId(selectedGuest.id);
+    } else {
+      setCurrentUserId(userId);
+    }
+  }, [selectedGuest, userId]);
+
+  useEffect(() => {
+    const itemsEatenByUser = itemsEaten.filter((itemEaten) =>
+      itemEaten.eatenBy.some((user) => user.id === currentUserId),
+    );
+
+    const subtotal = itemsEatenByUser.reduce((acc, itemEaten) => {
+      const item = items.find((item) => item.id === itemEaten.itemId);
+      return item ? acc + item.price / itemEaten.eatenBy.length : acc;
+    }, 0);
+
+    const tax = subtotal * (session.tax / 100);
+    const tip =
+      session.tipType === TipType.PERCENTAGE
+        ? subtotal * (session.tip / 100)
+        : subtotal * (session.tip / session.subtotal);
+
+    const total = subtotal + tax + tip;
+    setPotentialBill(total);
+  }, [currentUserId, items, itemsEaten, session]);
 
   const handleItemClick = useCallback(
     (itemId: string) => {
@@ -156,6 +192,16 @@ const Session = ({ session, userSession }: SessionProps) => {
               />
             </div>
           </div>
+        </div>
+      )}
+      {currentUserId !== session.ownerId && potentialBill !== 0 && (
+        <div className="flex justify-center mt-1 text-2xl font-bold text-center">
+          <h2 className="text-secondary mr-1">{`${
+            selectedGuest
+              ? `${selectedGuest.name} potentially owes:`
+              : 'You potentially owe:'
+          }`}</h2>
+          <h2 className="text-accent underline">${potentialBill.toFixed(2)}</h2>
         </div>
       )}
       <div className="w-full max-w-2xl text-center mt-1 mb-2">
