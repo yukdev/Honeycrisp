@@ -45,7 +45,11 @@ const SessionsPage = async () => {
                 key={session.id}
                 className="hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
               >
-                <div className="card card-compact md:card-normal card-bordered w-full text-primary-content bg-primary">
+                <div
+                  className={`card card-compact md:card-normal card-bordered w-full text-primary-content ${
+                    userId === session.ownerId ? 'bg-secondary' : 'bg-primary'
+                  }`}
+                >
                   <div className="card-body">
                     <h2 className="card-title">{session.name}</h2>
                     <p className="mt-2">Owner: {session.ownerName}</p>
@@ -54,13 +58,7 @@ const SessionsPage = async () => {
                         Bill: ${session.bill.toFixed(2) ?? 'N/A'}
                       </div>
                       <div className="card-actions">
-                        <button
-                          className={`btn ${
-                            userId === session.ownerId && 'btn-accent'
-                          }`}
-                        >
-                          View
-                        </button>
+                        <button className="btn">View</button>
                       </div>
                     </div>
                   </div>
@@ -85,7 +83,11 @@ const SessionsPage = async () => {
                 key={session.id}
                 className="hover:shadow-xl transition duration-300 ease-in-out transform hover:-translate-y-1"
               >
-                <div className="card card-compact md:card-normal card-bordered w-full text-secondary-content bg-secondary">
+                <div
+                  className={`card card-compact md:card-normal card-bordered w-full text-primary-content ${
+                    userId === session.ownerId ? 'bg-secondary' : 'bg-primary'
+                  }`}
+                >
                   <div className="card-body">
                     <h2 className="card-title">{session.name}</h2>
                     <p className="mt-2">
@@ -97,13 +99,7 @@ const SessionsPage = async () => {
                         Bill: ${session.bill.toFixed(2) ?? 'N/A'}
                       </div>
                       <div className="card-actions">
-                        <button
-                          className={`btn ${
-                            userId === session.ownerId && 'btn-accent'
-                          }`}
-                        >
-                          View
-                        </button>
+                        <button className="btn">View</button>
                       </div>
                     </div>
                     <progress
