@@ -31,7 +31,7 @@ model Session {
   finalized Boolean  @default(false)
   items     Item[]
   tax       Float    @default(8.875)
-  tip       Int      @default(20)
+  tip       Float    @default(20)
   tipType   TipType  @default(PERCENTAGE)
   bill      Float
   split     Json?
