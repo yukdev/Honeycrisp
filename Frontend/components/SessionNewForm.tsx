@@ -33,11 +33,12 @@ const SessionNewForm = ({ userSession }: SessionNewFormProps) => {
       (acc, item) => acc + item.price * item.quantity,
       0,
     );
-    const tax = subtotal * (sessionData.tax / 100);
-    const tip =
-      sessionData.tipType === TipType.PERCENTAGE
+    const tax = sessionData.tax ? subtotal * (sessionData.tax / 100) : 0;
+    const tip = sessionData.tip
+      ? sessionData.tipType === TipType.PERCENTAGE
         ? subtotal * (sessionData.tip / 100)
-        : sessionData.tip;
+        : sessionData.tip
+      : 0;
     const total = subtotal + tax + tip;
     setRunningTotal(total);
   }, [sessionData]);
@@ -294,10 +295,9 @@ const SessionNewForm = ({ userSession }: SessionNewFormProps) => {
         </div>
       </div>
       {/* display current subtotal */}
-      <div className="flex justify-center mt-4">
-        <h2 className="text-2xl font-bold text-center text-accent">
-          Running Total: ${runningTotal.toFixed(2)}
-        </h2>
+      <div className="flex justify-center mt-1 text-2xl font-bold text-center">
+        <h2 className="text-secondary mr-1">Running total:</h2>
+        <h2 className="text-accent underline">${runningTotal.toFixed(2)}</h2>
       </div>
       {error && (
         <div className="alert alert-error shadow-lg my-3">
