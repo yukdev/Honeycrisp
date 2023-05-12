@@ -7,7 +7,8 @@ import sessionCreate from '../schemas/sessionCreate.json';
 import sessionEdit from '../schemas/sessionEdit.json';
 import sessionItemsEaten from '../schemas/sessionItemsEaten.json';
 import sessionItemAdd from '../schemas/sessionItemAdd.json';
-import { Session, calculateBill, calculateSplit } from '../helpers/bill';
+import { calculateBill, calculateSplit } from '../helpers/bill';
+import { Session } from '@/lib/types';
 
 const router = Router();
 
