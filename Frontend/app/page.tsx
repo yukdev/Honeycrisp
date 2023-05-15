@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]/route';
 import GuestLogin from '@/components/GuestLogin';
+import DemoLogin from '@/components/DemoLogin';
 
 const HomePage = async () => {
   const userSession = ((await getServerSession(authOptions)) as any) ?? {};
@@ -42,6 +43,7 @@ const HomePage = async () => {
               </div>
               <div>
                 <GuestLogin />
+                <DemoLogin />
               </div>
             </>
           )}
