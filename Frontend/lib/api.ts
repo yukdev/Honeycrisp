@@ -151,3 +151,11 @@ export const userUpdate = async (userId: string, user: UpdateUser) => {
     body: user,
   });
 };
+
+export const demoLogin = async (user: RegisterUser) => {
+  return await fetcher({
+    url: 'users/demo-login',
+    method: 'POST',
+    body: user,
+  });
+};
