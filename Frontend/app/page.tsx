@@ -15,7 +15,7 @@ const HomePage = async () => {
           </h1>
           {!userSession?.user && (
             <p className="my-6">
-              Welcome to Honeycrisp, your user-friendly bill-splitting app.
+              Welcome to Honeycrisp, your user-friendly bill-management app.
             </p>
           )}
           {userSession?.user && !userSession.user.isGuest && (
