@@ -20,9 +20,7 @@ const SessionFinalized = ({ session, userSession }: SessionFinalizedProps) => {
   const [isUnfinalizing, setIsUnfinalizing] = useState(false);
   const [unfinalizeError, setUnfinalizeError] = useState('');
 
-  const {
-    user: { id: userId },
-  } = userSession;
+  const userId = userSession?.user?.id;
 
   const { id: sessionId } = session;
 
@@ -89,7 +87,6 @@ const SessionFinalized = ({ session, userSession }: SessionFinalizedProps) => {
           </button>
         </div>
       )}
-      {/* if you're not the owner and you're part of the session */}
       {session.ownerId !== userId &&
         session.split.some((user) => user.id === userId) && (
           <div className="flex justify-center text-2xl font-bold text-center">
