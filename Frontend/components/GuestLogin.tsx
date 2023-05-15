@@ -73,7 +73,7 @@ const GuestLogin = ({ id }: GuestLoginProps) => {
         <form onSubmit={(event) => handleGuestLogin(event)} className="flex">
           <input
             type="text"
-            placeholder="Enter your name"
+            placeholder="What is your name?"
             onChange={handleGuestNameInput}
             className={`input input-bordered input-accent text-center max-w-xs mr-2 ${
               id && 'input-sm'

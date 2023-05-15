@@ -78,7 +78,7 @@ const DemoLogin = () => {
           </button>
         </form>
       ) : (
-        <button className="btn btn-accent ml-2" onClick={handleDemoClick}>
+        <button className="btn btn-secondary ml-2" onClick={handleDemoClick}>
           View Demo
         </button>
       )}
