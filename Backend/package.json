@@ -8,7 +8,8 @@
     "dev": "nodemon --watch 'src/**/*.ts' --ignore 'src/**/*.spec.ts' --exec 'ts-node' src/server.ts",
     "build": "tsc",
     "prestart": "npm run build",
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "ts-node prisma/seed.ts",
+    "purge": "ts-node prisma/purge.ts"
   },
   "keywords": [],
   "author": "",
@@ -26,12 +27,14 @@
     "nodemon": "^2.0.22",
     "pg": "^8.10.0",
     "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
+    "typescript": "^5.0.4",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.13",
     "@types/jsonwebtoken": "^9.0.1",
+    "@types/uuid": "^9.0.1",
     "prisma": "^4.14.0"
   }
 }
