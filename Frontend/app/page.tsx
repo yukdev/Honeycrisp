@@ -11,13 +11,16 @@ const HomePage = async () => {
     <div className="hero min-h-screen">
       <div className="hero-content text-center">
         <div className="max-w-md">
-          <h1 className="text-5xl font-bold">
+          <h1 className="text-6xl font-bold">
             Hello {userSession?.user?.name}
           </h1>
           {!userSession?.user && (
-            <p className="my-6">
-              Welcome to Honeycrisp, your user-friendly bill-management app.
-            </p>
+            <div className="font-bold">
+              <h2 className="text-2xl text-secondary">Welcome to Honeycrisp</h2>
+              <h3 className="text-lg">
+                Your user-friendly bill management app
+              </h3>
+            </div>
           )}
           {userSession?.user && !userSession.user.isGuest && (
             <div className="my-6">
