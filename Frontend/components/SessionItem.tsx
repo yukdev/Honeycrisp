@@ -55,6 +55,7 @@ function SessionItem({
               className="checkbox checkbox-primary checkbox-sm md:checkbox-md"
               checked={isSelected}
               onChange={handleCheckboxChange}
+              disabled={!userId}
             />
           </label>
         </div>

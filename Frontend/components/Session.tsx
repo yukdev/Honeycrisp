@@ -251,12 +251,14 @@ const Session = ({ session, userSession }: SessionProps) => {
           </div>
         </div>
       )}
-      <button
-        onClick={handleSubmit}
-        className={`btn btn-primary my-3 ${isConfirming && 'loading'}`}
-      >
-        {isConfirming ? 'Confirming...' : 'Confirm'}
-      </button>
+      {userId && (
+        <button
+          onClick={handleSubmit}
+          className={`btn btn-primary my-3 ${isConfirming && 'loading'}`}
+        >
+          {isConfirming ? 'Confirming...' : 'Confirm'}
+        </button>
+      )}
       {confirmation && (
         <div className="toast">
           <div className="alert alert-success">
