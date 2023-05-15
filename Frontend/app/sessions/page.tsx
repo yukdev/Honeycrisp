@@ -52,7 +52,10 @@ const SessionsPage = async () => {
                 >
                   <div className="card-body">
                     <h2 className="card-title">{session.name}</h2>
-                    <p className="mt-2">Owner: {session.ownerName}</p>
+                    <p className="mt-2">
+                      Owner:{' '}
+                      {userId == session.ownerId ? 'You' : session.ownerName}
+                    </p>
                     <div className="flex items-center justify-between">
                       <div className="text-lg font-bold">
                         Bill: ${session.bill.toFixed(2) ?? 'N/A'}
