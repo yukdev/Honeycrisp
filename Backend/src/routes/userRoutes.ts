@@ -198,6 +198,10 @@ router.post('/guest-login', async (req, res, next) => {
       },
     });
 
+    if (!sessionId) {
+      return res.status(200).json({ newUser });
+    }
+
     const session = await prisma.session.findUnique({
       where: { id: sessionId },
     });

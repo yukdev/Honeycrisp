@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]/route';
+import GuestLogin from '@/components/GuestLogin';
 
 const HomePage = async () => {
   const userSession = ((await getServerSession(authOptions)) as any) ?? {};
@@ -30,14 +31,19 @@ const HomePage = async () => {
             </div>
           )}
           {!userSession?.user && (
-            <div className="my-6">
-              <Link href={'/register'} className="mx-2">
-                <button className="btn btn-primary">Register</button>
-              </Link>
-              <Link href={'/login'}>
-                <button className="btn btn-primary">Log in</button>
-              </Link>
-            </div>
+            <>
+              <div className="mt-6">
+                <Link href={'/register'} className="mx-2">
+                  <button className="btn btn-primary">Register</button>
+                </Link>
+                <Link href={'/login'}>
+                  <button className="btn btn-primary">Log in</button>
+                </Link>
+              </div>
+              <div>
+                <GuestLogin />
+              </div>
+            </>
           )}
           {userSession?.user && userSession.user.isGuest && (
             <div className="text-primary-content flex flex-col justify-center my-6">

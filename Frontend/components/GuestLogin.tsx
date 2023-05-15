@@ -8,7 +8,7 @@ import { useRouter } from 'next/navigation';
 import { FaExclamationTriangle } from 'react-icons/fa';
 
 interface GuestLoginProps {
-  id: string;
+  id?: string;
 }
 
 const GuestLogin = ({ id }: GuestLoginProps) => {
@@ -37,15 +37,16 @@ const GuestLogin = ({ id }: GuestLoginProps) => {
         name: guestName,
         email: guestEmail,
         password: guestPassword,
-        sessionId: id,
+        sessionId: id ?? '',
       });
 
       if (newUser) {
+        const url = id ? `/sessions/${id}` : '/';
         await signIn('login', {
           email: guestEmail,
           password: guestPassword,
           redirect: true,
-          callbackUrl: `/sessions/${id}`,
+          callbackUrl: url,
         });
       }
       router.refresh();
@@ -74,18 +75,22 @@ const GuestLogin = ({ id }: GuestLoginProps) => {
             type="text"
             placeholder="Enter your name"
             onChange={handleGuestNameInput}
-            className="input input-sm input-bordered input-accent text-center max-w-xs mr-2"
+            className={`input input-bordered input-accent text-center max-w-xs mr-2 ${
+              id && 'input-sm'
+            }`}
           />
           <button
             type="submit"
-            className={`btn btn-sm btn-accent ${isSubmitting && 'loading'}`}
+            className={`btn btn-accent ${isSubmitting && 'loading'} ${
+              id && 'btn-sm'
+            }`}
           >
             {isSubmitting ? 'Joining...' : 'Join'}
           </button>
         </form>
       ) : (
         <button
-          className="btn btn-accent btn-sm ml-2"
+          className={`btn btn-accent ml-2 ${id ? 'btn-sm' : 'btn-outline'}`}
           onClick={handleJoinAsGuestClick}
         >
           Join as guest
