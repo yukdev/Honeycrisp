@@ -305,7 +305,12 @@ router.post('/demo-login', async (req, res, next) => {
       mockUsers.push(mockUser);
     }
 
-    await prisma.session.create({
+    console.log(
+      '🚀 ~ file: userRoutes.ts:293 ~ router.post ~ mockUsers:',
+      mockUsers,
+    );
+
+    const session1 = await prisma.session.create({
       data: {
         name: 'Golden Lotus Dim Sum',
         items: {
@@ -325,8 +330,12 @@ router.post('/demo-login', async (req, res, next) => {
         isDemo: true,
       },
     });
+    console.log(
+      '🚀 ~ file: userRoutes.ts:330 ~ router.post ~ session1:',
+      session1,
+    );
 
-    await prisma.session.create({
+    const session2 = await prisma.session.create({
       data: {
         name: 'Sahib Indian Cuisine',
         items: {
@@ -343,6 +352,10 @@ router.post('/demo-login', async (req, res, next) => {
         isDemo: true,
       },
     });
+    console.log(
+      '🚀 ~ file: userRoutes.ts:349 ~ router.post ~ session2:',
+      session2,
+    );
 
     const unfinalizedSession = await prisma.session.create({
       data: {
@@ -361,6 +374,10 @@ router.post('/demo-login', async (req, res, next) => {
         isDemo: true,
       },
     });
+    console.log(
+      '🚀 ~ file: userRoutes.ts:368 ~ router.post ~ unfinalizedSession:',
+      unfinalizedSession,
+    );
 
     const eatenItems = [
       {
@@ -505,8 +522,13 @@ router.post('/demo-login', async (req, res, next) => {
         },
       },
     });
+    console.log(
+      '🚀 ~ file: userRoutes.ts:513 ~ router.post ~ sessionToBeFinalized:',
+      sessionToBeFinalized,
+    );
 
     const split = calculateSplit(sessionToBeFinalized as Session);
+    console.log('🚀 ~ file: userRoutes.ts:516 ~ router.post ~ split:', split);
 
     await prisma.session.update({
       where: { id: unfinalizedSession.id },
