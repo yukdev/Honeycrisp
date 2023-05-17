@@ -282,6 +282,7 @@ router.post('/demo-login', async (req, res, next) => {
 
     const demoUser = await prisma.user.create({
       data: {
+        id: uuid(),
         name,
         email,
         password: await hashPassword(password),
@@ -295,6 +296,7 @@ router.post('/demo-login', async (req, res, next) => {
     for (const name of mockUserNames) {
       const mockUser = await prisma.user.create({
         data: {
+          id: uuid(),
           name,
           email: `${uuid().slice(0, 8)}@guest.com`,
           password: await hashPassword(uuid().slice(0, 8)),
@@ -312,6 +314,7 @@ router.post('/demo-login', async (req, res, next) => {
 
     const session1 = await prisma.session.create({
       data: {
+        id: uuid(),
         name: 'Golden Lotus Dim Sum',
         items: {
           create: mockSession1Items,
@@ -337,6 +340,7 @@ router.post('/demo-login', async (req, res, next) => {
 
     const session2 = await prisma.session.create({
       data: {
+        id: uuid(),
         name: 'Sahib Indian Cuisine',
         items: {
           create: mockSession2Items,
@@ -359,6 +363,7 @@ router.post('/demo-login', async (req, res, next) => {
 
     const unfinalizedSession = await prisma.session.create({
       data: {
+        id: uuid(),
         name: 'Tsunami Seafood Boil',
         items: {
           create: mockSession3Items,
