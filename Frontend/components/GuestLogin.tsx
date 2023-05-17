@@ -60,25 +60,25 @@ const GuestLogin = ({ id }: GuestLoginProps) => {
   };
 
   return (
-    <div className="flex justify-center my-2">
+    <div className="flex flex-col justify-center items-center">
       {error && (
-        <div className="alert alert-error shadow-lg my-3">
-          <div>
-            <FaExclamationTriangle />
-            <span>{error}</span>
-          </div>
+        <div className="alert alert-error shadow-lg mb-2 justify-center">
+          <FaExclamationTriangle className="mr-2" />
+          <span>{error}</span>
         </div>
       )}
       {showGuestForm ? (
         <form onSubmit={(event) => handleGuestLogin(event)} className="flex">
-          <input
-            type="text"
-            placeholder="What is your name?"
-            onChange={handleGuestNameInput}
-            className={`input input-bordered input-accent text-center max-w-xs mr-2 ${
-              id && 'input-sm'
-            }`}
-          />
+          {!isSubmitting && (
+            <input
+              type="text"
+              placeholder="What is your name?"
+              onChange={handleGuestNameInput}
+              className={`input input-bordered input-accent text-center max-w-xs mr-2 ${
+                id && 'input-sm'
+              }`}
+            />
+          )}
           <button
             type="submit"
             className={`btn btn-accent ${isSubmitting && 'loading'} ${
@@ -90,7 +90,9 @@ const GuestLogin = ({ id }: GuestLoginProps) => {
         </form>
       ) : (
         <button
-          className={`btn btn-accent ml-2 ${id ? 'btn-sm' : 'btn-outline'}`}
+          className={`btn btn-accent w-1/2 ml-2 ${
+            id ? 'btn-sm' : 'btn-outline'
+          }`}
           onClick={handleJoinAsGuestClick}
         >
           Join as guest

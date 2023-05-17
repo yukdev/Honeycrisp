@@ -44,7 +44,7 @@ const HomePage = async () => {
                   <button className="btn btn-primary">Log in</button>
                 </Link>
               </div>
-              <div>
+              <div className="mt-3 space-y-3">
                 <GuestLogin />
                 <DemoLogin />
               </div>

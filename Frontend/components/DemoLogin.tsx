@@ -4,11 +4,9 @@ import { v4 as uuid } from 'uuid';
 import { demoLogin } from '@/lib/api';
 import { signIn } from 'next-auth/react';
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 import { FaExclamationTriangle } from 'react-icons/fa';
 
 const DemoLogin = () => {
-  const router = useRouter();
   const [showDemoForm, setShowDemoForm] = useState(false);
   const [demoName, setDemoName] = useState('');
   const [error, setError] = useState('');
@@ -53,9 +51,9 @@ const DemoLogin = () => {
   };
 
   return (
-    <div className="flex justify-center my-2">
+    <div className="flex flex-col justify-center items-center">
       {error && (
-        <div className="alert alert-error shadow-lg my-3">
+        <div className="alert alert-error shadow-lg justify-center mb-2">
           <div>
             <FaExclamationTriangle />
             <span>{error}</span>
@@ -64,21 +62,26 @@ const DemoLogin = () => {
       )}
       {showDemoForm ? (
         <form onSubmit={(event) => handleGuestLogin(event)} className="flex">
-          <input
-            type="text"
-            placeholder="What is your name?"
-            onChange={handleDemoNameInput}
-            className="input input-bordered input-accent text-center max-w-xs mr-2"
-          />
+          {!isSubmitting && (
+            <input
+              type="text"
+              placeholder="What is your name?"
+              onChange={handleDemoNameInput}
+              className="input input-bordered input-accent text-center max-w-xs mr-2"
+            />
+          )}
           <button
             type="submit"
             className={`btn btn-accent ${isSubmitting && 'loading'}`}
           >
-            {isSubmitting ? 'Setting up demo...' : 'Join'}
+            {isSubmitting ? 'Setting up demo...' : 'View'}
           </button>
         </form>
       ) : (
-        <button className="btn btn-secondary ml-2" onClick={handleDemoClick}>
+        <button
+          className="btn btn-secondary w-1/2 flex-shrink-0 ml-2"
+          onClick={handleDemoClick}
+        >
           View Demo
         </button>
       )}
