@@ -278,11 +278,12 @@ router.get('/:id/sessions', async (req, res, next) => {
  */
 router.post('/demo-login', async (req, res, next) => {
   try {
+    prisma.$connect();
+
     const { name, email, password } = req.body;
 
     const demoUser = await prisma.user.create({
       data: {
-        id: uuid(),
         name,
         email,
         password: await hashPassword(password),
@@ -296,7 +297,6 @@ router.post('/demo-login', async (req, res, next) => {
     for (const name of mockUserNames) {
       const mockUser = await prisma.user.create({
         data: {
-          id: uuid(),
           name,
           email: `${uuid().slice(0, 8)}@guest.com`,
           password: await hashPassword(uuid().slice(0, 8)),
@@ -307,14 +307,8 @@ router.post('/demo-login', async (req, res, next) => {
       mockUsers.push(mockUser);
     }
 
-    console.log(
-      '🚀 ~ file: userRoutes.ts:293 ~ router.post ~ mockUsers:',
-      mockUsers,
-    );
-
     const session1 = await prisma.session.create({
       data: {
-        id: uuid(),
         name: 'Golden Lotus Dim Sum',
         items: {
           create: mockSession1Items,
@@ -332,15 +326,11 @@ router.post('/demo-login', async (req, res, next) => {
         bill: 23.94,
         isDemo: true,
       },
+      include: { items: true },
     });
-    console.log(
-      '🚀 ~ file: userRoutes.ts:330 ~ router.post ~ session1:',
-      session1,
-    );
 
     const session2 = await prisma.session.create({
       data: {
-        id: uuid(),
         name: 'Sahib Indian Cuisine',
         items: {
           create: mockSession2Items,
@@ -355,15 +345,11 @@ router.post('/demo-login', async (req, res, next) => {
         bill: 172.63,
         isDemo: true,
       },
+      include: { items: true },
     });
-    console.log(
-      '🚀 ~ file: userRoutes.ts:349 ~ router.post ~ session2:',
-      session2,
-    );
 
-    const unfinalizedSession = await prisma.session.create({
+    const session3 = await prisma.session.create({
       data: {
-        id: uuid(),
         name: 'Tsunami Seafood Boil',
         items: {
           create: mockSession3Items,
@@ -378,128 +364,123 @@ router.post('/demo-login', async (req, res, next) => {
         bill: 43.77,
         isDemo: true,
       },
+      include: { items: true },
     });
-    console.log(
-      '🚀 ~ file: userRoutes.ts:368 ~ router.post ~ unfinalizedSession:',
-      unfinalizedSession,
-    );
 
     const eatenItems = [
       {
         userId: mockUsers[0].id,
-        itemId: mockSession1Items[0].id,
+        itemId: session1.items[0].id,
         isDemo: true,
       },
       {
         userId: mockUsers[1].id,
-        itemId: mockSession1Items[0].id,
+        itemId: session1.items[0].id,
         isDemo: true,
       },
       {
         userId: mockUsers[0].id,
-        itemId: mockSession1Items[1].id,
+        itemId: session1.items[1].id,
         isDemo: true,
       },
       {
         userId: mockUsers[1].id,
-        itemId: mockSession1Items[1].id,
+        itemId: session1.items[1].id,
         isDemo: true,
       },
       {
         userId: mockUsers[0].id,
-        itemId: mockSession1Items[3].id,
+        itemId: session1.items[3].id,
         isDemo: true,
       },
       {
         userId: mockUsers[1].id,
-        itemId: mockSession1Items[4].id,
+        itemId: session1.items[4].id,
         isDemo: true,
       },
       {
         userId: demoUser.id,
-        itemId: mockSession1Items[5].id,
+        itemId: session1.items[5].id,
         isDemo: true,
       },
       {
         userId: mockUsers[4].id,
-        itemId: mockSession2Items[0].id,
+        itemId: session2.items[0].id,
         isDemo: true,
       },
       {
         userId: mockUsers[3].id,
-        itemId: mockSession2Items[1].id,
+        itemId: session2.items[1].id,
         isDemo: true,
       },
       {
         userId: mockUsers[2].id,
-        itemId: mockSession2Items[2].id,
+        itemId: session2.items[2].id,
         isDemo: true,
       },
       {
         userId: demoUser.id,
-        itemId: mockSession2Items[3].id,
+        itemId: session2.items[3].id,
         isDemo: true,
       },
       {
         userId: mockUsers[4].id,
-        itemId: mockSession2Items[5].id,
+        itemId: session2.items[5].id,
         isDemo: true,
       },
       {
         userId: mockUsers[3].id,
-
-        itemId: mockSession2Items[5].id,
+        itemId: session2.items[5].id,
         isDemo: true,
       },
       {
         userId: mockUsers[2].id,
-
-        itemId: mockSession2Items[5].id,
+        itemId: session2.items[5].id,
         isDemo: true,
       },
       {
         userId: demoUser.id,
-        itemId: mockSession2Items[5].id,
+        itemId: session2.items[5].id,
         isDemo: true,
       },
       {
         userId: demoUser.id,
-        itemId: mockSession3Items[0].id,
+        itemId: session3.items[0].id,
         isDemo: true,
       },
       {
         userId: mockUsers[0].id,
-        itemId: mockSession3Items[1].id,
+        itemId: session3.items[1].id,
         isDemo: true,
       },
       {
         userId: mockUsers[3].id,
-        itemId: mockSession3Items[2].id,
+        itemId: session3.items[2].id,
         isDemo: true,
       },
       {
         userId: demoUser.id,
-        itemId: mockSession3Items[3].id,
+        itemId: session3.items[3].id,
         isDemo: true,
       },
       {
         userId: mockUsers[0].id,
-        itemId: mockSession3Items[3].id,
+        itemId: session3.items[3].id,
         isDemo: true,
       },
       {
         userId: mockUsers[3].id,
-        itemId: mockSession3Items[3].id,
+        itemId: session3.items[3].id,
         isDemo: true,
       },
       {
         userId: mockUsers[0].id,
-        itemId: mockSession3Items[4].id,
+        itemId: session3.items[4].id,
         isDemo: true,
       },
       {
         userId: mockUsers[3].id,
-        itemId: mockSession3Items[4].id,
+        itemId: session3.items[4].id,
         isDemo: true,
       },
     ];
@@ -509,7 +490,7 @@ router.post('/demo-login', async (req, res, next) => {
     );
 
     const sessionToBeFinalized = await prisma.session.findUnique({
-      where: { id: unfinalizedSession.id },
+      where: { id: session3.id },
       include: {
         items: {
           include: {
@@ -527,18 +508,16 @@ router.post('/demo-login', async (req, res, next) => {
         },
       },
     });
-    console.log(
-      '🚀 ~ file: userRoutes.ts:513 ~ router.post ~ sessionToBeFinalized:',
-      sessionToBeFinalized,
-    );
-
-    const split = calculateSplit(sessionToBeFinalized as Session);
-    console.log('🚀 ~ file: userRoutes.ts:516 ~ router.post ~ split:', split);
 
     await prisma.session.update({
-      where: { id: unfinalizedSession.id },
-      data: { split, finalized: true },
+      where: { id: session3.id },
+      data: {
+        split: calculateSplit(sessionToBeFinalized as Session),
+        finalized: true,
+      },
     });
+
+    prisma.$disconnect();
 
     return res.status(200).json(demoUser);
   } catch (error) {
