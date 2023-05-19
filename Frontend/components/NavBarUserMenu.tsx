@@ -10,6 +10,7 @@ interface NavBarUserMenuProps {
       name: string;
       email: string;
       isGuest: boolean;
+      isDemo: boolean;
     };
   };
 }
@@ -17,9 +18,11 @@ interface NavBarUserMenuProps {
 const NavBarUserMenu = ({ userSession }: NavBarUserMenuProps) => {
   return (
     <>
-      <li>
-        <NavLink label="Profile" path={`/users/${userSession.user.id}`} />
-      </li>
+      {!userSession.user.isDemo && (
+        <li>
+          <NavLink label="Profile" path={`/users/${userSession.user.id}`} />
+        </li>
+      )}
       <li>
         <a
           className="text-md md:text-lg mx-3"

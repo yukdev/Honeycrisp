@@ -1,5 +1,4 @@
 import { getServerSession } from 'next-auth';
-import React from 'react';
 import { authOptions } from '../../api/auth/[...nextauth]/route';
 import UpdateForm from '@/components/UpdateForm';
 import Unauthorized from '@/components/Unauthorized';
@@ -18,6 +17,10 @@ const UserPage = async ({ params: { id } }: UserPageProps) => {
     return (
       <Unauthorized errorMessage="You cannot edit another user's details" />
     );
+  }
+
+  if (userSession?.user?.isDemo) {
+    return <Unauthorized errorMessage="Demo users cannot edit their details" />;
   }
 
   return (
