@@ -4,7 +4,6 @@ import { getServerSession } from 'next-auth';
 import { authOptions } from './api/auth/[...nextauth]/route';
 import NavBar from '@/components/NavBar';
 import Footer from '@/components/Footer';
-import React from 'react';
 import Provider from '@/components/Provider';
 
 interface RootLayoutProps {

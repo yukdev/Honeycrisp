@@ -6,7 +6,6 @@ import DemoLogin from '@/components/DemoLogin';
 
 const HomePage = async () => {
   const userSession = ((await getServerSession(authOptions)) as any) ?? {};
-  console.log('🚀 ~ file: page.tsx:9 ~ HomePage ~ userSession:', userSession);
 
   return (
     <div className="hero min-h-screen">
