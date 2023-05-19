@@ -37,7 +37,9 @@ export const authOptions: NextAuthOptions = {
           id: token.id,
           name: token.name,
           isGuest: token.isGuest,
+          isDemo: token.isDemo,
           paymentAddress: token.paymentAddress,
+          demoData: token.demoData,
         },
       };
     },
@@ -47,14 +49,18 @@ export const authOptions: NextAuthOptions = {
           id: string;
           name: string;
           isGuest: boolean;
+          isDemo: boolean;
           paymentAddress: string;
+          demoData: object;
         };
         return {
           ...token,
           id: u.id,
           name: u.name,
           isGuest: u.isGuest,
+          isDemo: u.isDemo,
           paymentAddress: u.paymentAddress,
+          demoData: u.demoData,
         };
       }
       return token;
