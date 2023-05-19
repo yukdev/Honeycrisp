@@ -5,10 +5,10 @@ import { authOptions } from '../../api/auth/[...nextauth]/route';
 import SessionFinalized from '@/components/SessionFinalized';
 import GuestLogin from '@/components/GuestLogin';
 import { FaShare } from 'react-icons/fa';
-import { IoColorFill, IoLogoVenmo } from 'react-icons/io5';
+import { IoLogoVenmo } from 'react-icons/io5';
 import { TipType } from '@/lib/types';
 import ShareModal from '@/components/ShareModal';
-import NotFound from '@/components/NotFound';
+import NotFoundPage from '@/components/NotFoundPage';
 import Link from 'next/link';
 
 interface SessionPageProps {
@@ -24,7 +24,7 @@ const SessionPage = async ({ params: { id } }: SessionPageProps) => {
   try {
     session = await getSession(id);
   } catch (error) {
-    return <NotFound errorMessage={`Session not found with id: ${id}`} />;
+    return <NotFoundPage errorMessage={`Session not found with id: ${id}`} />;
   }
 
   const { finalized } = session;

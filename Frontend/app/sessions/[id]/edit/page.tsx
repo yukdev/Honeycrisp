@@ -1,9 +1,9 @@
 import { getSession } from '@/lib/api';
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../../../api/auth/[...nextauth]/route';
-import NotFound from '@/components/NotFound';
 import SessionEditForm from '@/components/SessionEditForm';
 import Unauthorized from '@/components/Unauthorized';
+import NotFoundPage from '@/components/NotFoundPage';
 
 interface SessionEditPageProps {
   params: {
@@ -18,7 +18,7 @@ const SessionEditPage = async ({ params: { id } }: SessionEditPageProps) => {
   try {
     session = await getSession(id);
   } catch (error) {
-    return <NotFound errorMessage={`Session not found with id: ${id}`} />;
+    return <NotFoundPage errorMessage={`Session not found with id: ${id}`} />;
   }
 
   if (session.ownerId !== userId) {
