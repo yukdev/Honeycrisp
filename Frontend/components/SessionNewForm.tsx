@@ -45,7 +45,7 @@ const SessionNewForm = ({ userSession }: SessionNewFormProps) => {
   }, [sessionData]);
 
   const {
-    user: { name: ownerName, id: ownerId, paymentAddress: ownerPaymentAddress },
+    user: { name: ownerName, id: ownerId },
   } = userSession;
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -98,7 +98,6 @@ const SessionNewForm = ({ userSession }: SessionNewFormProps) => {
         ...sessionData,
         ownerName,
         ownerId,
-        ownerPaymentAddress,
       });
 
       const { id } = response;

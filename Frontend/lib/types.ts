@@ -114,7 +114,7 @@ export interface EditedItem {
 export interface NewSession {
   ownerId: string;
   ownerName: string;
-  ownerPaymentAddress: string | null;
+  ownerPaymentAddress?: string | null;
   name: string;
   items: NewItem[];
   tax: number;

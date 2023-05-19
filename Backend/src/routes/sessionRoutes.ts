@@ -88,7 +88,7 @@ router.post('/', async (req, res, next) => {
       data: {
         ownerId,
         ownerName,
-        ownerPaymentAddress,
+        ownerPaymentAddress: ownerPaymentAddress || null,
         name,
         items: {
           create: itemsWithQuantity,
