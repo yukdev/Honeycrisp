@@ -28,6 +28,7 @@ interface NavBarProps {
       email: string;
       id: string;
       isGuest: boolean;
+      isDemo: boolean;
     };
   };
 }
