@@ -6,6 +6,7 @@ import DemoLogin from '@/components/DemoLogin';
 
 const HomePage = async () => {
   const userSession = ((await getServerSession(authOptions)) as any) ?? {};
+  console.log('🚀 ~ file: page.tsx:9 ~ HomePage ~ userSession:', userSession);
 
   return (
     <div className="hero min-h-screen">
@@ -22,18 +23,20 @@ const HomePage = async () => {
               </h3>
             </div>
           )}
-          {userSession?.user && !userSession.user.isGuest && (
-            <div className="my-6">
-              <Link href={'/sessions'} className="mx-2">
-                <button className="btn btn-primary">My Sessions</button>
-              </Link>
-              <Link href={'/sessions/new'}>
-                <button className="btn btn-outline btn-primary">
-                  Create a new session
-                </button>
-              </Link>
-            </div>
-          )}
+          {userSession?.user &&
+            !userSession.user.isGuest &&
+            !userSession.user.isDemo && (
+              <div className="my-6">
+                <Link href={'/sessions'} className="mx-2">
+                  <button className="btn btn-primary">My Sessions</button>
+                </Link>
+                <Link href={'/sessions/new'}>
+                  <button className="btn btn-outline btn-primary">
+                    Create a new session
+                  </button>
+                </Link>
+              </div>
+            )}
           {!userSession?.user && (
             <>
               <div className="mt-6">
@@ -56,6 +59,15 @@ const HomePage = async () => {
               <p>Would you like to migrate your account to a full account?</p>
               <Link href={`/users/${userSession.user.id}`}>
                 <button className="btn btn-sm btn-primary mt-2">Migrate</button>
+              </Link>
+            </div>
+          )}
+          {userSession?.user && userSession.user.isDemo && (
+            <div className="text-primary-content flex flex-col justify-center my-6">
+              <Link href="/demo">
+                <button className="btn btn-primary mt-2">
+                  View Demo Tasks
+                </button>
               </Link>
             </div>
           )}
