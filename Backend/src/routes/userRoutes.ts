@@ -133,7 +133,7 @@ router.put('/:id', async (req, res, next) => {
         data: {
           name,
           email,
-          paymentAddress,
+          paymentAddress: paymentAddress || null,
           password: await hashPassword(password),
           isGuest: false,
         },
@@ -166,7 +166,7 @@ router.put('/:id', async (req, res, next) => {
           data: {
             name,
             email,
-            paymentAddress,
+            paymentAddress: paymentAddress || null,
           },
         });
       } else {
@@ -175,7 +175,7 @@ router.put('/:id', async (req, res, next) => {
           data: {
             name,
             email,
-            paymentAddress,
+            paymentAddress: paymentAddress || null,
             password: await hashPassword(password),
           },
         });

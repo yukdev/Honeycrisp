@@ -139,7 +139,7 @@ export interface GuestUser extends RegisterUser {
 export interface UpdateUser {
   name: string;
   email: string;
-  paymentAddress: string;
+  paymentAddress?: string;
   password: string;
   currentPassword: string;
 }
