@@ -1,8 +1,8 @@
-interface NotFoundProps {
+interface NotFoundPageProps {
   errorMessage?: string;
 }
 
-const NotFound = ({ errorMessage }: NotFoundProps) => {
+const NotFoundPage = ({ errorMessage }: NotFoundPageProps) => {
   return (
     <div className="flex flex-col justify-center items-center min-h-screen">
       <h1 className="text-3xl font-bold text-base-content text-center">
@@ -17,4 +17,4 @@ const NotFound = ({ errorMessage }: NotFoundProps) => {
   );
 };
 
-export default NotFound;
+export default NotFoundPage;
