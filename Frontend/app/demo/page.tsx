@@ -1,6 +1,6 @@
 import { getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]/route';
-import { FaExternalLinkAlt } from 'react-icons/fa';
+import { FaExternalLinkAlt, FaAngleRight } from 'react-icons/fa';
 import DemoTask from '@/components/DemoTask';
 import Link from 'next/link';
 
@@ -55,11 +55,16 @@ const DemoPage = async () => {
               </div>
             </div>
             <div className="mt-2">
-              <h3 className="text-xl underline">Notice the following:</h3>
-              <h4>
-                The amount you <b>potentially owe</b> changes as you confirm
-                items you ate.
-              </h4>
+              <h3 className="text-xl underline text-left">
+                Notice the following:
+              </h3>
+              <span className="flex items-center space-x-1">
+                <FaAngleRight />
+                <h4 className="text-left">
+                  The amount you <b>potentially owe</b> changes as you confirm
+                  items you ate.
+                </h4>
+              </span>
             </div>
           </div>
           <div className="divider"></div>
@@ -112,14 +117,22 @@ const DemoPage = async () => {
               </div>
             </div>
             <div className="mt-2">
-              <h3 className="text-xl underline">Notice the following:</h3>
-              <h4>
-                The <b>total</b> will update accordingly to your changes.
-              </h4>
-              <h4>
-                There is a <b>running total</b> that updates live as you change
-                items.
-              </h4>
+              <h3 className="text-xl underline text-left">
+                Notice the following:
+              </h3>
+              <span className="flex items-center space-x-1">
+                <FaAngleRight />
+                <h4 className="text-left">
+                  The <b>total</b> will update accordingly to your changes.
+                </h4>
+              </span>
+              <span className="flex items-center space-x-1">
+                <FaAngleRight />
+                <h4 className="text-left">
+                  There is a <b>running total</b> that updates live as you
+                  change items.
+                </h4>
+              </span>
             </div>
           </div>
           <div className="divider"></div>
@@ -167,11 +180,16 @@ const DemoPage = async () => {
               </div>
             </div>
             <div className="mt-2">
-              <h3 className="text-xl underline">Notice the following:</h3>
-              <h4>
-                When you have a guest <b>selected</b>, it&apos;ll appear as if
-                you are the guest.
-              </h4>
+              <h3 className="text-xl underline text-left">
+                Notice the following:
+              </h3>
+              <span className="flex items-center space-x-1">
+                <FaAngleRight />
+                <h4 className="text-left">
+                  When you have a guest <b>selected</b>, it&apos;ll appear as if
+                  you are the guest.
+                </h4>
+              </span>
             </div>
           </div>
           <div className="divider"></div>
