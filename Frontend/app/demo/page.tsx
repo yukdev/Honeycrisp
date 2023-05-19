@@ -40,7 +40,7 @@ const DemoPage = async () => {
               </Link>
             </span>
             <h4>Aaron invites you and Bobby out for dimsum.</h4>
-            <div className="mt-2 flex flex-col">
+            <div className="mt-2 flex flex-col space-y-2">
               <div className="flex space-x-2 items-center">
                 <DemoTask taskName="confirm-items" />
                 <p>
@@ -83,7 +83,7 @@ const DemoPage = async () => {
               You actually had french fries, which you forgot to add to the
               session.
             </h4>
-            <div className="mt-2 flex flex-col">
+            <div className="mt-2 flex flex-col space-y-2">
               <div className="flex space-x-2 items-center">
                 <DemoTask taskName="mark-paid" />
                 <p className="text-left">
@@ -147,7 +147,7 @@ const DemoPage = async () => {
             </span>
             <h4>You paid the bill at this company lunch.</h4>
             <h4>Felix hasn&apos;t used this app before.</h4>
-            <div className="mt-2 flex flex-col">
+            <div className="mt-2 flex flex-col space-y-2">
               <div className="flex space-x-2 items-center">
                 <DemoTask taskName="add-gust" />
                 <p className="text-left">
