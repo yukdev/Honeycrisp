@@ -282,7 +282,7 @@ router.post('/demo-login', async (req, res, next) => {
 
     const { name, email, password } = req.body;
 
-    const demoUser = await prisma.user.create({
+    let demoUser = await prisma.user.create({
       data: {
         name,
         email,
@@ -517,9 +517,18 @@ router.post('/demo-login', async (req, res, next) => {
       },
     });
 
-    prisma.$disconnect();
+    demoUser = await prisma.user.update({
+      where: { id: demoUser.id },
+      data: {
+        demoData: {
+          session1Id: session1.id,
+          session2Id: session2.id,
+          session3Id: session3.id,
+        },
+      },
+    });
 
-    return res.status(200).json(demoUser);
+    return res.status(200).json({ demoUser });
   } catch (error) {
     if (error instanceof Error) {
       return res.status(400).json({ error: error.message });
